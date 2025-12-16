@@ -147,12 +147,13 @@ def _get_graph(persist_dir: str, embedding_model: str, cache_version: int = 2):
         persist_dir: Directory containing the vectorstore
         embedding_model: Embedding model name
         cache_version: Increment this to force cache invalidation when code changes
+    
+    Returns:
+        RAG graph or None if vectorstore not found
     """
     rt = RetrieverTool(persist_directory=persist_dir, embedding_model=embedding_model)
     if not rt.load_vectorstore():
-        raise RuntimeError(
-            "Vector store not found. Build the index first: `python -m src.main --build-index`."
-        )
+        return None  # Return None instead of raising - let UI handle it
 
     retrieve_tool = rt.get_retriever_tool()
 
