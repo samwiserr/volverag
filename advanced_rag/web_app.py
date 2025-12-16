@@ -231,7 +231,11 @@ def main():
 
     with st.sidebar:
         st.header("Config")
-        persist_dir = st.text_input("Vectorstore dir", value="./data/vectorstore")
+        # Default persist dir: resolve relative to this module so it works
+        # both when running from `advanced_rag/` and when Streamlit runs the
+        # module from the repo root (Streamlit Cloud clones to /mount/src/...).
+        default_persist = str(Path(__file__).resolve().parent / "data" / "vectorstore")
+        persist_dir = st.text_input("Vectorstore dir", value=default_persist)
         embedding_model = st.text_input("Embedding model", value="text-embedding-3-small")
         st.caption("Index build remains CLI-based: `python -m src.main --build-index`.")
         
@@ -243,11 +247,12 @@ def main():
         st.caption(f"🔍 Vectorstore: {vs_abs}")
         st.caption(f"🔍 Exists: {vs_abs.exists()}")
 
-        # Also emit to the process logs for Streamlit Cloud visibility
-        logger = logging.getLogger(__name__)
-        logger.info(f"CWD: {cwd}")
-        logger.info(f"Vectorstore path: {vs_abs}")
-        logger.info(f"Vectorstore exists: {vs_abs.exists()}")
+        # Also print to stdout so Streamlit Cloud deployment logs capture it
+        print(f"DEBUG: __file__ resolved to: {Path(__file__).resolve()}")
+        print(f"DEBUG: default_persist: {default_persist}")
+        print(f"DEBUG: CWD: {cwd}")
+        print(f"DEBUG: Vectorstore path: {vs_abs}")
+        print(f"DEBUG: Vectorstore exists: {vs_abs.exists()}")
 
     # Chat history (multi-turn)
     if "messages" not in st.session_state:
