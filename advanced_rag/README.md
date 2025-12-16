@@ -15,7 +15,7 @@ A state-of-the-art Retrieval-Augmented Generation (RAG) system for querying Volv
 
 ### Specialized Tools
 - **Well Picks Tool**: Direct lookup of formation depths (MD, TVD, TVDSS)
-- **Petrophysical Parameters Tool**: Exact values for Net/Gross, PHIF, SW, KLOGH
+- **Petrophysical Parameters Tool**: Exact values for Net/Gross, PHIF, SW, KLOGH (Klinkenberg-corrected horizontal permeability)
 - **Evaluation Parameters Tool**: Archie parameters, matrix/fluid density, GR min/max
 - **Structured Facts Tool**: General numeric facts from narrative text
 - **Section Lookup Tool**: Direct access to document sections
@@ -134,6 +134,7 @@ python -m src.main --chat
 - "What is the porosity for Hugin in 15/9-F-5?"
 - "What is the water saturation value of Hugin formation in 15/9-F-5?"
 - "What is the permeability for Sleipner in 15/9-F-5?"
+- "What is KLOGH for Hugin in 15/9-F-5?" (KLOGH = Klinkenberg-corrected horizontal permeability)
 
 ### Evaluation Parameters
 - "What is the Archie n for Hugin in 15/9-F-5?"

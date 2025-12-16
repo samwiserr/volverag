@@ -322,7 +322,10 @@ class FormationPropertiesTool:
     def get_tool(self):
         @tool
         def lookup_formation_properties(query: str) -> str:
-            """One-shot: list formations for a well and their petrophysical properties (Net/Gross, PHIF, SW, KLOGH) when available."""
+            """One-shot: list formations for a well and their petrophysical properties (Net/Gross, PHIF, SW, KLOGH) when available.
+            
+            KLOGH = Klinkenberg-corrected horizontal permeability (A/H/G = Arithmetic/Harmonic/Geometric means).
+            """
             return self.lookup(query)
 
         return lookup_formation_properties

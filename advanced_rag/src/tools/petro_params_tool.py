@@ -1,6 +1,8 @@
 """
 Structured lookup tool for petrophysical parameter tables (Net/Gross, PHIF, SW, KLOGH...).
 
+KLOGH = Klinkenberg-corrected horizontal permeability (arithmetic/harmonic/geometric means).
+
 These values often appear in PDF tables. Even with strong hybrid retrieval, answers can fail because
 tables may be fragmented or multiple similar tables exist across wells. This tool parses the extracted
 table text into rows and answers deterministically.
