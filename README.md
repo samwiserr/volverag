@@ -126,8 +126,8 @@ rag.print_results(results, "Which wells have high porosity?")
 ## Key Log Curves
 
 The system processes common petrophysical curves:
-- **PHIF**: Final porosity (V/V)
-- **KLOGH**: Horizontal permeability (mD)
+- **PHIF**: Porosity (V/V)
+- **KLOGH**: Klinkenberg-corrected horizontal permeability (mD)
 - **SW**: Water saturation (V/V)
 - **VSH**: Shale volume (V/V)
 - **BVW**: Bound volume water (V/V)
