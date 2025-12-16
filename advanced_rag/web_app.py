@@ -233,6 +233,15 @@ def main():
         persist_dir = st.text_input("Vectorstore dir", value="./data/vectorstore")
         embedding_model = st.text_input("Embedding model", value="text-embedding-3-small")
         st.caption("Index build remains CLI-based: `python -m src.main --build-index`.")
+        
+        # Debug: show current working directory and vectorstore path
+        from pathlib import Path
+        cwd = Path.cwd()
+        vs_path = Path(persist_dir)
+        vs_abs = vs_path.resolve()
+        st.caption(f"🔍 CWD: {cwd}")
+        st.caption(f"🔍 Vectorstore: {vs_abs}")
+        st.caption(f"🔍 Exists: {vs_abs.exists()}")
 
     # Chat history (multi-turn)
     if "messages" not in st.session_state:
