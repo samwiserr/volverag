@@ -1,0 +1,403 @@
+******************************************************************************* 
+** 15/9-19SR ******************************************************************* 
+** START ********************************************************************** 
+ 
+ 
+DATE: 04/2002 
+ 
+Interpreter: Susanne Hadland 
+ 
+UNITS: 
+ 
+     4175.50 - 4304.00 CROMER KNOLL GP. 
+ 
+     4304.00 - 4316.50 VIKING GP. 
+      
+ 
+     4316.50 - 4340.00 VESTLAND GP. 
+ 
+     4316.50 - 4340.00 Hugin Fm. 
+ 
+     4340.00 - 4641.00 HEGRE GP. 
+ 
+     4340.00 - 4579.00 Skagerrak 
+ 
+     4579.00 - 4641.00 Smith Bank Fm. 
+ 
+EVALUATION: 4175 - 4641 m 
+ 
+WATER DEPTH: 
+84  m (completion log) 
+ 
+LOGS for PETROEVAL: 
+ 
+ 
+ 
+ 
+BIT SIZE  (LFP_BS): 
+ 
+BS (Version: SFINX ) 
+CALIPER (LFP_CALI): 
+ 
+CALI (Version: SFINX 
+ 
+ 
+GAMMA RAY (LFP_GR): 
+ 
+GR (Version: STAT in main project) 
+ 
+ 
+ 
+ 
+ 
+NEUTRON POROSITY (LFP_NPHI): NPHI (Version: STAT in main project) 
+ 
+VELOCITY 
+(LFP_DT): 
+DT (Version: STAT in main project) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+DENSITY (LFP_RHOB): 
+ 
+RHOB (Version: STAT in main project) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RESISTIVITY (LFP_RT): 
+RT (Version: STAT in main project) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+(LFP_RXO): set to NULL 
+ 
+SHALE VOLUME: 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+------------------------------------------------------------------------- 
+ 
+   | GRMIN(lin.) | GRMAX(lin.) |   NPHISH   | SLOPE | VSH_METHOD 
+------------------------------------------------------------------------ 
+Roedby Fm.  |  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.00  | GR/DN 
+Draupne Fm. |  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.00  | GR/DN 
+Heather Fm. |  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.00  | GR/DN 
+Hugin Fm. 
+|  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.60  | GR/DN 
+Sleipner Fm. 
+|  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.00  | GR/DN 
+Skagerak Fm.    |  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.00  | GR/DN 
+Smith Bank Fm. 
+|  LFP_GRMIN  |  LFP_GRMAX  | LFP_NPHISH | 1.00  | GR/DN 
+ 
+ 
+ 
+
+ 
+MATRIX DENSITY: 4175m -  Hugin Base:      2.65 g/cc 
+                4340 - 4370 m : 2.685 g/cc 
+ 
+ 
+4370 - 4641 m : 2.67 g/cc   
+                LFP_RHOMANC 
+ 
+TEMPERATURE: 
+copied and extrapolated curve of 15/9-19Bt2  
+ 
+ 
+ 
+ 
+ 
+4250-4641m 
+ 
+        "LFP_TEMP" =59.21866989136 + 0.01273194794 * "DEPTH" 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+PRESSURE: 
+copied and extrapolated curve of 15/9-19Bt2                 
+ 
+ 
+"LFP_PRESS" = -37.53221893311 + 0.09352748841 * "DEPTH" 
+ 
+ 
+ 
+SALINITY:       150000 ppm 
+  
+ 
+ 
+ 
+ 
+ 
+  
+HYDROCARBON: 
+GAS: gas gravity: 0.92  
+ 
+ 
+ 
+OIL: 
+ 
+ 
+    API     25.89   (0.899)  [API] (g/cc) 
+ 
+ 
+    GOR       109      [Sm3/Sm3] 
+ 
+ 
+gas gravity   0.84  (oil associated gas) 
+ 
+ 
+               
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+FLUID EVAL. "LFP_WATER" = 0; 
+ 
+ 
+"LFP_OIL" = 1; 
+ 
+ 
+"LFP_GAS" = 0; 
+ 
+ 
+"LFP_RHOHW" = "LFP_RHOO"; 
+ 
+ 
+"LFP_RHOMF" = "LFP_RHOO"; 
+ 
+ 
+"LFP_KFLMF" = "LFP_KFLO"; 
+ 
+ 
+oil based mud (petrofree) 
+ 
+ 
+DATA:  
+ 
+DT   
+                DT_SYNT:        VSH-Gardner 
+ 
+ 
+                0.34/0.04/4.0    4175 - 4316 m  
+ 
+ 
+ 
+ 
+0.32/0.04/4.0    4316 - 4340 m (Hugin)   
+ 
+ 
+ 
+ 
+0.33/0.04/4.0    4340 - 4641 m 
+                                 
+ 
+ 
+ 
+ 
+DT_SYNT used in 
+ 
+ 
+ 
+ 
+4295.00 - 4298.93 m 
+ 
+ 
+ 
+ 
+4375.66 - 4379.75 m 
+ 
+ 
+ 
+ 
+4457.00 - 4464.00 m  
+ 
+ 
+ 
+ 
+4490.00 - 4501.00 m 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+manuall editing: 
+ 
+ 
+ 
+ 
+ 
+4575 - 4587.88 m 
+ 
+ 
+ 
+ 
+4589.75 - 4591 m 
+ 
+                RHOB: (not used SYNT) 
+ 
+ 
+RHOB_SYNT:      VSH-Gardner (not used) 
+ 
+ 
+ 
+ 
+0.33/0.020/0.25  4175 - 4316 m  
+ 
+ 
+ 
+ 
+0.31/0.022/0.25  4316 - 4340 m (Hugin)   
+ 
+ 
+ 
+ 
+0.32/0.020/0.25  4340 - 4641 m 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+(RHOB, DT correspond, ) 
+ 
+ 
+ 
+ 
+ 
+DTS: Greenberg-Castagne 
+ 
+LFP_MODEL:      Hugin =3 , rest 1 
+ 
+LFP_COAL:       set to 0.00 
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+PETROEVAL: RMF=0.02 (default) not used (RXO set to NULL) 
+ 
+ 
+BE(B/O/G)=0.2/0.2/0.2 
+ 
+ 
+a=1.00 
+ 
+ 
+m=2 
+ 
+ 
+n=2  
+ 
+ 
+Carbonate DT: 77 
+ 
+ 
+Carbonate RHOB: 2.65 
+ 
+ 
+Sand PHIE: 0.1 in general/ in Hugin: 0.001 
+ 
+ 
+Sand VSH: 0.5  in general/ in Hugin: 0.99 
+ 
+COMMENTS: 
+ 
+ 
+FLUID REPLACEMENT MODELING:  
+ 
+ 
+ 
+LFP_SUBST: 0,  
+ 
+        LFP_SUBST=LFP_SAND for Hugin 
+ 
+ 
+ 
+ 
+ 
+SOT/SGT_SUBST: 
+ 
+ 
+(1.00-(1.00-(LFP_PHIE/LFP_PHIT)*(1.0-0.1)))*LFP_SUBST 
+ 
+ 
+ 
+ 
+ 
+density log qualifier: 0 
+ 
+ 
+correction qualifier: 
+1 
+ 
+ 
+far offset angle: 30 
+ 
+** END ************************************************************************

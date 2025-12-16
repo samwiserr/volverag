@@ -1,0 +1,47 @@
+# LangChain and LangGraph
+langchain>=0.1.0
+langchain-openai>=0.0.5
+langchain-community>=0.0.20
+langgraph>=0.0.20
+langchain-text-splitters>=0.0.1
+
+# Vector Store
+chromadb>=0.4.22
+
+# OpenAI
+openai>=1.12.0
+
+# Document Processing (LangChain loaders)
+pypdf>=3.17.0
+python-docx>=1.1.0
+beautifulsoup4>=4.12.0
+unstructured>=0.11.0
+
+# Fallback processor dependencies (for .doc, .dat, OCR)
+PyMuPDF>=1.22.0
+pdfplumber>=0.9.0
+doc2txt>=0.1.0
+pytesseract>=0.3.10
+Pillow>=9.0.0
+opencv-python>=4.5.0
+
+# Text processing
+nltk>=3.8
+
+# Hybrid retrieval (lexical)
+rank-bm25>=0.2.2
+
+# Cross-encoder reranking (Phase 2)
+sentence-transformers>=2.2.0
+
+# Fuzzy matching (typos)
+rapidfuzz>=3.6.1
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Web UI (optional)
+streamlit>=1.28.0

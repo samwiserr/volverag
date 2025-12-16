@@ -1,0 +1,1975 @@
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 1 of 8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+OPERATOR:  
+ 
+STATOIL PETROLEUM AS 
+WELL: 
+ 
+ 
+ 
+15/9-F-15  
+WELLBORE:  
+ 
+15/9-F-15 D 
+FIELD: 
+ 
+ 
+ 
+VOLVE 
+RIG:  
+ 
+ 
+ 
+MAERSK INSPIRER  
+COUNTRY:  
+ 
+NORWAY 
+DRILL PERMIT#: 
+3667-P 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Report 
+ 
+ 
+WLC_PETROPHYSICAL_COMPOSITE_2.DLIS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Prepared by: LOGTEK AS 
+Date:  
+ 
+08-APR-2014 
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 2 of 8 
+The WLC_PETROPHYSICAL_COMPOSITE_2.DLIS has been created in accordance with the NPD 
+“Guidelines to the Petroleum Regulations/REPORTING REQUIREMENTS FOR DIGITAL WELL DATA (Drilling 
+Regulations, Section 12)”. 
+http://www.npd.no/Global/Norsk/5%20-%20Regelverk/Tematiske%20veiledninger/B_og_b_digital_rapportering_e.pdf 
+ 
+ 
+Purpose 
+To preserve ‘specialist’ composited data curves that may be created for a well but which do not fall into the 
+‘standard’ Composite (Section 3.1) or the ‘Interpreted Data Input’ data sets (described in Section 4.1). These data 
+may have additional work done such as environmental or bed thickness corrections. This data set would normally 
+be used by Petrophysicists. Operators are strongly recommended to report this data set in order to preserve value-
+added work. 
+ 
+Quality 
+Similar quality guidelines apply to the compositing work as described in Section 3.1.3 above. All work that is 
+carried out must also be documented in an Information File. 
+ 
+Operationally, it is expected that both the ‘standard’ Composite Log and this ‘specialized’ Composite Log would 
+normally be created in the same process but split into 2 data sets for reporting purposes. This ensures that the same 
+depth shifting is applied to both data sets – an important quality requirement. 
+ 
+Content 
+Data that are not part of the ‘Composited’ or ‘Interpretation Input’ data sets. This may include:  
+ 
+additional composited resistivity, NMR or other specialized curve data. 
+ 
+composited data at high sampling rates for thin-bed analysis. 
+ 
+a good guide is to include all ‘presentation curves’ from log prints (apart from those already included in the 
+‘standard’ composite). If quality curves such as Tension or Cable Speed are included (not a requirement), 
+information must be included in the Information Files to show which data curves they refer to. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 3 of 8 
+OPERATOR:  
+STATOIL PETROLEUM AS 
+WELL: 
+ 
+ 
+15/9-F-15  
+WELLBORE:  
+15/9-F-15 D 
+FIELD: 
+ 
+ 
+VOLVE 
+RIG: 
+ 
+ 
+ 
+MAERSK INSPIRER  
+COUNTRY: 
+ 
+NORWAY 
+DRILL PERMIT#: 3667-P 
+ 
+ 
+ 
+MWD data plotted and verified to prints. 
+ 
+Depth units are meters. 
+ 
+Quality comments: 
+15/9-F-15 D was kicked off from a cement plug from well 15/9-F-15 at 1380m (MD) in LWD Run#1. 
+ 
+MWD OTK-ZTK, run 1: 
+Data above 1368.0 m logged in casing (from MWD log heading). 
+Log comments: 
+Depth reference is driller's depth. All depths are measured depths (MD). 
+20" casing shoe was reported at 1368.4m (MD), and logged at 1367.8m (MD) in LWD Run#1. 
+Logger's TD in LWD Run#1 at 2618.4m (MD). 
+ 
+MWD OTK, run 2: 
+Data above 2612.0 m logged in casing (from MWD log heading). 
+Log comments: 
+Depth reference is driller's depth. All depths are measured depths (MD). 
+Logger's TD in LWD Run#2 at 3299.6m (MD). 
+ 
+MWD AZTK-CCN-ORD-ZTK, run 3: 
+Data above 3294.7 m logged in casing (from MWD log heading). 
+Log comments: 
+Depth reference is driller's depth. All depths are measured depths (MD). 
+ORD version 2.6 was used in LWD Run#3 with an ORD Wear Indicator: 
+Pre Run#3 : Stabilizer: N/A, Source: 4, Long Space Receiver: 4 
+Post Run#3 : Stabilizer: N/A, Source: 4, Long Space Receiver: 3 
+AzGR Image data starts at 3818.0m (MD). AzORD Image data starts at 3306.0m (MD). AzNBGR Image data starts at 
+3326.0m (MD). These are the depths of the first good survey in LWD Run#3. 
+Relog#1, interval 4337m - 4376m (MD) was logged while backreaming 11 - 12 hrs after being drilled. 
+Logger's TD in well 15/9-F-15 D at 4685m (MD). 
+ 
+Editing on WLC_PETROPHYSICAL_COMPOSITE_2.DLIS: 
+MWD OTK, run 2: 
+Resistivity data affected by casing above 2614.7 m and have been removed. 
+ 
+MWD AZTK-CCN-ORD-ZTK, run 3: 
+Resistivity data affected by casing above 3298.3 m and have been removed. 
+ 
+Depth shifts: 
+MWD OTK-ZTK, run 1: 
+NBGRCFM have been depth shifted in order to match other curve in same run: 
+ 
+Reference curve:  
+GRCFM (MWD OTK-ZTK, run 1) 
+Offset curve: 
+ 
+NBGRCFM (MWD OTK-ZTK, run 1) 
+Curves shifted:  
+NBGRCFM 
+ 
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 4 of 8 
+Shift pairs used: 
+Observed: 
+Actual: 
+1354.900 
+1354.200 
+1367.000 
+1367.300 
+1374.200 
+1374.700 
+1382.000 
+1381.800 
+1412.900 
+1413.300 
+1499.400 
+1499.600 
+1501.500 
+1501.400 
+1523.000 
+1523.300 
+1552.200 
+1551.500 
+1563.900 
+1564.200 
+1603.600 
+1603.900 
+1630.400 
+1629.800 
+1638.900 
+1639.000 
+1673.000 
+1672.500 
+1701.400 
+1701.600 
+1712.900 
+1712.600 
+1727.900 
+1728.200 
+1774.800 
+1774.300 
+1795.000 
+1794.200 
+1798.700 
+1798.700 
+1822.700 
+1822.800 
+1826.800 
+1826.500 
+1844.000 
+1844.400 
+1859.100 
+1859.400 
+1879.000 
+1878.800 
+1887.000 
+1887.200 
+1911.900 
+1911.500 
+1922.700 
+1922.700 
+1941.900 
+1942.300 
+1952.000 
+1951.400 
+1959.700 
+1959.500 
+1971.300 
+1971.600 
+1984.400 
+1984.900 
+1998.200 
+1997.900 
+2054.900 
+2055.200 
+2103.600 
+2104.000 
+2111.200 
+2110.200 
+2115.100 
+2114.200 
+2116.400 
+2115.900 
+2127.300 
+2127.700 
+2133.300 
+2133.600 
+2139.400 
+2139.900 
+2146.800 
+2147.000 
+2161.800 
+2161.800 
+2178.000 
+2178.500 
+2201.900 
+2201.600 
+2204.900 
+2204.800 
+2215.900 
+2216.200 
+2224.700 
+2224.900 
+2229.700 
+2229.200 
+2316.600 
+2316.000 
+2338.800 
+2339.200 
+2345.300 
+2345.600 
+2349.000 
+2348.800 
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 5 of 8 
+2354.100 
+2353.700 
+2364.100 
+2363.900 
+2387.300 
+2387.400 
+2399.400 
+2399.000 
+2419.300 
+2419.600 
+2429.800 
+2429.500 
+2432.600 
+2432.000 
+2447.100 
+2447.400 
+2492.700 
+2492.900 
+2500.500 
+2500.200 
+2517.800 
+2517.100 
+2527.600 
+2527.900 
+2545.200 
+2545.600 
+2561.900 
+2561.500 
+2571.900 
+2571.800 
+2580.900 
+2581.000 
+2592.000 
+2591.900 
+2596.800 
+2595.400 
+2604.600 
+2604.300 
+ 
+MWD OTK-ZTK, run 1: 
+Data depth shifted in order to match data from MWD POWERPULSE, run 2 (wellbore 15/9-F-15). 
+ 
+Reference curve:  
+GRM1 (MWD POWERPULSE, run 2 (wellbore 15/9-F-15). 
+Offset curve: 
+ 
+GRCFM (MWD OTK-ZTK, run 1) 
+Curves shifted:  
+All curves. 
+ 
+Shift pairs used: 
+Observed: 
+Actual: 
+1374.300 
+1374.600 
+1381.900 
+1381.000 
+1387.200 
+1386.800 
+1389.900 
+1389.900 
+ 
+MWD AZTK-CCN-ORD-ZTK, run 3: 
+NBGRCFM and NBGRCS01-16 have been depth shifted in order to match other curves in same run: 
+ 
+Reference curve:  
+GRCFM (MWD AZTK-CCN-ORD-ZTK, run 3) 
+Offset curve: 
+ 
+NBGRCFM (MWD AZTK-CCN-ORD-ZTK, run 3) 
+Curves shifted:  
+NBGRCFM, NBGRCS01-16 
+ 
+Shift pairs used: 
+Observed: 
+Actual: 
+3275.200 
+3275.300 
+3285.600 
+3283.100 
+3296.600 
+3298.000 
+3304.500 
+3304.700 
+3308.400 
+3308.200 
+3318.800 
+3318.700 
+3332.000 
+3332.400 
+3335.600 
+3334.300 
+3342.400 
+3342.000 
+3354.700 
+3354.500 
+3359.100 
+3359.200 
+3383.600 
+3384.200 
+3388.900 
+3387.100 
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 6 of 8 
+3397.600 
+3397.500 
+3421.500 
+3422.000 
+3431.000 
+3430.900 
+3438.500 
+3438.300 
+3442.600 
+3441.600 
+3446.500 
+3446.200 
+3465.400 
+3465.400 
+3478.500 
+3478.400 
+3482.500 
+3481.800 
+3520.800 
+3520.400 
+3528.500 
+3526.900 
+3530.000 
+3530.200 
+3537.100 
+3537.400 
+3558.800 
+3558.500 
+3602.400 
+3602.400 
+3837.800 
+3837.700 
+3847.400 
+3845.600 
+3855.100 
+3855.400 
+3859.200 
+3859.500 
+3872.700 
+3872.300 
+3878.900 
+3878.300 
+3883.600 
+3883.800 
+3937.300 
+3938.200 
+3961.500 
+3961.100 
+3971.500 
+3971.800 
+3998.400 
+3998.500 
+4019.300 
+4019.600 
+4051.700 
+4051.600 
+4057.400 
+4058.100 
+4092.900 
+4092.700 
+4155.700 
+4155.400 
+4230.200 
+4230.700 
+4237.800 
+4237.400 
+4243.500 
+4242.700 
+4278.700 
+4278.200 
+4313.800 
+4313.600 
+4405.200 
+4404.700 
+4415.900 
+4415.800 
+4423.600 
+4422.800 
+4464.400 
+4464.600 
+4499.000 
+4499.200 
+4519.500 
+4518.900 
+4580.500 
+4580.500 
+4610.900 
+4610.800 
+4622.800 
+4623.100 
+4667.000 
+4666.600 
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 7 of 8 
+CURVE SUMMARY, file WLC_PETROPHYSICAL_COMPOSITE_2.DLIS: 
+File #1. Incr.: 0.1m  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 
+Main 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Input  
+ 
+ 
+Run  
+Date  
+ 
+Interval 
+ 
+Merge depth 
+Depth 
+Edited 
+Services  
+ 
+ 
+ 
+ 
+ 
+ 
+Curve 
+ 
+ 
+no.  
+(start) 
+ 
+(meters) 
+ 
+(meters) 
+ 
+shifted 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 
+MWD AZTK-CCN-ORD-ZTK   
+ 
+ 
+ABDC01M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC02M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC03M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC04M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC05M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC06M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC07M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC08M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC09M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC10M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC11M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC12M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC13M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC14M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC15M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDC16M 
+ 
+3 
+ 
+28-NOV-13 
+3306.0-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDCQF01* 
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDCQF02* 
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDCQF03* 
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ABDCQF04* 
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA01M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA02M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA03M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No 
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA04M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA05M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA06M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA07M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA08M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA09M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA10M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA11M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA12M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA13M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA14M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA15M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+APRA16M* 
+ 
+3 
+ 
+28-NOV-13 
+3238.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+AZRIT1T2 
+ 
+3 
+ 
+28-NOV-13 
+3305.2-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+AZRTBM  
+ 
+3 
+ 
+28-NOV-13 
+3320.0-4675.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+BDCFM  
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+CALCM  
+ 
+3 
+ 
+28-NOV-13 
+3226.7-4660.5  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+DPEFM*  
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+DRHFM  
+ 
+3 
+ 
+28-NOV-13 
+3227.5-4661.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK  
+ 
+ 
+ 
+ 
+ 
+GRAFM*  
+ 
+1 
+ 
+10-NOV-13 
+1339.5-2605.6 2605.7 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+GRAFM*  
+ 
+2 
+ 
+21-NOV-13 
+2605.7-3277.7 3277.8 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRAFM*  
+ 
+3 
+ 
+28-NOV-13 
+3277.8-4673.0  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+GRCFM  
+ 
+1 
+ 
+10-NOV-13 
+1339.5-2605.6 2605.7 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+GRCFM  
+ 
+2 
+ 
+21-NOV-13 
+2605.7-3277.7 3277.8 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCFM  
+ 
+3 
+ 
+28-NOV-13 
+3277.8-4673.0  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS01M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS02M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS03M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS04M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS05M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS06M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS07M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+GRCS08M 
+ 
+3 
+ 
+28-NOV-13 
+3318.0-4673.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+NBGRCFM 
+ 
+1 
+ 
+10-NOV-13 
+1343.0-2614.4  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK   
+ 
+ 
+NBGRCFM 
+ 
+3 
+ 
+28-NOV-13 
+3247.5-4681.6  
+ 
+ 
+Yes  
+No 
+MWD AZTK-CCN-ORD-ZTK   
+ 
+ 
+NBGRCS01 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS02 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS03 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS04 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1 
+ 
+ 
+ 
+Page 8 of 8 
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS05 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS06 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS07 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS08 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS09 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS10 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS11 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS12 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS13 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS14 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS15 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NBGRCS16 
+ 
+3 
+ 
+28-NOV-13 
+3327.2-4681.7  
+ 
+ 
+Yes  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+NPCKLFM 
+ 
+3 
+ 
+28-NOV-13 
+3225.1-4658.5  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+RACEHM  
+ 
+1 
+ 
+10-NOV-13 
+1363.4-2608.5  
+ 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+RACEHM  
+ 
+2 
+ 
+21-NOV-13 
+2614.7-3279.9  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+RACEHM  
+ 
+3 
+ 
+28-NOV-13 
+3298.3-4675.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+RACELM  
+ 
+1 
+ 
+10-NOV-13 
+1363.4-2608.5  
+ 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+RACELM  
+ 
+2 
+ 
+21-NOV-13 
+2614.7-3279.9  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+RACELM  
+ 
+3 
+ 
+28-NOV-13 
+3298.3-4675.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+ROPAVG  
+ 
+1 
+ 
+10-NOV-13 
+1379.4-2618.0  
+ 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+ROPAVG  
+ 
+2 
+ 
+21-NOV-13 
+2618.1-3299.4 3299.5 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+ROPAVG  
+ 
+3 
+ 
+28-NOV-13 
+3299.5-4684.8  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+RPCEHM  
+ 
+1 
+ 
+10-NOV-13 
+1363.4-2608.5  
+ 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+RPCEHM  
+ 
+2 
+ 
+21-NOV-13 
+2614.7-3279.9  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+RPCEHM  
+ 
+3 
+ 
+28-NOV-13 
+3298.3-4675.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+RPCELM  
+ 
+1 
+ 
+10-NOV-13 
+1363.4-2608.5  
+ 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+RPCELM  
+ 
+2 
+ 
+21-NOV-13 
+2614.7-3279.9  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+RPCELM  
+ 
+3 
+ 
+28-NOV-13 
+3298.3-4675.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+RPTHM  
+ 
+1 
+ 
+10-NOV-13 
+1379.4-2608.5  
+ 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+RPTHM  
+ 
+2 
+ 
+21-NOV-13 
+2618.0-3279.9  
+ 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+RPTHM  
+ 
+3 
+ 
+28-NOV-13 
+3299.0-4675.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+TCDM 
+ 
+ 
+1 
+ 
+10-NOV-13 
+1350.9-2618.4 2618.5 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+TCDM 
+ 
+ 
+2 
+ 
+21-NOV-13 
+2618.5-3299.2 3299.3 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+TCDM 
+ 
+ 
+3 
+ 
+28-NOV-13 
+3299.3-4685.1  
+ 
+ 
+No  
+No  
+MWD OTK-ZTK 
+ 
+ 
+ 
+ 
+ 
+WOBAVG 
+ 
+1 
+ 
+10-NOV-13 
+1379.4-2618.0 2618.1 
+ 
+Yes  
+No  
+MWD OTK 
+ 
+ 
+ 
+ 
+ 
+ 
+WOBAVG 
+ 
+2 
+ 
+21-NOV-13 
+2618.1-3299.4 3299.5 
+ 
+No  
+No  
+MWD AZTK-CCN-ORD-ZTK  
+ 
+ 
+WOBAVG 
+ 
+3 
+ 
+28-NOV-13 
+3299.5-4684.8  
+ 
+ 
+No  
+No 
+ 
+* Not presented on plots. 
+ 
+ 
+ 
+ 
+ 
+ 
+Definitions: 
+ 
+Dynamic depth shift – variable depth shifting (stretch and pull) as opposed to linear depth shifting. 
+Linear depth shift – Constant depth shift through a certain depth interval. 
+Reference curve – Curve that will be used as the depth Reference for a set of logging curves. 
+Offset Curve – Curve that will be compared to the Reference curve in order to find required depth pairs. 
+Curves shifted – Curves that will be shifted with depth pairs found by comparing Reference to Offset curve. 
+Observed – Observed depth is the depth of a point before depth shifting. 
+Actual – Actual depth is the depth of the point after depth shifting. 
+ 
+ 
+WLC_PETROPHYSICAL_COMPOSITE_2.DLIS completed:  
+ 
+ 
+ 
+ 
+ 
+ 
+08-APR-2014 
+WLC_PETROPHYSICAL_COMPOSITE_2_INF_1.PDF completed:  
+ 
+ 
+ 
+ 
+08-APR-2014

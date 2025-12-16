@@ -1,0 +1,1317 @@
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1 
+ 
+ 
+Page 1 of 6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+OPERATOR: 
+ 
+STATOILHYDRO 
+WELL: 
+ 
+ 
+15/9-F-14 
+WELLBORE: 
+ 
+15/9-F-14 
+FIELD: 
+ 
+ 
+VOLVE 
+RIG: 
+ 
+ 
+MAERSK INSPIRER 
+COUNTRY: 
+ 
+NORWAY 
+DRILL PERMIT#: 
+2726-P 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Report 
+ 
+ 
+WLC_PETROPHYSICAL_COMPOSITE_1.LIS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Prepared by: LOGTEK AS 
+Date:  
+24-JUL-2008 
+
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1 
+ 
+ 
+Page 2 of 6 
+The WLC_PETROPHYSICAL_COMPOSITE_1.LIS has been created in accordance with the NPD 
+“Guidelines to the Petroleum Regulations/REPORTING REQUIREMENTS FOR DIGITAL WELL DATA 
+(Drilling Regulations, Section 12)”. 
+http://www.npd.no/regelverk/R2002/B_OG_B_DIGITAL_RAPPORTERING_E.HTM#Additional_Composited_Data 
+ 
+ 
+ 
+Purpose 
+To preserve ‘specialist’ composited data curves that may be created for a well but which do not fall into the 
+‘standard’ Composite (Section 3.1) or the ‘Interpreted Data Input’ data sets (described in Section 4.1). These 
+data may have additional work done such as environmental or bed thickness corrections. This data set would 
+normally be used by Petrophysicists. Operators are strongly recommended to report this data set in order to 
+preserve value-added work. 
+ 
+Quality 
+Similar quality guidelines apply to the compositing work as described in Section 3.1.3 above. All work that is 
+carried out must also be documented in an Information File. 
+ 
+Operationally, it is expected that both the ‘standard’ Composite Log and this ‘specialized’ Composite Log 
+would normally be created in the same process but split into 2 data sets for reporting purposes. This ensures 
+that the same depth shifting is applied to both data sets – an important quality requirement. 
+ 
+Content 
+Data that are not part of the ‘Composited’ or ‘Interpretation Input’ data sets. This may include  
+• 
+additional composited resistivity, NMR or other specialized curve data 
+• 
+composited data at high sampling rates for thin-bed analysis 
+• 
+a good guide is to include all ‘presentation curves’ from log prints (apart from those already included in 
+the ‘standard’ composite). If quality curves such as Tension or Cable Speed are included (not a 
+requirement), information must be included in the Information Files to show which data curves they refer 
+to. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1 
+ 
+ 
+Page 3 of 6 
+OPERATOR: 
+ 
+STATOILHYDRO 
+WELL: 
+ 
+ 
+15/9-F-14 
+WELLBORE: 
+ 
+15/9-F-14 
+FIELD: 
+ 
+ 
+VOLVE 
+RIG: 
+ 
+ 
+MAERSK INSPIRER 
+COUNTRY: 
+ 
+NORWAY 
+DRILL PERMIT#: 
+2726-P 
+ 
+ 
+MWD data plotted and verified to prints. 
+Curves renamed: 
+On field print 
+in composite 
+------------------------------------------ 
+GR_ARC  
+GRA 
+GR_ARC_F 
+GRAF 
+ROP5_RM  
+ROP5 
+TAB_ARC_RES 
+TABA 
+ 
+Depth units are meters. 
+ 
+Quality comments: 
+MWD ARC-Sonic, run 3: 
+20 in casing shoe at 1077.0m (depth from log heading). 
+Resistivity data above 1084.4m affected by casing. 
+Logger’s remarks: 
+All depths are referenced to driller's depth and are checked at least every stand. 
+All data from tool memory. 
+All data acquired while drilling. 
+Gamma Ray measurement is environmentally corrected for collar thickness but not for Potassium content. 
+Resistivity measurements are borehole compensated and environmentally corrected for bit size, mud resistivity 
+and temperature. 
+17 1/2 in. section TD at 2281 m. 
+ 
+MWD Sonic Best DT, run 3: 
+Remarks: 
+Delta-T Compressional (DTCO) derived from receiver and transmitter arrays. 
+Delta-T Compressional processed using a 7.5-9.5 KHz filter. 
+Median Residual 4000 Noise reduction applied. 
+ 
+MWD ARC-Sonic, run 4: 
+14 in casing shoe at 2275.4m (depth from log heading). 
+Data above 2282.0m affected by large/washed out borehole. 
+Logger’s remarks: 
+All depths are referenced to driller's depth and are checked at least every stand. 
+All data from tool memory. 
+All data acquired while drilling. 
+Gamma Ray measurement is environmentally corrected for mud weight, bit size and collar thickness. 
+Resistivity measurements are borehole compensated and require no environmental correction for borehole 
+effect. 
+Run 4 TD at 2788 m. 
+ 
+MWD Sonic Best DT, run 4: 
+Remarks: 
+Delta-T Compressional (DTCO) derived from receiver and transmitter arrays. 
+Delta-T Compressional processed using a 7.5-9.5 KHz filter above 2465.0m and 10-15 KHz below. 
+Median Residual 4000 Noise reduction applied. 
+ 
+
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1 
+ 
+ 
+Page 4 of 6 
+MWD EcoScope-Sonic, run 5: 
+9 5/8 in casing shoe at 2783.5m (depth from log heading). 
+Neutron and density data affected by casing and large/washed out borehole above 2789.0m. 
+Logger’s remarks: 
+All depths are referenced to driller's depth and are checked at least every stand. 
+All data from tool memory. 
+All data acquired while drilling. 
+Gamma Ray measurement is environmentally corrected for mud weight, bit size and collar thickness. 
+Resistivity measurements are borehole compensated and require no environmental correction for borehole 
+effect. 
+Bulk Density is compensated for tool standoff/mudcake. 
+Neutron Porosity measurement is calculated with limestone matrix, and is environmentally corrected for bit 
+size, mud weight, temperature, pressure, and mud salinity. 
+ 
+MWD Sonic Best DT, run 5: 
+Remarks: 
+Delta-T Compressional (DTCO) derived from receiver and transmitter arrays. 
+Delta-T Compressional processed using a 10-16 KHz filter. 
+Median Residual 400 Noise cut filter applied. 
+Delta-T Shear (DTSM) derived from receiver and transmitter arrays. 
+Delta-T Shear processed using a 8-10 KHz filter. 
+ 
+ 
+Editing on WLC_PETROPHYSICAL_COMPOSITE_1.LIS: 
+MWD ARC-Sonic, run 4: 
+Resistivity data above 2282.0m affected by casing and have been replaced by empty values. 
+ 
+MWD EcoScope-Sonic, run 5: 
+Resistivity data affected by 9 5/8 in casing above 2783.5m and have been removed in this zone. 
+ 
+Depth shifts: 
+No depth shifting performed. 
+ 
+ 
+ 
+CURVE SUMMARY, file WLC_PETROPHYSICAL_COMPOSITE_1.LIS: 
+File #2, increment 0.1524: 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+Main 
+ 
+Curve 
+ 
+Run 
+Date 
+ 
+Interval  
+ 
+Merge Depth 
+Dept 
+Edited 
+Services 
+ 
+ 
+ 
+no. 
+(start) 
+ 
+(meters)  
+ 
+(meters)  
+shifted 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+MWD ARC 
+ 
+A16H* 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A16H* 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+A16H* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A22H* 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A22H* 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+A22H* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A28H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A28H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+A28H* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A34H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A34H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+A34H* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A40H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+A40H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+A40H 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+BPHI* 
+ 
+5 
+10-JUN-08 
+2777.9-3736.3 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+CRPM 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+DRHB 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+DRHL*  
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+DRHO*  
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+DRHR*  
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1 
+ 
+ 
+Page 5 of 6 
+MWD EcoScope 
+DRHU 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTCO 
+ 
+3 
+11-MAY-08 
+1078.8-2254.6 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTCO 
+ 
+4 
+21-MAY-08 
+2274.4-2745.0 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTCO 
+ 
+5 
+10-JUN-08 
+2780.5-3713.9 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTRP 
+ 
+3 
+11-MAY-08 
+1078.8-2251.5 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTRP 
+ 
+4 
+21-MAY-08 
+2274.4-2741.9 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTRP 
+ 
+5 
+10-JUN-08 
+2780.5-3710.9 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTRS 
+ 
+5 
+10-JUN-08 
+2782.3-3710.4 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTSM 
+ 
+5 
+10-JUN-08 
+2782.3-3710.9 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTTP 
+ 
+3 
+11-MAY-08 
+1083.2-2254.6 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTTP 
+ 
+4 
+21-MAY-08 
+2279.1-2745.0 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTTP 
+ 
+5 
+10-JUN-08 
+2784.0-3713.9 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+DTTS 
+ 
+5 
+10-JUN-08 
+2785.7-3710.9 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+GRAF 
+ 
+3 
+11-MAY-08 
+1076.7-2268.4 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+GRA 
+ 
+4 
+21-MAY-08 
+2269.8-2759.3 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+GRMA  
+5 
+10-JUN-08 
+2777.9-3740.0 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P16H* 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P16H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P16H* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P16L 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P16L 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P16L* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P22H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P22H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P22H 
+ 
+5 
+10-JUNN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P22L 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P22L 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P22L* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P28H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P28H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P28H 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P28L 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P28L 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P28L* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P34H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P34H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P34H 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P34L 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P34L 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P34L* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P40H 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P40H 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P40H 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P40L 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+P40L 
+ 
+4 
+21-MAY-08 
+2282.0-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+P40L* 
+ 
+5 
+10-JUN-08 
+2783.5-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+PEB 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+PEF* 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+PEL* 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+PER* 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+PEU* 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+RHOB*  
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+ROBB 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+ROBL*  
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+ROBR*  
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+ROBU 
+ 
+5 
+10-JUN-08 
+2777.9-3738.6 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+ROP5 
+ 
+3 
+11-MAY-08 
+1083.5-2280.8 
+2280.9 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+ROP5 
+ 
+4 
+21-MAY-08 
+2280.9-2787.8 
+2788.0 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+ROP5 
+ 
+5 
+10-JUN-08 
+2788.0-3749.9 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+TABA 
+ 
+3 
+11-MAY-08 
+1076.7-2268.7 
+ 
+ 
+ 
+No 
+No 
+MWD ARC 
+ 
+TABA 
+ 
+4 
+21-MAY-08 
+2269.8-2759.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+TABA 
+ 
+5 
+10-JUN-08 
+2777.9-3737.1 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+TNPH 
+ 
+5 
+10-JUN-08 
+2777.9-3736.3 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+UCAV*  
+5 
+10-JUN-08 
+2777.9-3738.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+UCHO*  
+5 
+10-JUN-08 
+2777.9-3738.5 
+ 
+ 
+ 
+No 
+No 
+MWD EcoScope 
+UCVE*  
+5 
+10-JUN-08 
+2777.9-3738.5 
+ 
+ 
+ 
+No 
+No 
+MWD Sonic Best DT 
+VPVS#  
+5 
+10-JUN-08 
+2782.3-3710.9 
+ 
+ 
+ 
+No 
+No 
+* Not presented on plots 
+# VPVS calculated as DTSM/DTCO 
+
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1 
+ 
+ 
+Page 6 of 6 
+ 
+ 
+ 
+Definitions: 
+ 
+Dynamic depth shift - variable depth shifting (stretch and pull) as opposed to linear depth shifting. 
+Linear depth shift - Constant depth shift through a certain depth interval. 
+Reference curve - Curve that will be used as the depth Reference for a set of logging curves. 
+Offset Curve - Curve that will be compared to the Reference curve in order to find required depth pairs. 
+Curves shifted - Curves that will be shifted with depth pairs found by comparing Reference to Offset curve. 
+Observed - Observed depth is the depth of a point before depth shifting 
+Actual - Actual depth is the depth of the point after depth shifting.     
+ 
+ 
+WLC_PETROPHYSICAL_COMPOSITE_1.LIS completed: 
+ 
+ 
+ 
+24-JUL-2008 
+WLC_PETROPHYSICAL_COMPOSITE_1_INF_1.PDF completed: 
+ 
+ 
+24-JUL-2008

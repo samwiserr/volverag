@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data and vector database (exclude large files)
+vector_db/
+data/vectorstore/
+data/indices/
+data/processed/
+*.pkl
+*.pickle
+*.index
+*.bin
+*.sqlite3
+*.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables (API keys)
+.env
+.env.local
+
+# Streamlit secrets
+.streamlit/secrets.toml
+advanced_rag/.streamlit/secrets.toml
+
+# Cache files
+*.cache
+*.jsonl
+well_picks_cache.json
+petro_params_cache.json
+eval_params_cache.json
+facts_cache.json
+section_index.json
+lexical_store.jsonl
+lexical_store_meta.json
+advanced_rag/data/well_picks_cache.json
+advanced_rag/data/vectorstore/*.json
+advanced_rag/data/vectorstore/*.jsonl
+
+# Logs
+*.log
+logs/
+data/processed/rag_system.log
+advanced_rag/data/processed/rag_system.log
+
+# Temporary files
+*.tmp
+*.temp
+out.txt
+*.bak
+

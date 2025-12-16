@@ -1,0 +1,263 @@
+
+LFP Evaluation of Well  NO_15/9-19_BT2 | |
+|NATION           |Norway                                                   |
+|YEAR             |1998                                                     |
+|OPERATOR         |Statoil                                                  |
+|FIELD/area       |Sleipner - Offshore Norway.                              |
+|DISTANCE RKB -   |78 m                                                     |
+|MSL              |                                                         |
+|  WATER DEPTH    |85 m (completion log)                                    |
+|TOTAL DEPTH      |4250 m MD RKB (driller)                                  |
+|MUD              |OBM                                                      |
+|FLUID CONTACTS   |                                                         |
+|EVALUATION DATE  |Susanne Hadland and UPDATED by  Dondo Salomao (Jan2011)  |
+|REMARKS          |                                                         |
+|EVALUATION TOPS  |Evaluation starts at31700 m MD RKB.                      |
+|                 |      3678.00 - 3768.00 CROMER KNOLL GP.                 |
+|                 |3678.00 - 3768.00       Roedby Fm.                       |
+|                 |3768.00 - 4035.80       VIKING GP.                       |
+|                 |3768.00 - 3946.00   Draupne Fm.                          |
+|                 |3946.00 - 4035.80 Heather Fm.                            |
+|                 |4035.80 - 4214.00 VESTLAND GP.                           |
+|                 |4035.80 - 4179.00  Hugin Fm.                             |
+|                 |4179.00 - 4214.00 Sleipner Fm.                           |
+|                 |4214.00 - 4250.00       HEGRE GP.                        |
+|                 |4214.00 - 4250.00       Smith Bank Fm.                   |
+|                 |Evaluation ends at 4250 m MD RKB                         |
+|LOG INTERVAL     |Evaluation       |                                      |
+|                 |RHOB             |yes                                   |
+|                 |DT reprocessed   |yes                                   |
+|                 |DTS reprocessed  |yes                                   |
+|RAW LOGS         |                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|                 |                   |                                     |
+|                 |LFP_BS             |BS (Version:  SFINX in Geo)          |
+|                 |LFP_CALI           |CALI (Version: SFINX in Geo)         |
+|                 |LFP_GR             |GR (Version: STAT in main project)   |
+|                 |LFP_SP             |-                                    |
+|                 |LFP_PEF            |PE (Version: SFINX in Geo)           |
+|                 |LFP_DRHO           |-                                    |
+|                 |LFP_RHOB_LOG       |RHOB                                 |
+|                 |LFP_NPHI           |NPHI (Version: STAT in main project) |
+|                 |LFP_DT_LOG         |DT (reprocessed version received from|
+|                 |                   |PDM)                                 |
+|                 |LFP_DTS_LOG        |DTS  (reprocessed version received   |
+|                 |                   |from PDM)                            |
+|                 |LFP_TVDSS          |Calculated TVDSS                     |
+|                 |                                                         |
+|                 |LFP_RT             |RT (Version: STAT in main project)   |
+|                 |LFP_RXO            |Null                                 |
+|                 |                                                         |
+|FLUID  PROPERTIES|                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|fluidparameters.l|                                                         |
+|ls               |                                                         |
+|statoil_fluids.ll|                                                         |
+|s                |                                                         |
+|                 |LFP_TEMP           |final wellreport (1998, page 35)     |
+|                 |                   |                                     |
+|                 |                   |3700-4129.99:                        |
+|                 |                   |LFP_TEMP=-1.95390951633  +           |
+|                 |                   |0.02759878710 * DEPTH                |
+|                 |                   |4130-4250:                           |
+|                 |                   |LFP_TEMP= 59.21866989136 +           |
+|                 |                   |0.01273194794 *DEPTH                 |
+|                 |LFP_PRESS          |final wellreport (1998, page 35)     |
+|                 |                   |                                     |
+|                 |                   |LFP_PRESS = -37.53221893311 +        |
+|                 |                   |0.09352748841 *DEPTH                 |
+|                 |LFP_SAL / ppm      |150000 ppm NaCl-eq                   |
+|                 |LFP_API            |25.89                                |
+|                 |LFP_GOR            |109                                  |
+|                 |LFP_SGG_O          |0.84                                 |
+|                 |LFP_SGG_G          |0.92                                 |
+|EVALUATION       |                                                         |
+|PARAMETERS       |                                                         |
+|                 |                                                         |
+|lfp_interval_curv|                                                         |
+|es.lls           |                                                         |
+|                 |LFP_RHOHW          |LFP_RHOO                             |
+|                 |LFP_RHOMF          |LFP_RHOO                             |
+|                 |LFP_RHOMANC        |2.65  (average from core values).    |
+|                 |LFP_RHOBSHNC       |Curve edited interactively           |
+|                 |LFP_NPHISH         |Curve edited interactively           |
+|                 |LFP_RSH            |Curve edited interactively           |
+|                 |LFP_WATER          |1                                    |
+|                 |LFP_OIL            |0                                    |
+|                 |LFP_GAS            |0                                    |
+|                 |LFP_GRMIN          |Curve edited interactively           |
+|                 |LFP_GRMAX          |Curve edited interactively           |
+|SHALE VOLUME     |                                                         |
+|                 |                                                         |
+|lfp_vshale.lls   |                                                         |
+|                 |LFP_VSHGR          |Yes                                  |
+|                 |LFP_VSHCL          |No                                   |
+|                 |LFP_VSHSP          |No                                   |
+|                 |LFP_VSHLO          |No                                   |
+|                 |LFP_VSHDN          |Yes                                  |
+|                 |LFP_VSHDS          |No                                   |
+|                 |LFP_VSHRT          |No                                   |
+|                 |LFP_VSH            |Min (LFP_VSHDN, LFP_VSHGR)           |
+|                 |RHOFL              |1.0 (default)                        |
+|                 |NPHISH             |LFP_NPHISH                           |
+|                 |SLOPE              |1 (default)                          |
+|                 |GRMIN              |LFP_GRMIN                            |
+|                 |GRMAX              |LFP_GRMAX                            |
+|                 |RSAND              |100 (default)                        |
+|                 |SPSAND             |Not used                             |
+|                 |SPSHALE            |Not used                             |
+|                 |DTFL               |189 (default)                        |
+|                 |DTSH               |100 (default)                        |
+|                 |DSMAX              |1 (default)                          |
+|RHOB / DT EDITING|Sythetic curves are adjusted to log curves for intervals |
+|                 |with bad data. Thus they must not be used for other      |
+|                 |purposes!                                                |
+|interval_curves.l|                                                         |
+|ls               |                                                         |
+|                 |LFP_RHOB_SYNT      |Synthetic density estimated by:      |
+|                 |                   |LFP_RHOB_SYNT=100*(a+b*LFP_VSH)*LFP_D|
+|                 |                   |T_LOG**(-0.25)                       |
+|                 |                   |Parameters for various regions:      |
+|                 |                   |3170-3371m and 4036-4178 m MD: a =   |
+|                 |                   |0.33 ; b=0.04                        |
+|                 |                   |a = 0.33 ; b=0.02  Otherwise         |
+|                 |LFP_DT_SYNT        |Model:                               |
+|                 |                   |LFP_DT_FAUST=304800/(0.3048*(K*((LFP_|
+|                 |                   |RT)*(TVDSS/0.3048))**(1/6)           |
+|                 |                   |Parameters used:                     |
+|                 |                   |3170-3371m and 4036-4178 m MD: a =   |
+|                 |                   |0.33 ; b=0.04                        |
+|                 |                   |a = 0.33 ; b=0.02  Otherwise         |
+|                 |LFP_RHOBLOGFLAG    |1                                    |
+|                 |                   |0 : 3170-3371 m MD                   |
+|                 |LFP_DTLOGFLAG      |1                                    |
+|                 |LFP_RHOB           |LFP_RHOB= LFP_RHOB_SYNT 3170-3371 m  |
+|                 |                   |MD.                                  |
+|                 |LFP_DT             |LFP_RHOB_LOG                         |
+|                 |LFP_BADDATA        |LFP_DT = LFP_DT_LOG                  |
+|                 |                   |3170-3371 m MD                       |
+|PETROPHYSICAL    |                                                         |
+|EVALUATION       |                                                         |
+|                 |                                                         |
+|lfp_petroeval.lls|                                                         |
+|                 |RMF                |-                                    |
+|                 |MFINVW             |0.0 - standard values                |
+|                 |MFINVO             |0.0 - standard values                |
+|                 |MFINVG             |0.0 - standard values                |
+|                 |P: a               |1.00 - Petrophysical Report          |
+|                 |P: BE              |B / O / G = 0.2 / 0.2 / 0.2          |
+|                 |                   |(standard)                           |
+|                 |P: m               |2  - Standard values                 |
+|                 |P: n               |2 - Standard values                  |
+|                 |P: Carb DT limit   |77 ?s/ft  (standard)                 |
+|                 |P: Carb RHOB limit |2.65 g/cc                            |
+|                 |P: Sand phi limit  |0.1                                  |
+|                 |P: Sand VSH limit  |0.5                                  |
+|MODEL ENHANCEMENT|                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|lfp_interval_curv|                                                         |
+|es.lls           |                                                         |
+|                 |LFP_COAL           |0 in general                         |
+|                 |LFP_MODEL          |3 - 2 * LFP_WATER                    |
+|                 |                   |(that is, 1 for water and 3 for      |
+|                 |                   |hydrocarbons)                        |
+|INITIAL SEISMIC  |                                                         |
+|RELATED CURVES   |                                                         |
+|                 |                                                         |
+|lfp_logged_seismi|                                                         |
+|c_curves.lls     |                                                         |
+|                 |                                                         |
+|lfp_synthetic_pr.|                                                         |
+|lls              |                                                         |
+|                 |LFP_VP_LOG         |304800 / LFP_DT_LOG                  |
+|                 |LFP_VS_LOG         |LFP_VS_LOG=304800/LFP_DTS_LOG        |
+|                 |LFP_AI_LOG         |LFP_RHOB_LOG * LFP_VP_LOG            |
+|                 |LFP_SI_LOG         |LFP_SI_LOG=LFP_RHOB_LOG*LFP_VS_LOG   |
+|                 |LFP_VPVS_LOG       |LFP_VPVS_LOG=LFP_DTS_LOG/LFP_DT_LOG  |
+|                 |LFP_PR_LOG         |LFP_PR_LOG=((0.5*(1.00/LFP_DT_LOG)^2)|
+|                 |                   |-((1.00/LFP_DTS_LOG)^2)) /           |
+|                 |                   |(((1.00/LFP_DT_LOG)^2)-((1.00/LFP_DTS|
+|                 |                   |_LOG)^2))                            |
+|                 |LFP_VP             |304800 / LFP_DT                      |
+|                 |LFP_PR_SH_SYNT     |(-0.0000231 * LFP_RHOB * 304800 /    |
+|                 |                   |LFP_DT) + 0.511                      |
+|                 |LFP_PR_SS_B_SYNT   |(-0.0000267 * LFP_RHOB * 304800 /    |
+|                 |                   |LFP_DT) + 0.487                      |
+|                 |LFP_PR_SS_O_SYNT   |(-0.0000211 * LFP_RHOB * 304800 /    |
+|                 |                   |LFP_DT) + 0.411                      |
+|                 |LFP_PR_SS_G_SYNT   |(-0.0000119 * LFP_RHOB * 304800 /    |
+|                 |                   |LFP_DT) + 0.288                      |
+|PREPARE FOR FLUID|                                                         |
+|SUBSTITUTION     |                                                         |
+|                 |                                                         |
+|lfp_input_to_flui|                                                         |
+|dsubst.lls       |                                                         |
+|                 |LFP_SUBST        |LFP_SAND                              |
+|                 |LFP_SOT          |LFP_OIL * (1 - LFP_SWT)               |
+|                 |LFP_SGT          |LFP_GAS * (1 - LFP_SWT)               |
+|                 |LFP_SOT_SUBST    |LFP_PHIE * 0.9 * LFP_SUBST / LFP_PHIT |
+|                 |LFP_SGT_SUBST    |LFP_PHIE * 0.9 * LFP_SUBST / LFP_PHIT |
+|                 |LFP_SXOOT        |LFP_OIL * (1 - LFP_SXOMIXT)           |
+|                 |LFP_SXOGT        |LFP_GAS * (1 - LFP_SXOMIXT)           |
+|                 |LFP_KFLMF        |LFP_KFLW                              |
+|                 |LFP_ZERO         |0.0                                   |
+|VS ESTIMATE BY GC|                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|statoil_synthvs_g|                                                         |
+|c.lls            |                                                         |
+|                 |AI1SH = 0.76969                                          |
+|                 |AI0SH = -0.86735                                         |
+|                 |AI2SS = AI2SH = 0                                        |
+|                 |AI1SS = 0.80416                                          |
+|                 |AI0SS = -0.85588                                         |
+|                 |KGSS = 36                                                |
+|                 |KGSH = 30                                                |
+|VS EDITING       |                                                         |
+|                 |                                                         |
+|lfp_final_seismic|                                                         |
+|_curves.lls      |                                                         |
+|                 |LFP_DTS_LOG      |DTS reprocessed                       |
+|                 |LFP_DTS_GC       |Default values used                   |
+|                 |LFP_DTSLOGFLAG   |0                                     |
+|                 |LFP_DTS          |LFP_DTS_LOG / LFP_DTS_GC              |
+|                 |LFP_VS_GC        |default                               |
+|                 |LFP_VS           |304800 / LFP_DTS                      |
+|                 |LFP_VPVS         |LFP_DTS / LFP_DT                      |
+|                 |LFP_PR           |default                               |
+|FLUID SUBST. / EI|                                                         |
+|                 |                                                         |
+|                 |                                                         |
+|statoil_fluidsubs|                                                         |
+|t_2.lls          |                                                         |
+|                 |QRHOB           |1                                       |
+|                 |QCORR           |3                                       |
+|                 |KGSS            |36                                      |
+|                 |KGSH            |30                                      |
+|                 |Far offset angle|30                                      |
+|                 |AI2SS           |0                                       |
+|                 |AI1SS           |0.80416                                 |
+|                 |AI0SS           |-0.85588                                |
+|                 |AI2SH           |0                                       |
+|                 |AI1SH           |0.76969                                 |
+|                 |AI0SH           |-0.86735                                |
+|                 |LFP_SWT_DT      |LFP_SWT                                 |
+|                 |LFP_SOT_DT      |LFP_SOT                                 |
+|                 |LFP_SGT_DT      |LFP_SGT                                 |
+|                 |LFP_SMFT_DT     |0                                       |
+|                 |LFP_KFLMF       |LFP_KFLO                                |
+|Seismograms      |                                                         |
+|All input and output data have been designed to meet the requirements of a |
+|specific LFP study. In some occasions the data might have been, for any    |
+|reason, simplified to a level which should be adequate for this LFP study, |
+|but which can be inadequate for another purpose.                           |
+
+
+
+
+

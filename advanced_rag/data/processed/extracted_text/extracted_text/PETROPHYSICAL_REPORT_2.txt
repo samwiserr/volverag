@@ -1,0 +1,1385 @@
+Volve
+15/9-F-11
+15/9-F-11 T2
+15/9-F-11 A
+15/9-F-11 B
+Petrophysical (static) well evaluation
+Interpreter: Torill Vee
+Date: November 2013
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 1 av 47
+1 Introduction ..................................................................................................................... 3
+1.1 Introduction 15/9-F-11 / 15/9-F-11 T2 ............................................................................... 3
+1.2 Introduction 15/9-F-11 A ................................................................................................... 3
+1.3 Introduction 15/9-F-11 B ................................................................................................... 3
+2 Summary .......................................................................................................................... 4
+2.1 Summary 15/9-F-11 / 15/9-F-11 T2 .................................................................................. 4
+2.2 Summary 15/9-F-11 A ....................................................................................................... 5
+2.3 Summary 15/9-F-11 B ....................................................................................................... 6
+3 Data Acquisition and QC ................................................................................................ 7
+3.1 15/9-F-11 / 15/9-F-11 T2 Measurement While Drilling (MWD) / Logging While Drilling
+(LWD) ................................................................................................................................ 7
+3.2 15/9-F-11 A Logging While Drilling (LWD) ........................................................................ 9
+3.3 15/9-F-11 B Logging While Drilling (LWD) ........................................................................ 10
+3.4 Electrical Wireline Logging ................................................................................................ 10
+4 Petrophysical Evaluation ............................................................................................... 11
+4.1 Porosity ............................................................................................................................. 11
+4.2 Shale volume .................................................................................................................... 11
+4.3 Water saturation ................................................................................................................ 13
+4.4 Permeability ...................................................................................................................... 13
+4.5 Composite curves ............................................................................................................. 14
+4.6 Evaluation parameters ...................................................................................................... 15
+4.7 Flag curves ....................................................................................................................... 17
+5 Evaluation of Formation Pressure Data ........................................................................ 18
+5.1 General remarks about Baker’s TesTrak type .................................................................. 18
+5.2 General remarks about temperature measured by Baker’s TesTrak ................................ 19
+5.3 Evaluation of Formation Pressure Data 15/9-F-11 T2 ...................................................... 20
+5.4 Evaluation of Formation Pressure Data 15/9-F-11 A ........................................................ 22
+5.5 Plot of Formation Pressure Data, 15/9-F-11 T2 and 15/9-F-11 A ..................................... 25
+6 LWD NMR - MagTrak ....................................................................................................... 27
+6.1 Logging mode and parameters ......................................................................................... 27
+6.2 MagTrak output ................................................................................................................. 28
+6.3 MagTrak purpose and achievement .................................................................................. 29
+6.4 MagTrak T2 distribution plots ............................................................................................ 31
+6.5 Coates-Timur permeability ................................................................................................ 33
+7 Petrophysical results ...................................................................................................... 36
+7.1 Petrophysical results 15/9-F-11 T2 ................................................................................... 37
+7.2 Petrophysical results 15/9-F-11 A ..................................................................................... 38
+7.3 Petrophysical results 15/9-F-11 B ..................................................................................... 39
+8 CPI plots of evaluated curves and raw data ................................................................. 41
+8.1 CPI plot 15/9-F-11 T2........................................................................................................ 42
+8.2 CPI plot 15/9-F-11 A ......................................................................................................... 43
+8.3 CPI plot 15/9-F-11 B, interval 3330 – 3800 m MD RKB .................................................... 44
+9 References ....................................................................................................................... 47
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 2 av 47
+1 Introduction
+1.1 Introduction 15/9-F-11 / 15/9-F-11 T2
+Objective of the 15/9-F-11 pilot well was to prove oil in the Volve North prospect segment and to define
+the field OWC. If the pilot revealed an ODT situation, an optional openhole side-track further down flank
+would be considered.
+In addition the pilot was placed such that it could also prove a shallower Hugin interpretation based on
+the previous 2009 interpretation, which represents an additional prospect upside. Fluid sampling, both oil
+and water samples (with Sclumberger’s MDT on TLC) for PVT analysis, was planned if any commercial
+find scenario.
+1.2 Introduction 15/9-F-11 A
+Objective of the second pilot 15/9-F-11 A was to prove oil and sufficient reservoir thickness in the
+Northwest fault segment. If the pilot revealed an ‘oil above water column’ situation, a water sample (with
+Sclumberger’s MDT on TLC) was to be taken to prove for initial (perched water) or flooded conditions.
+1.3 Introduction 15/9-F-11 B
+Dependent of the results from 15/9-F-11 / F-11 T2, the objectives of 15/9-F-11 B were the following two:
+If 15/9-F-11 / F-11 T2 encountered sufficient oil column in Volve North segment, well F-11 B was to be
+drilled to an optimal location further upflank and completed as a producer. An injection well would then
+later be required for pressure support (2nd well in drilling campaign from F-1), even if the segment is in
+communication with the main field.
+If 15/9-F-11 / F-11 T2 found no or insufficient oil in the Volve N prospect, the well was to be side-tracked
+to an infill location between existing producers F-12 and F-14 in the main field and downflank towards
+existing injector F-5. The aim was then to geosteer the well in the upper part of the Hugin reservoir,
+which was expected to be only partially drained.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 3 av 47
+2 Summary
+2.1 Summary 15/9-F-11 / 15/9-F-11 T2
+15/9-F-11 well path did not achieve sufficient separation from nearby wells, hence P&A before a
+technical side-track was performed. TD of 15/9-F-11 was 347 m MD RKB.
+The technical side-track, 15/9-F-11 T2, was kicked off from F-11 @ 257 m MD RKB. TD @ 4562 m MD
+RKB.
+Top Hugin was encountered 27 m deeper than prognosed.
+Hugin Fm. was water filled, except of two pockets of residual oil that seem to be structurally trapped.
+(Lowest Sw achieved in these is ~ 0.4) One residual oil pocket is situated below Heather Fm. and the
+other below the “Offshore Shale” which is separating Upper Hugin and the “Thief Zone” (Middle Hugin).
+These 2 residual oil pockets are observed in the following intervals:
+4393.8 – 4399 m MD RKB / 3182.3 – 3187.3 m TVD MSL,
+4415.8 – 4419.7 m MD RKB / 3203.6 – 3207.4 m TVD MSL.
+Oil show is described on cuttings @ 4411 m MD.
+The rest of Hugin Fm. which was water filled, showing very low resistivities < 0.05 ohmm in the best
+sands, is reflecting the very saline formation water in Volve (~ 130000 ppm). This might indicate that
+Hugin Fm. never has been oil filled, and that the two observed oil pockets are results of hydrocarbon
+migration.
+Hugin Fm. properties seem to be poorer than in Hugin Fm. in previous Volve wells, with an average
+porosity of 0.17. This is 4 p.u. less than the porosity in Hugin Fm. in the exploration well 15/9-19 BT2,
+which is the closest well with respect to TVD depth. Net/Gross is however high as expected in Hugin (>
+0.8); in this well 0.81.
+Porosity from MagTrak is a lithology independent porosity, and MagTrak porosity in F-11 T2 confirms in
+general the porosity from the density log.
+Formation pressure points in Hugin Fm. were 13.7 bar above initial fm. pressure measured in 15/9-19
+BT2 (January 1998). This indicates communication with Hugin Fm. in the Volve main field, since
+reservoir pressure has been increased ~12 bar above initial pressure by injection, prior to this drilling
+campaign.
+LWD log data is of good quality.
+No oil and water samples were taken since no commercial find.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 4 av 47
+2.2 Summary 15/9-F-11 A
+15/9-F-11 A was side-tracked from F-11 T2 with KOP @ 2586 m MD RKB. TD @ 3762 m MD RKB.
+Top Hugin was encountered 25 m deeper than prognosed.
+Hugin Fm. was oil filled, with porosity being slightly lower and water saturation being higher than
+previous Hugin wells. An average porosity of 0.21 in F-11 A is 2 p.u. less than the porosity in Hugin Fm.
+in 15/9-F-4 and 15/9-F-15 A, which are the most comparable wells with respect to TVD depth. Net/Gross
+is however as expected > 0.8, in this well 0.86.
+Oil Down To (ODT) ~ 3702 m MD RKB / 3025.5 m TVD MSL which corresponds to Top Sleipner Fm.
+Formation pressure points in Hugin were 12 bar above initial fm. pressure measured in 15/9-F-12
+(February 2008). This indicates communication with Hugin Fm. in the Volve main field, since reservoir
+pressure has been increased ~12 bar above initial pressure by injection, prior to this drilling campaign.
+To get a picture of the time lapse effect, injection was closed, and a second set of formation pressure
+(only 5 depth stations were repeated) was logged 48 hours after the first formation pressure data set.
+This showed only minor decrease in formation pressure, in the range: 0.2 – 0.9 bar.
+LWD log data is of good quality.
+No water sample was taken since water was not encountered below the oil column.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 5 av 47
+2.3 Summary 15/9-F-11 B
+Since 15/9-F-11 T2 did not find commercial oil in the Volve N prospect, 15/9-F-11 B was side-tracked to
+an infill location between existing producers F-12 and F-14 in the main field and downflank towards
+existing injector F-5.
+15/9-F-11 B was side-tracked from F-11 T2 with KOP @ 2585 m MD RKB. TD @ 4770 m MD RKB.
+Top Hugin was encountered 7 m shallower than prognosed.
+Baker Hughes’ AziTrak was used for geosteering.
+Hugin Fm. was oil filled in large parts of the well, and encountered also oil in the first part (shallowest) of
+Hugin Fm., which was not expected from 4D and simulation model.
+Averages for Hugin are given in table in chapter 7.3
+Flooded intervals are given in table in chapter 4.7. A flag curve showing flooded intervals is named
+FLOODED_FLAG (in flooded intervals is FLOODED_FLAG = 1), and plotted as turquoise intervals in
+track no. 8 in the CPI plot.
+Below ~ 4701 m MD RKB / 3148 m TVD MSL (a coal layer) the water seems to be initial, due to the low
+resistivity. This is plotted as dark blue interval in track no. 8 in the CPI plot.
+Hence F-11 B might indicate a WUT = 3148 m TVD MSL, which is not in conflict with the observed ODT
+(= 3145 m TVD MSL) in the main field.
+Since there is a huge contrast between the very saline Hugin formation water and the fresh, low saline
+Utsira formation (injection) water, 3 cases with different formation water salinity are presented in the F-11
+B CPI in order to illustrated the impact on water saturation. The details of these cases are given in the
+header of the CPI.
+LWD log data is of good quality.
+8 intervals have been perforated. These are listed in table below and plotted as light green intervals in
+the rightmost track (no. 18) in the F-11 B CPI (chapter 8.3).
+15/9-F-11 B PERFORATIONS
+Run no. Depth [m MD RKB] Date Shot Density Open / Closed Formation
+1 4527-4539 11.07.2013 4SPF Open Hugin
+2 4488-4500 12.07.2013 4SPF Open Hugin
+3 4355-4367 14.07.2013 4SPF Open Hugin
+4 4304-4316 19.07.2013 4SPF Open Hugin
+5 4286-4295 18.07.2013 4SPF Open Hugin
+6 4268-4280 19.07.2013 4SPF Open Hugin
+7 4065-4075 20.07.2013 4SPF Open Hugin
+8 4031-4043 20.07.2013 4SPF Open Hugin
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 6 av 47
+
+[TABLE]
+ | 15/9-F-11 B PERFORATIONS |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Run no. |  |  | Depth [m MD RKB] |  |  | Date |  |  | Shot Density |  |  | Open / Closed |  |  | Formation | 
+1 |  |  | 4527-4539 |  |  | 11.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+2 |  |  | 4488-4500 |  |  | 12.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+3 |  |  | 4355-4367 |  |  | 14.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+4 |  |  | 4304-4316 |  |  | 19.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+5 |  |  | 4286-4295 |  |  | 18.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+6 |  |  | 4268-4280 |  |  | 19.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+7 |  |  | 4065-4075 |  |  | 20.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+8 |  |  | 4031-4043 |  |  | 20.07.2013 |  |  | 4SPF |  |  | Open |  |  | Hugin |  | 
+[/TABLE]
+3 Data Acquisition and QC
+3.1 15/9-F-11 / 15/9-F-11 T2 Measurement While Drilling (MWD) / Logging While Drilling (LWD)
+The MWD / LWD logging contractor for the entire 2 wellbores was Baker Hughes.
+Mud type in the 8 ½” reservoir section of 15/9-F-11 T2 was OBM, named Enviromul Yellow Spec 12. Name of base oil was EDC 95-11.
+(Mud filtrate is considered to consist mainly of base oil.)
+No cores were taken.
+15/9-F-11 MWD Run Summary
+Contractor: Baker Hughes
+LWD Hole Logging service Pass Pass Logging Bit depth Logging Interval Remark
+Run Section (tool combination) direction speed Interval
+[inch] [m MD RKB] [m MD RKB]
+1 17 ½ x 36 OnTrak Drill Down ROP 146 - 208 - Tool was lost in hole /
+seabed.
+2 26 OnTrak Drill Down ROP 208 - 224 - MWD tool failure. No
+data in memory.
+Interval was re-logged
+in LWD Run #3.
+3 26 OnTrak Drill*) Down ROP 224 - 347 188 - 331 Good logging run,
+despite one resistivity
+transmitter failure.
+*) See re-log remark for
+Run #2.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 7 av 47
+
+[TABLE]
+ |  |  |  |  |  |  | 15/9-F-11 MWD Run Summary |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  | Contractor: Baker Hughes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | LWD |  |  | Hole |  |  | Logging service |  |  | Pass |  |  | Pass |  |  | Logging |  |  | Bit depth |  |  | Logging Interval |  |  | Remark | 
+ | Run |  |  | Section |  |  | (tool combination) |  |  |  |  |  | direction |  |  | speed |  |  | Interval |  |  |  |  |  |  | 
+ |  |  |  | [inch] |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [m MD RKB] |  |  | [m MD RKB] |  |  |  | 
+1 |  |  | 17 ½ x 36 |  |  | OnTrak |  |  | Drill |  |  | Down |  |  | ROP |  |  | 146 - 208 |  |  | - |  |  | Tool was lost in hole /
+seabed. |  | 
+2 |  |  | 26 |  |  | OnTrak |  |  | Drill |  |  | Down |  |  | ROP |  |  | 208 - 224 |  |  | - |  |  | MWD tool failure. No
+data in memory.
+Interval was re-logged
+in LWD Run #3. |  | 
+3 |  |  | 26 |  |  | OnTrak |  |  | Drill*) |  |  | Down |  |  | ROP |  |  | 224 - 347 |  |  | 188 - 331 |  |  | Good logging run,
+despite one resistivity
+transmitter failure.
+*) See re-log remark for
+Run #2. |  | 
+[/TABLE]
+15/9-F-11 T2 LWD Run Summary
+Contractor: Baker Hughes
+LWD Hole Logging service Pass Pass Logging Bit depth Logging interval Remark
+Run Section (tool combination) direction speed Interval [m MD RKB]
+[inch] [m MD RKB]
+4 26 OnTrak Drill Down ROP 257 - 454 238 – 439 Good logging run.
+5 26 OnTrak Drill Down ROP 454 – 1365 390 – 1349 Good logging run.
+6 17 1/2 OnTrak / ZoneTrak G Drill Down ROP 1365 – 2574 1250 – 2570 Good logging run.
+7 8 1/2 AziTrak / LithoTrak / Drill*) Down*) ROP 2577 - 4562 2522 - 4553 Good logging run including
+MagTrak / SoundTrak / 2 re-logs.
+TesTrak / CoPilot *)Fm. pressure points with
+TesTrak were taken when
+re-logging Hugin while
+POOH after TD.
+Re-log no. 1 in Bit depth interval 4478.9 – 4560.8 m MD RKB, was logged while backreaming 7 – 19 hours after being drilled.
+Re-log no. 2 in Bit depth interval 4392.5 – 4480.0 m MD RKB, was logged while backreaming 24 – 38 hours after being drilled.
+Memory data:
+All data was in memory, except for run 2 in 15/9-F-11 (Overburden). The data quality is in general good.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 8 av 47
+
+[TABLE]
+ |  |  |  |  |  |  | 15/9-F-11 T2 LWD Run Summary |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  | Contractor: Baker Hughes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | LWD |  |  | Hole |  |  | Logging service |  |  | Pass |  |  | Pass |  |  | Logging |  |  | Bit depth |  |  | Logging interval |  |  | Remark | 
+ | Run |  |  | Section |  |  | (tool combination) |  |  |  |  |  | direction |  |  | speed |  |  | Interval |  |  | [m MD RKB] |  |  |  | 
+ |  |  |  | [inch] |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [m MD RKB] |  |  |  |  |  |  | 
+4 |  |  | 26 |  |  | OnTrak |  |  | Drill |  |  | Down |  |  | ROP |  |  | 257 - 454 |  |  | 238 – 439 |  |  | Good logging run. |  | 
+5 |  |  | 26 |  |  | OnTrak |  |  | Drill |  |  | Down |  |  | ROP |  |  | 454 – 1365 |  |  | 390 – 1349 |  |  | Good logging run. |  | 
+6 |  |  | 17 1/2 |  |  | OnTrak / ZoneTrak G |  |  | Drill |  |  | Down |  |  | ROP |  |  | 1365 – 2574 |  |  | 1250 – 2570 |  |  | Good logging run. |  | 
+7 |  |  | 8 1/2 |  |  | AziTrak / LithoTrak /
+MagTrak / SoundTrak /
+TesTrak / CoPilot |  |  | Drill*) |  |  | Down*) |  |  | ROP |  |  | 2577 - 4562 |  |  | 2522 - 4553 |  |  | Good logging run including
+2 re-logs.
+*)Fm. pressure points with
+TesTrak were taken when
+re-logging Hugin while
+POOH after TD. |  | 
+[/TABLE]
+3.2 15/9-F-11 A Logging While Drilling (LWD)
+The LWD logging contractor for the entire well was Baker Hughes.
+Mud type in the 8 ½” reservoir section was OBM.
+No cores were taken.
+15/9-F-11 A LWD Run Summary
+Contractor: Baker Hughes
+LWD Hole Logging service Pass Pass Logging Bit depth Logging interval Remark
+Run Section (tool combination) direction speed Interval [m MD RKB]
+[inch] [m MD RKB]
+8 8 1/2 OnTrak / LithoTrak / Drill*) Down*) ROP 2586 – 3762 2457 - 3754 Good logging run.
+TesTrak / SoundTrak / *)Fm. pressure points with
+CoPilot TesTrak were taken while
+POOH after TD.
+Memory data:
+All data was in memory. The data quality is in general good.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 9 av 47
+
+[TABLE]
+ |  |  |  |  |  |  | 15/9-F-11 A LWD Run Summary |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  | Contractor: Baker Hughes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | LWD |  |  | Hole |  |  | Logging service |  |  | Pass |  |  | Pass |  |  | Logging |  |  | Bit depth |  |  | Logging interval |  |  | Remark | 
+ | Run |  |  | Section |  |  | (tool combination) |  |  |  |  |  | direction |  |  | speed |  |  | Interval |  |  | [m MD RKB] |  |  |  | 
+ |  |  |  | [inch] |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [m MD RKB] |  |  |  |  |  |  | 
+8 |  |  | 8 1/2 |  |  | OnTrak / LithoTrak /
+TesTrak / SoundTrak /
+CoPilot |  |  | Drill*) |  |  | Down*) |  |  | ROP |  |  | 2586 – 3762 |  |  | 2457 - 3754 |  |  | Good logging run.
+*)Fm. pressure points with
+TesTrak were taken while
+POOH after TD. |  | 
+[/TABLE]
+3.3 15/9-F-11 B Logging While Drilling (LWD)
+The LWD logging contractor for the entire well was Baker Hughes.
+Mud type in the 8 ½” reservoir section was OBM.
+No cores were taken.
+15/9-F-11 B LWD Run Summary
+Contractor: Baker Hughes
+LWD Hole Logging service Pass Pass Logging Bit depth Logging interval Remark
+Run Section (tool combination) direction speed Interval [m MD RKB]
+[inch] [m MD RKB]
+9 12 1/4 OnTrak / CoPilot Drill Down ROP 2585 – 2917 2538.2 – 2898.5 Good logging run.
+10 12 1/4 OnTrak / CoPilot Drill Down ROP 2917 – 3197 2847.2 – 3177.3 Good logging run.
+11 8 1/2 AziTrak / LithoTrak / Drill Down ROP 3197 - 4770 3146.1 – 4761.5 Good logging run including
+CoPilot 1 re-log.
+Re-log in Bit depth interval 3451 – 3508 m MD RKB, was logged while backreaming 91 – 105 hours after being drilled.
+Memory data:
+All data was in memory. The data quality is in general good.
+3.4 Electrical Wireline Logging
+No electrical logging performed in open hole.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 10 av 47
+
+[TABLE]
+ |  |  |  |  |  |  | 15/9-F-11 B LWD Run Summary |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  | Contractor: Baker Hughes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | LWD |  |  | Hole |  |  | Logging service |  |  | Pass |  |  | Pass |  |  | Logging |  |  | Bit depth |  |  | Logging interval |  |  | Remark | 
+ | Run |  |  | Section |  |  | (tool combination) |  |  |  |  |  | direction |  |  | speed |  |  | Interval |  |  | [m MD RKB] |  |  |  | 
+ |  |  |  | [inch] |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [m MD RKB] |  |  |  |  |  |  | 
+9 |  |  | 12 1/4 |  |  | OnTrak / CoPilot |  |  | Drill |  |  | Down |  |  | ROP |  |  | 2585 – 2917 |  |  | 2538.2 – 2898.5 |  |  | Good logging run. |  | 
+10 |  |  | 12 1/4 |  |  | OnTrak / CoPilot |  |  | Drill |  |  | Down |  |  | ROP |  |  | 2917 – 3197 |  |  | 2847.2 – 3177.3 |  |  | Good logging run. |  | 
+11 |  |  | 8 1/2 |  |  | AziTrak / LithoTrak /
+CoPilot |  |  | Drill |  |  | Down |  |  | ROP |  |  | 3197 - 4770 |  |  | 3146.1 – 4761.5 |  |  | Good logging run including
+1 re-log. |  | 
+[/TABLE]
+4 Petrophysical Evaluation
+Petrophysical evaluation is performed according to the Volve petrophysical field model, described in
+report: “Sleipner Øst and Volve Model 2006, Hugin and Skagerrak Formation, Petrophysical Evaluation”.
+November 2006. Author: Elin Solfjell, Karl Audun Lehne.
+The petrophysical evaluation software used is Geolog, and the Geolog project is SLEIPNER_OST (at
+Stavanger server: FROST_SVG).
+4.1 Porosity
+Total porosity, PHIF (φ ), is derived from the density log which is calibrated to overburden corrected
+F
+core porosity for wells drilled with either OBM or WBM.
+The Neutron log, NPHI, has been used to correct for varying mud filtrate invasion.
+φ =φ + A×(NPHI −φ )+B
+F D D
+where:
+ρ −ρ
+φ = ma b [fraction]
+D ρ −ρ
+ma fl
+ρ is the matrix density [g/cm3]
+ma
+ρ is the measured bulk density (RHOB), [g/cm3]
+b
+ρ is the pore fluid density [g/cm3].
+fl
+A and B are regression coefficients.
+NPHI: Neutron log in limestone units [fraction]
+4.2 Shale volume
+To determine VSH, the standard model VSH from linear GR relationship is applied:
+GR
+GR−GR
+VSH = VSH = min
+GR GR −GR
+max min
+where:
+GR = gamma ray log reading [API]
+GR = GR reading in clean sand [API]
+min
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 11 av 47
+GR = GR reading in shale [API]
+max
+VSH is used quantitatively in deriving permeability, and quantitatively indirectly in Netsand cutoff.
+In order to pick GR and GR in a more objective way, and to avoid over-estimating of VSH, GR is
+min max
+“normalized” against VSHDN (VSH from density / neutron) by cross plotting GR versus VSHDN. VSHDN
+is considered to be the most reliable shale indicator (except in intervals dominated by mica and heavy
+minerals). This shale indicator compares porosity derived from the Density log with porosity from the
+Neutron log. If the Neutron log reads higher porosity than the density, is this believed to be due to the
+hydrogen content of present clay minerals.
+VSHDN is derived from the response equation for the Neutron log:
+NPHICS−(PHIT*HIFL)
+VCLDN =
+HICL
+VCLDN
+VSHDN =
+(1−PHISH)
+where:
+VCLDN = Dry shale volume from density / neutron logs [fraction]
+NPHICS = Neutron log corrected to sandstone matrix [fraction]
+PHIT = Total log porosity [fraction]
+HIFL = Hyrdogen Index to fluid
+HICL = Hydrogen Index to clay
+PHISH = Shale porosity [fraction]
+In table below are the general parameters used in Hugin Fm. for deriving VSHDN, given the assumption
+that Kaolinite is the dominant clay mineral:
+VSHDN Parameters
+HIFL (oil / water) HICL PHISH
+0.95 / 1 0.5 0.07
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 12 av 47
+
+[TABLE]
+ | VSHDN Parameters |  |  |  |  |  |  | 
+ | HIFL (oil / water) |  |  | HICL |  |  | PHISH | 
+ |  |  |  |  |  |  |  | 
+0.95 / 1 |  |  | 0.5 |  |  | 0.07 |  | 
+[/TABLE]
+4.3 Water saturation
+Water saturation is calculated using Archie equation, giving a total water saturation:
+1
+ a×R n
+Sw = w 
+t 
+
+φm ×R 
+
+F t
+where:
+a = Archie (tortuosity) factor
+R = resistivity of formation water [Ohmm]
+w
+φ = Total porosity [fraction]
+F
+m = cementation exponent
+R = true resistivity [Ohmm]
+t
+n = saturation exponent
+4.4 Permeability
+The horizontal log permeability, KLOGH, is derived from the following equation based on multivariable
+regression analysis between log porosity and shale volume (“normalized” against VSHDN) against
+overburden corrected core permeability:
+Hugin Fm.: KLOGH =10(2+8×PHIF−9×VSH))
+Sleipner Fm.: KLOGH =10(−3+32×PHIF−2×VSH))
+Skagerak Fm.: KLOGH =10(−1.85+17.4×PHIF−3×VSH))
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 13 av 47
+4.5 Composite curves
+The following composite curves are used for the petrophysical evaluation:
+GR : GRCFM*) from OnTrak
+RHOB : BDCFM from LithoTrak
+NPHI : NPCKLFM from LithoTrak
+PEF : DPEFM from LithoTrak
+RT : RPCEHM from OnTrak
+DRHO : DRHFM from LithoTrak
+CALI : CALCM from UltraSonic Caliper, part of LithoTrak
+Note in general that Baker considers the GRAFM curve as the best GR reading for large hole sizes > 17
+½” hole. The reason is as follows:
+GRCFM is corrected for sensor type, collar size, carbonate content in mud, mud weight and hole size.
+GRAFM is only corrected for sensor type, collar size and carbonate content in mud.
+The hole size correction for GRCFM is performed by “normalising” GRAFM to a standard which is: 6 ¾”
+tool, 10” borehole with 8 ppg mud. The large discrepancy between 26” hole and “the normalised
+standard” is the reason for why the GRAFM is considered to be the best GR in large holes > 17 1/2”.
+*) Hence in 26” section GRAFM is used as GR (applies only for 15/9-F-11 and F-11 T2).
+15/9-F-11 T2: Note that in the 17 ½” section a re-scaled NearBit GR (NBGRCFM) is spliced into GR for
+the ~ 9 last meters. NearBit GR has been re-scaled by -12 API in order to match GRCFM level.
+Note also in general that the final «average» density curve - RHOB (BDCFM) - from Baker is weighted
+with respect to which of the 16 sectors / bins that provide the best density measurement (smallest
+standoff).
+NPHI (NPCKLFM) is in limestone units, Caliper and salinity corrected and filtered.
+The composite curves were created by Logtek from the memory data delivered by Baker Hughes.
+Logtek’s RDEP (Resistivity Deep) curve = RPCELM, named RD in the OW Volve project.
+Logtek’s RMED (Resistivity Medium) curve = RPCEHM, named RM in the OW Volve project.
+No depth shifting has been applied, except in limited overlap intervals around kick off depths and hole
+sections in Overburden. These depth shifts and the splicing of the individual runs are reported in
+Logtek’s info file for each well; WLC_COMPOSITE_1_INF_1.PDF which is stored in Petrobank.
+All depths are referenced to Driller’s depth.
+Logtek’s general “philosophy” with respect to depth shifting in the transition zone between a mother well
+and a kick off well is as follows: aim to keep the stop-coupled depths as shallow as possible, preferably
+at KOP. But sometimes it has to be sat deeper (a few meters deeper, preferably in a shale if possible)
+due to a) if overlapping curves are not on depth at KOP, or b) if the depth shifts have been so large, that
+the logs else will be too compressed. This “philosophy” also applies of course for depth shifting in
+overlap between hole sections.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 14 av 47
+4.6 Evaluation parameters
+The following evaluation parameters are used for calculation of porosity, shale volume and water
+saturation:
+15/9-F-11 T2 Evaluation parameters
+Formation name
+Parameter Heather Fm. Hugin Fm. Sleipner Fm.
+ρ 2.66 2.65 2.65
+ma
+ρ 1 0.9 0.9
+fl
+A 0 0 0
+B 0 0 0
+GR 4 4 4
+min
+GR 120 184 105
+max
+a 1 1 1
+m 2 *) *)
+n 2 2.45 2.45
+( )
+*) m =1.865× KLOGH(−0.0083)
+R = 0.07 ohmm @ 20 oC.
+w
+Temperature gradient = 2.6 oC / 100 m.
+Reservoir temp.: 111 oC @ 2800 m TVD MSL.
+15/9-F-11 A Evaluation parameters
+Formation name
+Parameter Heather Fm. Hugin Fm. Sleipner Fm.
+ρ 2.66 2.65 2.65
+ma
+ρ 1 0.9 0.9
+fl
+A 0 0.4 0.4
+B 0 0.01 0.01
+GR 7 7 7
+min
+GR 120 150 105
+max
+a 1 1 1
+m 2 *) *)
+n 2 2.45 2.45
+( )
+*) m =1.865× KLOGH(−0.0083)
+R = 0.07 ohmm @ 20 oC.
+w
+Temperature gradient = 2.6 oC / 100 m.
+Reservoir temp.: 111 oC @ 2800 m TVD MSL.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 15 av 47
+
+[TABLE]
+ | 15/9-F-11 T2 Evaluation parameters |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Formation name |  |  |  |  |  |  | 
+ | Parameter |  |  | Heather Fm. |  |  | Hugin Fm. |  |  | Sleipner Fm. | 
+ρ
+ma |  |  | 2.66 |  |  | 2.65 |  |  | 2.65 |  | 
+ρ
+fl |  |  | 1 |  |  | 0.9 |  |  | 0.9 |  | 
+A |  |  | 0 |  |  | 0 |  |  | 0 |  | 
+B |  |  | 0 |  |  | 0 |  |  | 0 |  | 
+GR
+min |  |  | 4 |  |  | 4 |  |  | 4 |  | 
+GR
+max |  |  | 120 |  |  | 184 |  |  | 105 |  | 
+a |  |  | 1 |  |  | 1 |  |  | 1 |  | 
+m |  |  | 2 |  |  | *) |  |  | *) |  | 
+n |  |  | 2 |  |  | 2.45 |  |  | 2.45 |  | 
+( )
+*) m =1.865× KLOGH(−0.0083) |  |  |  |  |  |  |  |  |  |  | 
+R = 0.07 ohmm @ 20 oC.
+w |  |  |  |  |  |  |  |  |  |  | 
+Temperature gradient = 2.6 oC / 100 m.
+Reservoir temp.: 111 oC @ 2800 m TVD MSL. |  |  |  |  |  |  |  |  |  |  | 
+[/TABLE]
+
+[TABLE]
+ | 15/9-F-11 A Evaluation parameters |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Formation name |  |  |  |  |  |  | 
+ | Parameter |  |  | Heather Fm. |  |  | Hugin Fm. |  |  | Sleipner Fm. | 
+ρ
+ma |  |  | 2.66 |  |  | 2.65 |  |  | 2.65 |  | 
+ρ
+fl |  |  | 1 |  |  | 0.9 |  |  | 0.9 |  | 
+A |  |  | 0 |  |  | 0.4 |  |  | 0.4 |  | 
+B |  |  | 0 |  |  | 0.01 |  |  | 0.01 |  | 
+GR
+min |  |  | 7 |  |  | 7 |  |  | 7 |  | 
+GR
+max |  |  | 120 |  |  | 150 |  |  | 105 |  | 
+a |  |  | 1 |  |  | 1 |  |  | 1 |  | 
+m |  |  | 2 |  |  | *) |  |  | *) |  | 
+n |  |  | 2 |  |  | 2.45 |  |  | 2.45 |  | 
+( )
+*) m =1.865× KLOGH(−0.0083) |  |  |  |  |  |  |  |  |  |  | 
+R = 0.07 ohmm @ 20 oC.
+w |  |  |  |  |  |  |  |  |  |  | 
+Temperature gradient = 2.6 oC / 100 m.
+Reservoir temp.: 111 oC @ 2800 m TVD MSL. |  |  |  |  |  |  |  |  |  |  | 
+[/TABLE]
+15/9-F-11 B Evaluation parameters
+Formation name
+Parameter Heather Fm. Hugin Fm. Sleipner Fm.
+ρ 2.66 2.65 2.65
+ma
+ρ 1 0.9 0.9
+fl
+A 0 0.4 0.4
+B 0 0.01 0.01
+GR 5 5 5
+min
+GR 120 127 105
+max
+a 1 1 1
+m 2 *) *)
+n 2 2.45 2.45
+( )
+*) m =1.865× KLOGH(−0.0083)
+R = 0.07 ohmm @ 20 oC.
+w
+Temperature gradient = 2.6 oC / 100 m.
+Reservoir temp.: 111 oC @ 2800 m TVD MSL.
+Note that the RT curve in 15/9-F-11 B used for saturation calculation, has been edited in intervals where
+RPCEHM is affected by polarization horns or is saturated. This editing is kept on a specific curve in
+Geolog, named RT_EDIT.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 16 av 47
+
+[TABLE]
+ | 15/9-F-11 B Evaluation parameters |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Formation name |  |  |  |  |  |  | 
+ | Parameter |  |  | Heather Fm. |  |  | Hugin Fm. |  |  | Sleipner Fm. | 
+ρ
+ma |  |  | 2.66 |  |  | 2.65 |  |  | 2.65 |  | 
+ρ
+fl |  |  | 1 |  |  | 0.9 |  |  | 0.9 |  | 
+A |  |  | 0 |  |  | 0.4 |  |  | 0.4 |  | 
+B |  |  | 0 |  |  | 0.01 |  |  | 0.01 |  | 
+GR
+min |  |  | 5 |  |  | 5 |  |  | 5 |  | 
+GR
+max |  |  | 120 |  |  | 127 |  |  | 105 |  | 
+a |  |  | 1 |  |  | 1 |  |  | 1 |  | 
+m |  |  | 2 |  |  | *) |  |  | *) |  | 
+n |  |  | 2 |  |  | 2.45 |  |  | 2.45 |  | 
+( )
+*) m =1.865× KLOGH(−0.0083) |  |  |  |  |  |  |  |  |  |  | 
+R = 0.07 ohmm @ 20 oC.
+w |  |  |  |  |  |  |  |  |  |  | 
+Temperature gradient = 2.6 oC / 100 m.
+Reservoir temp.: 111 oC @ 2800 m TVD MSL. |  |  |  |  |  |  |  |  |  |  | 
+[/TABLE]
+4.7 Flag curves
+Netsand flag:
+Cutoffs on PHIF and VSH are used to determine Netsand; SAND_FLAG = 1.
+Hugin Fm.: SAND_FLAG = 1 when PHIF > 0.10 and VSH < 0.50.
+These cut offs correspond to a overburden corrected core permeability of 0.5 mD, and are also applied
+for the other formations.
+In addition some manual editing might have been performed on the SAND_FLAG curve.
+Carbonate flag:
+A carbonate flag curve, CARB_FLAG, has been determined manually by visual inspection of the logs.
+Whenever CARB_FLAG = 1 is SAND_FLAG = 0.
+Coal flag:
+15/9-F-11 T2: 2 coal layers were observed in Sleipner Fm.
+15/9-F-11 A: No coal layers were observed.
+15/9-F-11 B: 2 coal layers were observed in Hugin Fm.
+The coal flag curve, COAL_FLAG, has been determined by a manually decided cut off on the density
+log. In addition some editing was needed due to shoulder effects. Whenever COAl_FLAG = 1 is
+SAND_FLAG = 0.
+15/9-F-11 B: Flooded interval flag:
+A flag curve showing intervals which are flooded is named FLOODED_FLAG. When flooded intervals is
+FLOODED_FLAG = 1.
+Flooded intervals are given in table below, and are also plotted as turquoise intervals in track no. 8 in the
+CPI plot for 15/9-F-11 B.
+15/9-F-11 B FLOODED INTERVALS
+DEPTH DEPTH ZONE
+[m MD RKB] [m TVD MSL]
+3527.5 – 3538.5 2846.7 – 2849.3 Hugin 3.1 (10)
+4116.0 – 4187.5 2919.1 – 2933.6 Hugin 2.3 (9)
+4577.5 – 4605.2 3061.8 – 3079.2 Hugin 2.2 (8), Hugin 2.3 (9)
+4642.0 – 4700.0 3104.2 – 3147.0 Hugin 1.5 (5), Hugin 1.6 (6), Hugin 2.1 (7), Hugin 2.2 (8)
+Table 4.7.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 17 av 47
+
+[TABLE]
+ | 15/9-F-11 B FLOODED INTERVALS |  |  |  |  |  |  | 
+ | DEPTH |  |  | DEPTH |  |  | ZONE | 
+ | [m MD RKB] |  |  | [m TVD MSL] |  |  |  | 
+3527.5 – 3538.5 |  |  | 2846.7 – 2849.3 |  |  | Hugin 3.1 (10) |  | 
+4116.0 – 4187.5 |  |  | 2919.1 – 2933.6 |  |  | Hugin 2.3 (9) |  | 
+4577.5 – 4605.2 |  |  | 3061.8 – 3079.2 |  |  | Hugin 2.2 (8), Hugin 2.3 (9) |  | 
+4642.0 – 4700.0 |  |  | 3104.2 – 3147.0 |  |  | Hugin 1.5 (5), Hugin 1.6 (6), Hugin 2.1 (7), Hugin 2.2 (8) |  | 
+[/TABLE]
+5 Evaluation of Formation Pressure Data
+Baker’s TesTrak Formation Pressure While Drilling tool was run in the 8 ½ section of 15/9-F-11 T2 and
+15/9-F-11 A.
+In both wells the formation pressures were taken after reached TD while re-logging while POOH (15/9-F-
+11 T2) and while POOH (15/9-F-11 A).
+5.1 General remarks about Baker’s TesTrak type
+In general the test type choosen will have no influence on the acquired pressures – there might however
+be slight differences in mobility estimates from the second and third drawdown.
+If “tight supercharged” test in a Darcy sand is chosen, one will still get the same pressure as a “high
+mobility” test. As seen from the table below all test types are volume controlled for the first drawdown
+(DD) anyway – it is only the second and third DD that are different. (The only difference between High
+and Low Mobility is the third drawdown).
+Test Type First DrawDown (DD) Second DD Third DD
+High Mobility Volume DeltaP Steady State
+Low Mobility Volume DeltaP DeltaP
+Tight Supercharged Volume Volume DeltaP
+Unconsolidated Sand Volume w/ initialization Volume Volume
+The “Unconsolidated Sand” test includes a initialization sequence which might be beneficial to use for
+the first test. It is also the safest test to run if experiencing problems with the testing. The initialization
+sequence does however take about 1 min extra time, so if doing a large number of tests one would save
+some rig-time by doing one of the other types. Under normal conditions any of the tests could be chosen
+and would give good results.
+Test time will be dictated by the formation mobility, independent of the test type (except the 1 extra
+minute of the “Unconsolidated Sand”) – the “smart test” downhole logic will determine when it has 3
+stable formation pressures and automatically finish the test. If 3 pressures are not obtained within the
+specified 10 minutes, the test will abort and the recorded pressures will be transmitted to surface.
+To sum up:
+Picking the most permeable zones for testing and having proper depth control is far more important than
+worrying about which test type to choose.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 18 av 47
+
+[TABLE]
+ | Test Type |  |  | First DrawDown (DD) |  |  | Second DD |  |  | Third DD | 
+High Mobility |  |  | Volume |  |  | DeltaP |  |  | Steady State |  | 
+Low Mobility |  |  | Volume |  |  | DeltaP |  |  | DeltaP |  | 
+Tight Supercharged |  |  | Volume |  |  | Volume |  |  | DeltaP |  | 
+Unconsolidated Sand |  |  | Volume w/ initialization |  |  | Volume |  |  | Volume |  | 
+[/TABLE]
+5.2 General remarks about temperature measured by Baker’s TesTrak
+The TesTrak temperature is the temperature on the quartzdyne pressure sensor, which will require exact
+temperature correction. This temperature measurement is therefore strongly affected by the temperature
+of the drilling fluid (and also by annulus temperature and steel temperature), but minor affected by the
+volume of formation liquid which is drawn in (30 cc).
+The temperature of the drilling fluid will also change when circulating: downhole it warms up by the
+formation and cools down when coming up at the rig, hence will probably be somewhat lower than
+absolute formation temperature. If extensive pumping it will therefore also be difficult to see relative
+temperature trends from TesTrak measurements.
+To sum up:
+TesTrak temperature measurements cannot be used for absolute formation temperature, and most likely
+cannot be trusted for looking for relative temperature trends either.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 19 av 47
+5.3 Evaluation of Formation Pressure Data 15/9-F-11 T2
+6 of 6 tests were successful and of good technical quality (all reached a stable pressure). When judging
+the pressure quality by mobility range (flag curve in OpenWorks: PRES_QUAL), the tests can be
+summarized as 1 very good quality pressure, 3 good quality pressures and 2 poor quality pressures.
+Formation pressure points in Hugin Fm. were 13.7 bar above initial fm. pressure measured in 15/9-19
+BT2 (January 1998). This indicates communication with Hugin Fm. in the Volve main field, since
+reservoir pressure has been increased ~12 bar above initial pressure by injection, prior to this drilling
+campaign.
+The results are shown in table below and in plot of all formation pressures in Hugin Fm. at Volve (F-11
+T2 formation pressures are marked as red balls) at the end of this chapter. The initial water gradient of
+0.103 bar/m has been forced through the F-11 T2 pressure points, drawn as a blue, dashed line.
+In addition is the drawdown mobility plotted in the permeability track in the CPI plot for F-11 T2, and the
+formation pressure is plotted in the density / neutron track, both marked as red balls.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 20 av 47
+Well: 15/9-F-11 T2 Date: 04. May – 05. May 2013 Rig: Mærsk Inspirer RKB: 54.9 m PORE PRESSURE (s.g ref. RKB) =
+Baker’s TesTrak tool 10.195*FORM. PRESSURE / mTVD RKB
+ZONE Log Test DEPTH DEPTH FORM. TEMP. GOOD REMARKS DrawDown PORE PRESS. MUD+ECD PRESS.
+NAME Run No. [m MD RKB] [m TVD RKB] PRESS. [°C] SEAL MOBILITY s.g ref. RKB s.g ref. RKB
+No. [bar] (Y/N) [mD/cP] [g/cm3] [g/cm3]
+Hugin 1.1 7 1 4490.1 3330.7 367.51 97.2 Y OK 17.1 1.125 1.432
+Hugin 1.4 7 2 4468.3 3309.5 364.53 97 Y OK 17.2 1.123 1.433
+Hugin 2.1 7 3 4451.4 3293.1 362.77 96.3 Y OK 123.6 1.123 1.432
+Hugin 2.3 7 4 4417 3259.7 361.09 96 Y OK 7.1 1.129 1.432
+Hugin 3.1 7 5 4408.9 3251.8 356.71 95.7 Y OK 6.9 1.118 1.431
+Hugin 3.3 7 6 4395.1 3238.4 356.75 95.2 Y OK 22.3 1.123 1.430
+Total number of tests: 6 No. of Successful tests: 6 No. of Fluid samples: none
+Hydrostatic gradient in logged interval: -
+Minimum measured pore pressure (ref. RKB): 1.118 g/cm3 Maximum measured pore pressure (ref. RKB): 1.129 g/cm3
+Using LWD/GR for depth correlation. All pressure tests were taken as Test Type Option = “High Mobility”.
+Formation pressure data is entered into OW. The curve is named PRES_FORM.
+Mobility is named PRES_MOBL and temperature PRES_TEMP.
+Formation pressure test quality in OW is called PRES_QUAL;
+0: lost seal, 1: Tight, 2: Poor (<10mD/cP), 3: Good (10-100 mD/cP), 4: Very Good (>100 mD/cP).
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 21 av 47
+
+[TABLE]
+ |  |  |  | Well: 15/9-F-11 T2 Date: 04. May – 05. May 2013 Rig: Mærsk Inspirer RKB: 54.9 m
+Baker’s TesTrak tool |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | PORE PRESSURE (s.g ref. RKB) =
+10.195*FORM. PRESSURE / mTVD RKB |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | ZONE |  |  | Log |  |  | Test |  |  | DEPTH |  |  | DEPTH |  |  | FORM. |  | TEMP. | GOOD | REMARKS | DrawDown | PORE PRESS. | MUD+ECD PRESS.
+ | NAME |  |  | Run |  |  | No. |  |  | [m MD RKB] |  |  | [m TVD RKB] |  |  | PRESS. |  | [°C] | SEAL |  | MOBILITY | s.g ref. RKB | s.g ref. RKB
+ |  |  |  | No. |  |  |  |  |  |  |  |  |  |  |  | [bar] |  |  | (Y/N) |  | [mD/cP] | [g/cm3] | [g/cm3]
+Hugin 1.1 |  |  | 7 |  |  | 1 |  |  | 4490.1 |  |  | 3330.7 |  |  | 367.51 |  |  | 97.2 | Y | OK | 17.1 | 1.125 | 1.432
+Hugin 1.4 |  |  | 7 |  |  | 2 |  |  | 4468.3 |  |  | 3309.5 |  |  | 364.53 |  |  | 97 | Y | OK | 17.2 | 1.123 | 1.433
+Hugin 2.1 |  |  | 7 |  |  | 3 |  |  | 4451.4 |  |  | 3293.1 |  |  | 362.77 |  |  | 96.3 | Y | OK | 123.6 | 1.123 | 1.432
+Hugin 2.3 |  |  | 7 |  |  | 4 |  |  | 4417 |  |  | 3259.7 |  |  | 361.09 |  |  | 96 | Y | OK | 7.1 | 1.129 | 1.432
+Hugin 3.1 |  |  | 7 |  |  | 5 |  |  | 4408.9 |  |  | 3251.8 |  |  | 356.71 |  |  | 95.7 | Y | OK | 6.9 | 1.118 | 1.431
+Hugin 3.3 |  |  | 7 |  |  | 6 |  |  | 4395.1 |  |  | 3238.4 |  |  | 356.75 |  |  | 95.2 | Y | OK | 22.3 | 1.123 | 1.430
+Total number of tests: 6 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | No. of Successful tests: 6 |  |  | No. of Fluid samples: none | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | Hydrostatic gradient in logged interval: - |  |  |  | 
+Minimum measured pore pressure (ref. RKB): 1.118 g/cm3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | Maximum measured pore pressure (ref. RKB): 1.129 g/cm3 |  |  |  | 
+Using LWD/GR for depth correlation. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | All pressure tests were taken as Test Type Option = “High Mobility”. |  |  |  | 
+Formation pressure data is entered into OW. The curve is named PRES_FORM.
+Mobility is named PRES_MOBL and temperature PRES_TEMP.
+Formation pressure test quality in OW is called PRES_QUAL;
+0: lost seal, 1: Tight, 2: Poor (<10mD/cP), 3: Good (10-100 mD/cP), 4: Very Good (>100 mD/cP). |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+[/TABLE]
+5.4 Evaluation of Formation Pressure Data 15/9-F-11 A
+18 of 24 tests (2 sets of data with time delay) were successful and of good technical quality (one might
+be supercharged). 6 tests were tight. When judging the pressure quality by mobility range (flag curve in
+OpenWorks: PRES_QUAL), the tests can be summarized as 7 very good quality pressures, 5 good
+quality pressures and 6 poor quality pressures.
+Formation pressure points in Hugin were 12 bar above initial fm. pressure measured in 15/9-F-12
+(February 2008). This indicates communication with Hugin Fm. in the Volve main field, since reservoir
+pressure has been increased ~12 bar above initial pressure by injection, prior to this drilling campaign.
+To get a picture of the time lapse effect, injection was closed, and a second set of formation pressure
+(only 5 depth stations were repeated) was logged 48 hours after the first formation pressure data set was
+measured. This showed only minor decrease in formation pressure, in the range: 0.2 – 0.9 bar.
+The results are shown in table below and in plot of all formation pressures in Hugin Fm. at Volve (F-11 A
+formation pressures are marked as yellow balls) at the end of this chapter. Note that only the first
+pressure data set (logged 21. May) in F-11 A is plotted. The initial oil gradient of 0.0704 bar/m has been
+forced through the F-11 A pressure points, drawn as a green, dashed line.
+In addition is the drawdown mobility plotted in the permeability track in the CPI plot for F-11 A, and the
+formation pressure is plotted in the density / neutron track, both marked as red balls.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 22 av 47
+Well: 15/9-F-11 A Date: 21. May – 23. May 2013 Rig: Mærsk Inspirer RKB: 54.9 m PORE PRESSURE (s.g ref. RKB) =
+Baker’s TesTrak tool 10.195*FORM. PRESSURE / mTVD RKB
+ZONE Log Run No., Test DEPTH DEPTH FORM. TEMP. GOOD REMARKS DrawDown PORE MUD+ECD PRESS.
+NAME Date No. [m MD [m TVD PRESS. [°C] SEAL MOBILITY PRESS. s.g ref. RKB
+RKB] RKB] [bar] (Y/N) [mD/cP] s.g ref. RKB [g/cm3]
+[g/cm3]
+Hugin 1.1 8, 21.May 1 3694.5 3074.7 346.41 84.9 Y OK 62.8 1.149 1.411
+OK
+Hugin 1.1 8, 21.May 2 3688.1 3069.8 346.05 83.3 Y 50.5 1.149 1.411
+Hugin 1.2 8, 21.May 3 3681 3064.4 345.54 82.6 Y OK 101.9 1.150 1.412
+Hugin 1.3 8, 21.May 4 3671.1 3056.8 345.05 82.4 Y OK 22 1.151 1.411
+Hugin 1.4 8, 21.May 5 3665.9 3052.8 344.72 83.1 Y OK 4.9 1.151 1.409
+Hugin 1.6 8, 21.May 6 3657.3 3046.2 344.4 82.1 Y OK 3.9 1.153 1.406
+Hugin 2.1 8, 21.May 7 3651 3041.4 343.78 81.1 Y OK 1235.7 1.152 1.404
+Hugin 2.2 8, 21.May 8 3635.2 3029.3 342.87 80.6 Y OK 12.4 1.154 1.401
+Hugin 2.2 8, 21.May 9 3632 3026.8 342.72 80.6 Y OK 5.7 1.154 1.400
+Hugin 2.3 8, 21.May 10 3624 3020.7 342.13 81.4 Y OK 968.8 1.155 1.402
+Sleipner 8, 21.May 11 3711.1 3087.5 - 83.6 Y Tight - - 1.405
+Sleipner 8, 21.May 12 3705.1 3082.9 - 81.1 Y Tight - - 1.403
+Sleipner 8, 21.May 13 3704.5 3082.4 - 79.8 Y Tight - - 1.402
+Sleipner 8, 21.May 14 3711.5 3087.8 - 79.7 Y Tight - - 1.401
+Hugin 2.3 8, 21.May 15 3617.2 3015.5 341.69 80.1 Y OK 358.3 1.155 1.403
+Hugin 3.1 8, 21.May 16 3608.2 3008.6 340.52 80.1 Y OK 3.3 1.154 1.402
+Hugin 3.2 8, 21.May 17 3602.2 3004 342.14 79.2 Y OK 0.6 1.161 1.401
+(supercharged ?)
+Hugin 3.2 8, 21.May 18 3599.8 3002.2 - 78.8 Y Tight - - 1.400
+Hugin 3.3 8, 21.May 19 3596.3 2999.5 - 78.8 Y Tight - - 1.400
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 23 av 47
+
+[TABLE]
+ |  |  |  | Well: 15/9-F-11 A Date: 21. May – 23. May 2013 Rig: Mærsk Inspirer RKB: 54.9 m
+Baker’s TesTrak tool |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | PORE PRESSURE (s.g ref. RKB) =
+10.195*FORM. PRESSURE / mTVD RKB |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | ZONE |  |  | Log Run No., |  |  | Test |  |  | DEPTH |  |  | DEPTH |  |  | FORM. |  | TEMP. | GOOD | REMARKS | DrawDown | PORE | MUD+ECD PRESS.
+ | NAME |  |  | Date |  |  | No. |  |  | [m MD |  |  | [m TVD |  |  | PRESS. |  | [°C] | SEAL |  | MOBILITY | PRESS. | s.g ref. RKB
+ |  |  |  |  |  |  |  |  |  | RKB] |  |  | RKB] |  |  | [bar] |  |  | (Y/N) |  | [mD/cP] | s.g ref. RKB | [g/cm3]
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [g/cm3] | 
+Hugin 1.1 |  |  | 8, 21.May |  |  | 1 |  |  | 3694.5 |  |  | 3074.7 |  |  | 346.41 |  |  | 84.9 | Y | OK | 62.8 | 1.149 | 1.411
+Hugin 1.1 |  |  | 8, 21.May |  |  | 2 |  |  | 3688.1 |  |  | 3069.8 |  |  | 346.05 |  |  | 83.3 | Y | OK | 50.5 | 1.149 | 1.411
+Hugin 1.2 |  |  | 8, 21.May |  |  | 3 |  |  | 3681 |  |  | 3064.4 |  |  | 345.54 |  |  | 82.6 | Y | OK | 101.9 | 1.150 | 1.412
+Hugin 1.3 |  |  | 8, 21.May |  |  | 4 |  |  | 3671.1 |  |  | 3056.8 |  |  | 345.05 |  |  | 82.4 | Y | OK | 22 | 1.151 | 1.411
+Hugin 1.4 |  |  | 8, 21.May |  |  | 5 |  |  | 3665.9 |  |  | 3052.8 |  |  | 344.72 |  |  | 83.1 | Y | OK | 4.9 | 1.151 | 1.409
+Hugin 1.6 |  |  | 8, 21.May |  |  | 6 |  |  | 3657.3 |  |  | 3046.2 |  |  | 344.4 |  |  | 82.1 | Y | OK | 3.9 | 1.153 | 1.406
+Hugin 2.1 |  |  | 8, 21.May |  |  | 7 |  |  | 3651 |  |  | 3041.4 |  |  | 343.78 |  |  | 81.1 | Y | OK | 1235.7 | 1.152 | 1.404
+Hugin 2.2 |  |  | 8, 21.May |  |  | 8 |  |  | 3635.2 |  |  | 3029.3 |  |  | 342.87 |  |  | 80.6 | Y | OK | 12.4 | 1.154 | 1.401
+Hugin 2.2 |  |  | 8, 21.May |  |  | 9 |  |  | 3632 |  |  | 3026.8 |  |  | 342.72 |  |  | 80.6 | Y | OK | 5.7 | 1.154 | 1.400
+Hugin 2.3 |  |  | 8, 21.May |  |  | 10 |  |  | 3624 |  |  | 3020.7 |  |  | 342.13 |  |  | 81.4 | Y | OK | 968.8 | 1.155 | 1.402
+Sleipner |  |  | 8, 21.May |  |  | 11 |  |  | 3711.1 |  |  | 3087.5 |  |  | - |  |  | 83.6 | Y | Tight | - | - | 1.405
+Sleipner |  |  | 8, 21.May |  |  | 12 |  |  | 3705.1 |  |  | 3082.9 |  |  | - |  |  | 81.1 | Y | Tight | - | - | 1.403
+Sleipner |  |  | 8, 21.May |  |  | 13 |  |  | 3704.5 |  |  | 3082.4 |  |  | - |  |  | 79.8 | Y | Tight | - | - | 1.402
+Sleipner |  |  | 8, 21.May |  |  | 14 |  |  | 3711.5 |  |  | 3087.8 |  |  | - |  |  | 79.7 | Y | Tight | - | - | 1.401
+Hugin 2.3 |  |  | 8, 21.May |  |  | 15 |  |  | 3617.2 |  |  | 3015.5 |  |  | 341.69 |  |  | 80.1 | Y | OK | 358.3 | 1.155 | 1.403
+Hugin 3.1 |  |  | 8, 21.May |  |  | 16 |  |  | 3608.2 |  |  | 3008.6 |  |  | 340.52 |  |  | 80.1 | Y | OK | 3.3 | 1.154 | 1.402
+Hugin 3.2 |  |  | 8, 21.May |  |  | 17 |  |  | 3602.2 |  |  | 3004 |  |  | 342.14 |  |  | 79.2 | Y | OK
+(supercharged ?) | 0.6 | 1.161 | 1.401
+Hugin 3.2 |  |  | 8, 21.May |  |  | 18 |  |  | 3599.8 |  |  | 3002.2 |  |  | - |  |  | 78.8 | Y | Tight | - | - | 1.400
+Hugin 3.3 |  |  | 8, 21.May |  |  | 19 |  |  | 3596.3 |  |  | 2999.5 |  |  | - |  |  | 78.8 | Y | Tight | - | - | 1.400
+[/TABLE]
+Hugin 1.2 8, 23.May 20 3681 3064.4 345.16 75.2 Y OK 142.2 1.148 1.419
+∆
+P ~ -0.3 bar
+Hugin 2.1 8, 23.May 21 3651 3041.4 343.39 73.4 Y OK 1344.9 1.151 1.418
+∆
+P ~ -0.4 bar
+Hugin 2.3 8, 23.May 22 3617 3015.4 340.84 72.1 Y OK 275.1 1.152 1.418
+∆
+P ~ -0.9 bar
+Hugin 3.1 8, 23.May 23 3607.9 3008.4 340.34 71.2 Y OK 21.4 1.153 1.419
+∆P ~ -0.2 bar
+Hugin 3.2 8, 23.May 24 3602 3003.9 341.67 71 Y OK 3.2 1.160 1.416
+∆
+P ~ -0.5 bar
+Total number of tests: 24 No. of Successful tests: No.of Fluid samples: none
+19 (21. May 2013) 13 (21. May 2013)
+5 (23. May 2013) 5 (23. May 2013)
+Pressure decrease due to time lapse of 48 hour (second data set logged 23. May) after Hydrostatic gradient in logged interval: -
+closed injection after logged first fm. pressure data set (dated 21. May):
+∆ ∆ ∆
+P ~ -0.3 bar, P ~ -0.4 bar, P ~ -0.9 bar,
+∆ ∆
+P ~ -0.2 bar, P ~ -0.5 bar.
+Minimum measured pore pressure (ref. RKB), 21. May : 1.149 g/cm3 Maximum measured pore pressure (ref. RKB), 21. May: 1.161 g/cm3
+Using LWD/GR for depth correlation. All pressure tests were taken as Test Type Option = “High Mobility”,
+except test no. 13 and no. 14 which were taken as “Low Mobility”.
+Formation pressure data is entered into OpenWorks. The curve is named PRES_FORM.
+Mobility is named PRES_MOBL and temperature PRES_TEMP.
+Formation pressure test quality in OW is called PRES_QUAL;
+0: lost seal, 1: Tight, 2: Poor (<10mD/cP), 3: Good (10-100 mD/cP), 4: Very Good (>100 mD/cP).
+Pressure data with qualifiers 0 or 1 are however not registered in OW, due to technical issues wrt. plotting.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 24 av 47
+
+[TABLE]
+ |  |  |  |  |  |  |  |  |  |  | 
+Hugin 1.2 | 8, 23.May | 20 | 3681 | 3064.4 | 345.16 | 75.2 | Y | OK
+∆
+P ~ -0.3 bar | 142.2 | 1.148 | 1.419
+Hugin 2.1 | 8, 23.May | 21 | 3651 | 3041.4 | 343.39 | 73.4 | Y | OK
+∆
+P ~ -0.4 bar | 1344.9 | 1.151 | 1.418
+Hugin 2.3 | 8, 23.May | 22 | 3617 | 3015.4 | 340.84 | 72.1 | Y | OK
+∆
+P ~ -0.9 bar | 275.1 | 1.152 | 1.418
+Hugin 3.1 | 8, 23.May | 23 | 3607.9 | 3008.4 | 340.34 | 71.2 | Y | OK
+∆P ~ -0.2 bar | 21.4 | 1.153 | 1.419
+Hugin 3.2 | 8, 23.May | 24 | 3602 | 3003.9 | 341.67 | 71 | Y | OK
+∆
+P ~ -0.5 bar | 3.2 | 1.160 | 1.416
+Total number of tests: 24
+19 (21. May 2013)
+5 (23. May 2013) |  |  |  |  |  |  | No. of Successful tests:
+13 (21. May 2013)
+5 (23. May 2013) |  |  | No.of Fluid samples: none | 
+Pressure decrease due to time lapse of 48 hour (second data set logged 23. May) after
+closed injection after logged first fm. pressure data set (dated 21. May):
+∆ ∆ ∆
+P ~ -0.3 bar, P ~ -0.4 bar, P ~ -0.9 bar,
+∆ ∆
+P ~ -0.2 bar, P ~ -0.5 bar. |  |  |  |  |  |  | Hydrostatic gradient in logged interval: - |  |  |  | 
+Minimum measured pore pressure (ref. RKB), 21. May : 1.149 g/cm3 |  |  |  |  |  |  | Maximum measured pore pressure (ref. RKB), 21. May: 1.161 g/cm3 |  |  |  | 
+Using LWD/GR for depth correlation. |  |  |  |  |  |  | All pressure tests were taken as Test Type Option = “High Mobility”,
+except test no. 13 and no. 14 which were taken as “Low Mobility”. |  |  |  | 
+Formation pressure data is entered into OpenWorks. The curve is named PRES_FORM.
+Mobility is named PRES_MOBL and temperature PRES_TEMP.
+Formation pressure test quality in OW is called PRES_QUAL;
+0: lost seal, 1: Tight, 2: Poor (<10mD/cP), 3: Good (10-100 mD/cP), 4: Very Good (>100 mD/cP).
+Pressure data with qualifiers 0 or 1 are however not registered in OW, due to technical issues wrt. plotting. |  |  |  |  |  |  |  |  |  |  | 
+[/TABLE]
+5.5 Plot of Formation Pressure Data, 15/9-F-11 T2 and 15/9-F-11 A
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 25 av 47
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 26 av 47
+6 LWD NMR - MagTrak
+Baker’s LWD NMR tool, MagTrak, was logged in 8 1/2“ section.
+The tool was ran in silent mode, hence data only in memory. MagTrak sensor offset to Bit was 50.45 m.
+6.1 Logging mode and parameters
+The tool was logged in “Dual Wait Time” (DTW) mode, also called “PoroPermMT+Light HC” mode, in
+order to process a salinity independent water saturation.
+An average ROP of 15 m/hr (in the Section guidelines a max ROP of 20 m/hr and a optimal ROP of 10
+m/hr was specified) was held in the reservoir interval to assure a sufficient vertical resolution of the
+MagTrak data, and also to keep the Signal/Noise ratio high.
+Vertical resolution with DTW mode and ROP = 20 m/hr was calculated to be 1.7 m. Vertical resolution
+with DTW mode and ROP = 30 m/hr was calculated to be 2.6 m.
+The MagTrak data was logged and final post processed with the following parameters:
+Running Average (Data Stacking) of 16: RA = 16
+T2 Cutoffs: CBW = 3.3 ms, BVI = 33 ms (standard sandstone T2 cutoffs)
+Number of T2 bins: 27 over the range of 0.5 – 4096 ms.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 27 av 47
+6.2 MagTrak output
+In table below are the most important curves from MagTrak listed with explanation:
+CURVE NAME BAKER’s CURVE EXPLANATION “TRADITIONAL” NAME CURVE RELATION DEPENDING ON
+T2 CUTOFF
+MBVI MagTrak Irreducible Fluid Porosity Capillary Bound Fluid Index MBVI = MPHE - MBVM YES
+MBVM MagTrak Movable Fluid Porosity FFI (Free Fluid Index) MBVM = MPHS - MBW YES
+MBW MagTrak Bound Fluid Porosity BVI (Bound Fluid Index) MBW = MCBW + MBVI YES
+MCBW MagTrak Clay Bound Fluid Porosity Clay Bound Volume Index MCBW = MPHS - MBVI - MBVM YES
+MPERM MagTrak Permeability Index b YES
+ MPHS 2 MPHS −MBW  
+MPERM =   × 
+  C   MBW 
+Default parameters are b=2, C=10
+MPHE MagTrak Effective Porosity MPHE = MPHS - MCBW YES
+MPHS MagTrak Total Porosity MPHS = MBW + MBVM NO*
+*MPHS: MPHS is only dependent on Hydrogen Index (HI). If HI unequal 1, then MPHS is also dependent of T2 cutoffs.
+15/9-F-11 T2 is mostly water filled, hence HI ~ 1.
+MPHS is comparable with PHIF (= PHIT) from conventional logs.
+MPERM is qualitative (semi-quantitative) comparable with KLOGH from conventional logs.
+MBW/MPHS is comparable with Swirr from resistivity logs (not applicable in this water filled well).
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 28 av 47
+
+[TABLE]
+ | CURVE NAME |  |  | BAKER’s CURVE EXPLANATION |  |  | “TRADITIONAL” NAME |  |  | CURVE RELATION |  |  | DEPENDING ON | 
+ |  |  |  |  |  |  |  |  |  |  |  |  | T2 CUTOFF | 
+MBVI |  |  | MagTrak Irreducible Fluid Porosity |  |  | Capillary Bound Fluid Index |  |  | MBVI = MPHE - MBVM |  |  | YES |  | 
+MBVM |  |  | MagTrak Movable Fluid Porosity |  |  | FFI (Free Fluid Index) |  |  | MBVM = MPHS - MBW |  |  | YES |  | 
+MBW |  |  | MagTrak Bound Fluid Porosity |  |  | BVI (Bound Fluid Index) |  |  | MBW = MCBW + MBVI |  |  | YES |  | 
+MCBW |  |  | MagTrak Clay Bound Fluid Porosity |  |  | Clay Bound Volume Index |  |  | MCBW = MPHS - MBVI - MBVM |  |  | YES |  | 
+MPERM |  |  | MagTrak Permeability Index |  |  |  |  |  | b
+ MPHS 2 MPHS −MBW  
+MPERM =   × 
+  C   MBW 
+Default parameters are b=2, C=10 |  |  | YES |  | 
+MPHE |  |  | MagTrak Effective Porosity |  |  |  |  |  | MPHE = MPHS - MCBW |  |  | YES |  | 
+MPHS |  |  | MagTrak Total Porosity |  |  |  |  |  | MPHS = MBW + MBVM |  |  | NO* |  | 
+[/TABLE]
+6.3 MagTrak purpose and achievement
+• Purpose with running MagTrak was to achieve:
+Lithology independent porosity
+o
+Independent (semi-quantitative) permeability indicator, possibility of detecting thief zone?
+o
+Salinity independent water/oil saturation
+o
+Discriminate between movable and bound fluid
+o
+Irreducible water saturation
+o
+Independent estimation of saturation exponent, n
+o
+Pore size distribution
+o
+Since the reservoir turned out to be more or less water filled, some of the purposes were not any longer
+applicable.
+• Achievements:
+MagTrak provides both a total and an effective porosity which is lithology independent.
+o
+Total porosity from MagTrak, MPHS, is plotted (magenta curve) in same track as total
+porosity, PHIF, from conventional logs in the F-11 T2 CPI. The overall trend in the Hugin
+Fm. is that the MPHS matches good with PHIF, which should not be a surprise in a water
+filled reservoir. MPHS has (and shows) however a poorer vertical resolution than PHIF.
+In Heather Fm. PHIF is lower than MPHS, indicating perhaps a too low matrix density
+applied for this formation.
+MagTrak provides an independent semi-quantitative permeability indicator, MPERM. This
+o
+curve is plotted (magenta curve) in same track as the permeability from conventional logs
+and field model, KLOGH, in the F-11 T2 CPI. The overall trend is that MPERM > KLOGH
+with the applied standard sandstone T2 cutoffs.
+The thief zone is not detected by MPERM. From the T2 distribution (ref. fig. 6.4.2) it is
+however seen that the sand in interval 4449 – 4453 m MD RKB (Lower Thief zone / Hugin
+2.1 (7)) has the complete T2 signal coming from the oil based mud filtrate, hence
+indicating qualitatively the most permeable zone of this Hugin Fm. Invasion will however
+of course be dependent of different factors, such as mud properties and ROP.
+SCAL (Special Core AnaLysis) data from 15/9-19 A was investigated to check if the
+default coefficients for the Coates-Timur permeability (MPERM) equation was
+appropriate, ref. chapter 6.5. This resulted in a permeability curve called
+MPERM_ADJUSTED which is plotted (light green curve) in the permeability track (track
+no. 9) in the F-11 T2 CPI.
+Since the reservoir was more or less water filled, it was no point to order a processing
+o
+from Baker to get an independent oil saturation.
+MagTrak provides a discrimination between movable and bound fluid. This is illustrated in
+o
+track no. 8 in the F-11 T2 CPI. Brown shading = clay bound fraction, turquoise shading =
+capillary bound fraction and yellow shading = free or movable fluid fraction.
+MagTrak provides an irreducible water saturation which is the ratio: bound fluid / total
+o
+porosity. This is named SWIRR_MTK and is plotted (magenta curve) in same track as the
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 29 av 47
+water saturation from the conventional logs. Since ~ water filled reservoir, comparison
+against water saturation from conventional logs is of course not applicable.
+Since the reservoir was more or less water filled, the method of estimating n from the
+o
+slope when illustrating Archie Water Saturation equation graphically above transition
+zone, was not applicable.
+Pore size distribution: this needs 2 more processings (DTW and Grain Size Distribution)
+o
+from Baker, and has not been ordered.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 30 av 47
+6.4 MagTrak T2 distribution plots
+Figure 6.4.1 showing T2 distribution from MagTrak in track no. 5.
+Hugin Fm. shows bimodal T2 distribution of the Free Fluid fraction due to invasion of mudfiltrate (OBM).
+OBM filtrate signal to the right and formation water signal to the left.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 31 av 47
+Figure 6.4.2.
+T2 distribution in the black circled area shows full invasion (Lower Thief zone / Hugin 2.1 (7)). Hence
+indicates qualitatively the most permeable zone, this is however not seen directly from MPERM.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 32 av 47
+6.5 Coates-Timur permeability
+A verification / check of the coefficients in the Coates-Timur permeability equation has been done.
+Due to lack of cores in 15/9-F-11 T2, the SCAL data in 15/9-19 A was reviewed. An overview over SCAL
+permeability versus irreducible water saturation from different methods is given in figure 6.5.1.
+Figure 6.5.1. SCAL data from well 15/9-19 A.
+All permeability data versus irreducible water saturation data derived from different methods listed to the
+right and separated by different colors. The data from mercury injection should be disregarded.
+Data from the CCAL (Conventional Core AnaLysis) plugs are shown as purple squares in fig. 6.5.1.
+The water saturation is measured by Dean and Stark method (OBM) and is measured together with
+porosity at vertical plugs. Permeability is however not measured on same vertical plugs, but on
+horizontal plugs. Due to this, permeability has been picked from adjacent plugs with approximately same
+porosity.
+The overall trend is quite a large scatter in the data range, hence corresponding large uncertainty.The
+mercury injection data is however clear outliers, and data from this method should be disregarded.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 33 av 47
+In order to illustrate Coates-Timur permeability equation graphically (ref. fig. 6.5.2) to verify / check the
+default coefficients, b=2 and C=10, the equation was split into a linear equation as shown below:
+b
+ φ 2 FFI  
+K =   × 
+ C BVI 
+b
+ φ 2 FFI  
+LOGK = LOG  × 
+ C BVI 
+ b b
+ 1   FFI 
+LOGK = LOG  ×φ2 ×  
+ C2   BVI  
+ 1   FFI 
+LOGK =bLOG +bLOGφ2 × 
+C2   BVI 
+( )  FFI 
+LOGK =b LOG(1)−LOG(C2) +bLOGφ2 × 
+ BVI 
+ FFI 
+LOGK=b(−LOG(C2))+bLOGφ2 × 
+ BVI 
+ FFI 
+LOGK = −2bLOG(C)+ bLOGφ2× 
+ BVI 
+Fig. 6.5.2 shows that the default coefficients (solid line) in the Coates-Timur equation is not appropriate
+when comparing to the core data from Hugin Fm. in 15/9-19 A. Despite large scattering in the data, a
+new regression line has been suggested, ref. dashed line, giving the coefficients: b=2.5 and C=17.8.
+New adjusted MPERM, named MPERM_ADJUSTED, according to these new parameters is plotted
+(light green curve) in the permeability track, track no. 9, in the F-11 T2 CPI. In general
+MPERM_ADJUSTED is closer to KLOGH from field model than MPERM. MPERM_ADJUSTED is
+truncated at permeability > 15 D, which corresponds to very low BVI.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 34 av 47
+Figure 6.5.2. SCAL data from well 15/9-19 A illustrating Coates-Timur permeability equation. Solid regression line is with default coefficients; b=2
+and C=10. This line seems to be off compared to the core data, resulting in a too high MagTrak permeability, MPERM. Dashed line is with
+adjusted coefficients: b=2.5 and C=17.8. This line seems more reasonable compared to the core data.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 35 av 47
+7 Petrophysical results
+Tables below in this chapter are showing average values of Net/Gross (N/G), total porosity (PHIF), total
+water saturation (SW) and horizontal permeability from logs (KLOGH) in Netsand.
+Note that for F-11 B the reported water saturation averages are from case calculated with pure Hugin
+formation water salinity, as if no flooding.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 36 av 47
+7.1 Petrophysical results 15/9-F-11 T2
+15/9-F-11 T2 Averages
+Formation / Top Base N/G PHIF SW KLOGH KLOGH KLOGH
+Zone arithmetic harmonic geometric
+[m MD RKB] [m MD RKB] [fraction] [fraction] [fraction] [mD] [mD] [mD]
+Heather 4334.7 4393.0 0 - - - - -
+Hugin 4393.0 4497.4 0.808 0.168 0.934 243 39 118
+Upper Hugin 4393.0 4415 0.864 0.158 0.836 248 63 165
+Middle Hugin 4415 4455 0.765 0.155 0.932 330 36 131
+(“Thief Zone”)
+Lower Hugin 4455 4497.4 0.821 0.186 0.981 163 34 90
+Hugin 3.3 (12) 4393.0 4399.0 0.875 0.178 0.506 491 358 422
+Hugin 3.2 (11) 4399.0 4407.0 1 0.127 0.982 135 107 119
+Hugin 3.1 (10) 4407.0 4415.0 0.719 0.184 0.987 183 27 111
+Hugin 2.3 (9) 4415.0 4422.0 0.836 0.142 0.689 480 302 409
+Hugin 2.2 (8) 4422.0 4444.0 0.873 0.154 0.994 89 24 60
+Hugin 2.1 (7) 4444.0 4455.0 0.505 0.174 0.951 1003 187 587
+Hugin 1.6 (6) 4455.0 4463.5 0.176 0.193 0.97 116 65 90
+Hugin 1.5 (5) 4463.5 4466.0 0.82 0.181 0.962 17 9 13
+Hugin 1.4 (4) 4466.0 4471.0 1 0.195 0.98 223 191 210
+Hugin 1.3 (3) 4471.0 4476.4 1 0.198 0.969 97 62 82
+Hugin 1.2 (2) 4476.4 4485.0 0.988 0.176 0.976 343 233 300
+Hugin 1.1 (1) 4485.0 4497.4 0.996 0.183 0.995 74 20 39
+Sleipner 4497.4 4562 0 - - - - -
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 37 av 47
+
+[TABLE]
+ | 15/9-F-11 T2 Averages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Formation / |  |  | Top |  |  | Base |  |  | N/G |  |  | PHIF |  |  | SW |  |  | KLOGH |  |  | KLOGH |  |  | KLOGH | 
+ | Zone |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | arithmetic |  |  | harmonic |  |  | geometric | 
+ |  |  |  | [m MD RKB] |  |  | [m MD RKB] |  |  | [fraction] |  |  | [fraction] |  |  | [fraction] |  |  | [mD] |  |  | [mD] |  |  | [mD] | 
+ | Heather |  | 4334.7 |  |  | 4393.0 |  |  | 0 |  |  | - |  |  | - |  |  | - |  |  | - |  |  | - |  | 
+ | Hugin |  | 4393.0 |  |  | 4497.4 |  |  | 0.808 |  |  | 0.168 |  |  | 0.934 |  |  | 243 |  |  | 39 |  |  | 118 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Upper Hugin |  | 4393.0 |  |  | 4415 |  |  | 0.864 |  |  | 0.158 |  |  | 0.836 |  |  | 248 |  |  | 63 |  |  | 165 |  | 
+ | Middle Hugin |  | 4415 |  |  | 4455 |  |  | 0.765 |  |  | 0.155 |  |  | 0.932 |  |  | 330 |  |  | 36 |  |  | 131 |  | 
+ | (“Thief Zone”) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Lower Hugin |  | 4455 |  |  | 4497.4 |  |  | 0.821 |  |  | 0.186 |  |  | 0.981 |  |  | 163 |  |  | 34 |  |  | 90 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Hugin 3.3 (12) |  | 4393.0 |  |  | 4399.0 |  |  | 0.875 |  |  | 0.178 |  |  | 0.506 |  |  | 491 |  |  | 358 |  |  | 422 |  | 
+ | Hugin 3.2 (11) |  | 4399.0 |  |  | 4407.0 |  |  | 1 |  |  | 0.127 |  |  | 0.982 |  |  | 135 |  |  | 107 |  |  | 119 |  | 
+ | Hugin 3.1 (10) |  | 4407.0 |  |  | 4415.0 |  |  | 0.719 |  |  | 0.184 |  |  | 0.987 |  |  | 183 |  |  | 27 |  |  | 111 |  | 
+ | Hugin 2.3 (9) |  | 4415.0 |  |  | 4422.0 |  |  | 0.836 |  |  | 0.142 |  |  | 0.689 |  |  | 480 |  |  | 302 |  |  | 409 |  | 
+ | Hugin 2.2 (8) |  | 4422.0 |  |  | 4444.0 |  |  | 0.873 |  |  | 0.154 |  |  | 0.994 |  |  | 89 |  |  | 24 |  |  | 60 |  | 
+ | Hugin 2.1 (7) |  | 4444.0 |  |  | 4455.0 |  |  | 0.505 |  |  | 0.174 |  |  | 0.951 |  |  | 1003 |  |  | 187 |  |  | 587 |  | 
+ | Hugin 1.6 (6) |  | 4455.0 |  |  | 4463.5 |  |  | 0.176 |  |  | 0.193 |  |  | 0.97 |  |  | 116 |  |  | 65 |  |  | 90 |  | 
+ | Hugin 1.5 (5) |  | 4463.5 |  |  | 4466.0 |  |  | 0.82 |  |  | 0.181 |  |  | 0.962 |  |  | 17 |  |  | 9 |  |  | 13 |  | 
+ | Hugin 1.4 (4) |  | 4466.0 |  |  | 4471.0 |  |  | 1 |  |  | 0.195 |  |  | 0.98 |  |  | 223 |  |  | 191 |  |  | 210 |  | 
+ | Hugin 1.3 (3) |  | 4471.0 |  |  | 4476.4 |  |  | 1 |  |  | 0.198 |  |  | 0.969 |  |  | 97 |  |  | 62 |  |  | 82 |  | 
+ | Hugin 1.2 (2) |  | 4476.4 |  |  | 4485.0 |  |  | 0.988 |  |  | 0.176 |  |  | 0.976 |  |  | 343 |  |  | 233 |  |  | 300 |  | 
+ | Hugin 1.1 (1) |  | 4485.0 |  |  | 4497.4 |  |  | 0.996 |  |  | 0.183 |  |  | 0.995 |  |  | 74 |  |  | 20 |  |  | 39 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Sleipner |  | 4497.4 |  |  | 4562 |  |  | 0 |  |  | - |  |  | - |  |  | - |  |  | - |  |  | - |  | 
+[/TABLE]
+7.2 Petrophysical results 15/9-F-11 A
+15/9-F-11 A Averages
+Formation / Top Base N/G PHIF SW KLOGH KLOGH KLOGH
+Zone arithmetic harmonic geometric
+[m MD RKB] [m MD RKB] [fraction] [fraction] [fraction] [mD] [mD] [mD]
+Heather 3574.9 3594.6 0 - - - - -
+Hugin 3594.6 3702.0 0.862 0.209 0.323 513 18 129
+Upper Hugin 3594.6 3612.5 0.648 0.172 0.443 121 4 33
+Middle Hugin 3612.5 3653 0.894 0.208 0.295 1024 26 216
+(“Thief Zone”)
+Lower Hugin 3653 3702.0 0.913 0.22 0.32 201 46 122
+Hugin 3.3 (12) 3594.6 3599.0 0.557 0.153 0.269 326 162 248
+Hugin 3.2 (11) 3599.0 3605.5 1 0.169 0.462 85 3 22
+Hugin 3.1 (10) 3605.5 3612.5 0.379 0.196 0.529 22 7 13
+Hugin 2.3 (9) 3612.5 3627.5 0.9 0.215 0.192 2140 63 1193
+Hugin 2.2 (8) 3627.5 3647.0 0.936 0.211 0.412 82 15 40
+Hugin 2.1 (7) 3647.0 3653.0 0.742 0.171 0.091 1501 510 1231
+Hugin 1.6 (6) 3653.0 3663.0 0.575 0.2 0.319 46 29 36
+Hugin 1.5 (5) 3663.0 3665.0 1 0.209 0.304 7 5 6
+Hugin 1.4 (4) 3665.0 3667.3 1 0.209 0.279 151 67 120
+Hugin 1.3 (3) 3667.3 3674.3 1 0.242 0.31 147 134 141
+Hugin 1.2 (2) 3674.3 3684.0 1 0.193 0.234 440 338 393
+Hugin 1.1 (1) 3684.0 3702.0 1 0.236 0.367 170 83 126
+Sleipner 3702.0 3762.0 0.157 0.136 0.864 87 1 4
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 38 av 47
+
+[TABLE]
+ | 15/9-F-11 A Averages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Formation / |  |  | Top |  |  | Base |  |  | N/G |  |  | PHIF |  |  | SW |  |  | KLOGH |  |  | KLOGH |  |  | KLOGH | 
+ | Zone |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | arithmetic |  |  | harmonic |  |  | geometric | 
+ |  |  |  | [m MD RKB] |  |  | [m MD RKB] |  |  | [fraction] |  |  | [fraction] |  |  | [fraction] |  |  | [mD] |  |  | [mD] |  |  | [mD] | 
+ | Heather |  | 3574.9 |  |  | 3594.6 |  |  | 0 |  |  | - |  |  | - |  |  | - |  |  | - |  |  | - |  | 
+ | Hugin |  | 3594.6 |  |  | 3702.0 |  |  | 0.862 |  |  | 0.209 |  |  | 0.323 |  |  | 513 |  |  | 18 |  |  | 129 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Upper Hugin |  | 3594.6 |  |  | 3612.5 |  |  | 0.648 |  |  | 0.172 |  |  | 0.443 |  |  | 121 |  |  | 4 |  |  | 33 |  | 
+ | Middle Hugin |  | 3612.5 |  |  | 3653 |  |  | 0.894 |  |  | 0.208 |  |  | 0.295 |  |  | 1024 |  |  | 26 |  |  | 216 |  | 
+ | (“Thief Zone”) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Lower Hugin |  | 3653 |  |  | 3702.0 |  |  | 0.913 |  |  | 0.22 |  |  | 0.32 |  |  | 201 |  |  | 46 |  |  | 122 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Hugin 3.3 (12) |  | 3594.6 |  |  | 3599.0 |  |  | 0.557 |  |  | 0.153 |  |  | 0.269 |  |  | 326 |  |  | 162 |  |  | 248 |  | 
+ | Hugin 3.2 (11) |  | 3599.0 |  |  | 3605.5 |  |  | 1 |  |  | 0.169 |  |  | 0.462 |  |  | 85 |  |  | 3 |  |  | 22 |  | 
+ | Hugin 3.1 (10) |  | 3605.5 |  |  | 3612.5 |  |  | 0.379 |  |  | 0.196 |  |  | 0.529 |  |  | 22 |  |  | 7 |  |  | 13 |  | 
+ | Hugin 2.3 (9) |  | 3612.5 |  |  | 3627.5 |  |  | 0.9 |  |  | 0.215 |  |  | 0.192 |  |  | 2140 |  |  | 63 |  |  | 1193 |  | 
+ | Hugin 2.2 (8) |  | 3627.5 |  |  | 3647.0 |  |  | 0.936 |  |  | 0.211 |  |  | 0.412 |  |  | 82 |  |  | 15 |  |  | 40 |  | 
+ | Hugin 2.1 (7) |  | 3647.0 |  |  | 3653.0 |  |  | 0.742 |  |  | 0.171 |  |  | 0.091 |  |  | 1501 |  |  | 510 |  |  | 1231 |  | 
+ | Hugin 1.6 (6) |  | 3653.0 |  |  | 3663.0 |  |  | 0.575 |  |  | 0.2 |  |  | 0.319 |  |  | 46 |  |  | 29 |  |  | 36 |  | 
+ | Hugin 1.5 (5) |  | 3663.0 |  |  | 3665.0 |  |  | 1 |  |  | 0.209 |  |  | 0.304 |  |  | 7 |  |  | 5 |  |  | 6 |  | 
+ | Hugin 1.4 (4) |  | 3665.0 |  |  | 3667.3 |  |  | 1 |  |  | 0.209 |  |  | 0.279 |  |  | 151 |  |  | 67 |  |  | 120 |  | 
+ | Hugin 1.3 (3) |  | 3667.3 |  |  | 3674.3 |  |  | 1 |  |  | 0.242 |  |  | 0.31 |  |  | 147 |  |  | 134 |  |  | 141 |  | 
+ | Hugin 1.2 (2) |  | 3674.3 |  |  | 3684.0 |  |  | 1 |  |  | 0.193 |  |  | 0.234 |  |  | 440 |  |  | 338 |  |  | 393 |  | 
+ | Hugin 1.1 (1) |  | 3684.0 |  |  | 3702.0 |  |  | 1 |  |  | 0.236 |  |  | 0.367 |  |  | 170 |  |  | 83 |  |  | 126 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Sleipner |  | 3702.0 |  |  | 3762.0 |  |  | 0.157 |  |  | 0.136 |  |  | 0.864 |  |  | 87 |  |  | 1 |  |  | 4 |  | 
+[/TABLE]
+7.3 Petrophysical results 15/9-F-11 B
+15/9-F-11 B Weighted averages from all observations of a Formation / Zone
+Formation / Top Base N/G PHIF SW* KLOGH KLOGH KLOGH
+Zone arithmetic harmonic geometric
+[m MD RKB] [m MD RKB] [fraction] [fraction] [fraction] [mD] [mD] [mD]
+Heather 3351 3467.5
+3812 3894
+3934 3952
+4374 4483.5
+Weighted Heather averages: 0.089 0.136 0.638 10 1 2
+Hugin 3467.5 3812
+3894 3934
+3952 4374
+4483.5 4732
+Weighted Hugin averages: 0.888 0.207 0.232 512 2 123
+Upper Hugin 3467.5 3812
+3894 3934
+3952 4092
+4187.6 4374
+4483.5 4573
+Weighted Upper Hugin averages: 0.887 0.211 0.170 459 2 103
+Middle Hugin 4092 4187.6
+(“Thief Zone”) 4573 4681.5
+Weighted Middle Hugin averages: 0.924 0.193 0.381 789 2 290
+Lower Hugin 4681.5 4732 0.765 0.187 0.78 137 3 47
+Hugin 3.3 (12) 3467.5 3504
+3663 3812
+3894 3934
+3952 4027.2
+4337 4374
+4483.5 4510
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 39 av 47
+
+[TABLE]
+ | 15/9-F-11 B Weighted averages from all observations of a Formation / Zone |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Formation / |  |  | Top |  |  | Base |  |  | N/G |  |  | PHIF |  |  | SW* |  |  | KLOGH |  |  | KLOGH |  |  | KLOGH | 
+ | Zone |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | arithmetic |  |  | harmonic |  |  | geometric | 
+ |  |  |  | [m MD RKB] |  |  | [m MD RKB] |  |  | [fraction] |  |  | [fraction] |  |  | [fraction] |  |  | [mD] |  |  | [mD] |  |  | [mD] | 
+ | Heather |  | 3351
+3812
+3934
+4374 |  |  | 3467.5
+3894
+3952
+4483.5 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Heather averages: |  |  |  |  | 0.089 |  |  | 0.136 |  |  | 0.638 |  |  | 10 |  |  | 1 |  |  | 2 |  | 
+ | Hugin |  | 3467.5
+3894
+3952
+4483.5 |  |  | 3812
+3934
+4374
+4732 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Hugin averages: |  |  |  |  |  | 0.888 |  |  | 0.207 |  |  | 0.232 |  |  | 512 |  |  | 2 |  |  | 123 | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Upper Hugin |  | 3467.5
+3894
+3952
+4187.6
+4483.5 |  |  | 3812
+3934
+4092
+4374
+4573 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Upper Hugin averages: |  |  |  |  | 0.887 |  |  | 0.211 |  |  | 0.170 |  |  | 459 |  |  | 2 |  |  | 103 |  | 
+ | Middle Hugin |  | 4092
+4573 |  |  | 4187.6
+4681.5 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | (“Thief Zone”) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Middle Hugin averages: |  |  |  |  | 0.924 |  |  | 0.193 |  |  | 0.381 |  |  | 789 |  |  | 2 |  |  | 290 |  | 
+ | Lower Hugin |  | 4681.5 |  |  | 4732 |  |  | 0.765 |  |  | 0.187 |  |  | 0.78 |  |  | 137 |  |  | 3 |  |  | 47 |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Hugin 3.3 (12) |  | 3467.5
+3663
+3894
+3952
+4337
+4483.5 |  |  | 3504
+3812
+3934
+4027.2
+4374
+4510 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+[/TABLE]
+Weighted Hugin 3.3 (12) averages: 0.965 0.217 0.122 795 122 532
+Hugin 3.2 (11) 3504 3663
+4027.2 4063
+4238 4337
+4510 4555
+Weighted Hugin 3.2 (11) averages: 0.813 0.199 0.236 89 1 12
+Hugin 3.1 (10) 4063 4092
+4187.6 4238
+4555 4573
+Weighted Hugin 3.1 (10) averages: 0.854 0.232 0.17 266 1 110
+Hugin 2.3 (9) 4092 4187.6
+4573 4601
+Weighted Hugin 2.3 (9) averages: 0.932 0.197 0.379 916 1 396
+Hugin 2.2 (8) 4601 4647 0.885 0.187 0.35 89 14 43
+Hugin 2.1 (7) 4647 4681.5 0.945 0.189 0.426 1216 683 1034
+Hugin 1.6 (6) 4681.5 4698 0.558 0.188 0.583 32 2 19
+Hugin 1.5 (5) 4698 4701 0.65 0.165 0.790 74 65 69
+Hugin 1.4 (4) 4701 4710 0.983 0.18 0.769 129 79 101
+Hugin 1.3 (3) 4710 4715 0.87 0.18 0.849 50 1 13
+Hugin 1.2 (2) 4715 4725 0.915 0.195 0.919 371 170 231
+Hugin 1.1 (1) 4725 4732 0.736 0.197 0.83 21 2 10
+Sleipner 4732 4770 0.068 0.116 0.833 4 1 2
+* Note that for F-11 B the reported water saturation averages are from case calculated with pure Hugin formation water salinity, as if no
+flooding.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 40 av 47
+
+[TABLE]
+ |  |  |  | Weighted Hugin 3.3 (12) averages: |  |  | 0.965 | 0.217 | 0.122 | 795 | 122 | 532 | 
+ | Hugin 3.2 (11) |  | 3504
+4027.2
+4238
+4510 |  | 3663
+4063
+4337
+4555 |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Hugin 3.2 (11) averages: |  |  | 0.813 | 0.199 | 0.236 | 89 | 1 | 12 | 
+ | Hugin 3.1 (10) |  | 4063
+4187.6
+4555 |  | 4092
+4238
+4573 |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Hugin 3.1 (10) averages: |  |  | 0.854 | 0.232 | 0.17 | 266 | 1 | 110 | 
+ | Hugin 2.3 (9) |  | 4092
+4573 |  | 4187.6
+4601 |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  | Weighted Hugin 2.3 (9) averages: |  |  | 0.932 | 0.197 | 0.379 | 916 | 1 | 396 | 
+ | Hugin 2.2 (8) |  | 4601 |  | 4647 |  | 0.885 | 0.187 | 0.35 | 89 | 14 | 43 | 
+ | Hugin 2.1 (7) |  | 4647 |  | 4681.5 |  | 0.945 | 0.189 | 0.426 | 1216 | 683 | 1034 | 
+ | Hugin 1.6 (6) |  | 4681.5 |  | 4698 |  | 0.558 | 0.188 | 0.583 | 32 | 2 | 19 | 
+ | Hugin 1.5 (5) |  | 4698 |  | 4701 |  | 0.65 | 0.165 | 0.790 | 74 | 65 | 69 | 
+ | Hugin 1.4 (4) |  | 4701 |  | 4710 |  | 0.983 | 0.18 | 0.769 | 129 | 79 | 101 | 
+ | Hugin 1.3 (3) |  | 4710 |  | 4715 |  | 0.87 | 0.18 | 0.849 | 50 | 1 | 13 | 
+ | Hugin 1.2 (2) |  | 4715 |  | 4725 |  | 0.915 | 0.195 | 0.919 | 371 | 170 | 231 | 
+ | Hugin 1.1 (1) |  | 4725 |  | 4732 |  | 0.736 | 0.197 | 0.83 | 21 | 2 | 10 | 
+ |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Sleipner |  | 4732 |  | 4770 |  | 0.068 | 0.116 | 0.833 | 4 | 1 | 2 | 
+[/TABLE]
+8 CPI plots of evaluated curves and raw data
+Remarks regarding F-11 B CPI:
+Note that for F-11 B is the CPI separated in 3 parts for better visualization.
+Note also that the F11 B CPIs include 3 different formation water salinity cases:
+First case is Hugin formation water salinity,
+second case is a mixture of Hugin and Utsira formation water salinity,
+third case is pure Utsira formation water salinity.
+The details in difference and color coding are explained in the header of the CPIs. There is a
+huge contrast between the very saline Hugin formation water and the fresh, low saline Utsira
+formation water (injection water), and the different cases illustrate the impact on the water
+saturation.
+Note also that the salinity is changed in the whole evaluated intervals, and that all other
+parameters are kept unchanged.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 41 av 47
+8.1 CPI plot 15/9-F-11 T2
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 42 av 47
+8.2 CPI plot 15/9-F-11 A
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 43 av 47
+8.3 CPI plot 15/9-F-11 B, interval 3330 – 3800 m MD RKB
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 44 av 47
+CPI plot 15/9-F-11 B, interval 3800 – 4300 m MD RKB
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 45 av 47
+CPI plot 15/9-F-11 B, interval 4300 – 4770 m MD RKB
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 46 av 47
+9 References
+1. “Sleipner Øst and Volve Model 2006, Hugin and Skagerrak Formation, Petrophysical Evaluation”.
+November 2006. Author: Elin Solfjell, Karl Audun Lehne.
+2. Logtek’s info file for well 15/9-F-11: WLC_COMPOSITE_1_INF_1.PDF
+3. Logtek’s info file for well 15/9-F-11 T2: WLC_COMPOSITE_1_INF_1.PDF
+4. Logtek’s info file for well 15/9-F-11 A: WLC_COMPOSITE_1_INF_1.PDF
+5. Logtek’s info file for well 15/9-F-11 B: WLC_COMPOSITE_1_INF_1.PDF
+6. MagTrak MR-LWD, Job Planning Report & Definition of Deliverables, Well Name: 15/9-F-11
+North Pilot, Field Name: Volve, Company: Statoil ASA, Location: North Sea, Country: Norway,
+Prepared For: Torill Vee, Prepared By: Monica Nævdal, Date Prepared: 11-Apr-2013.
+7. Special Core Analysis, Sleipner. Well 15/9-19 A. ResLab. 1999-05-25.
+Gradering: Internal Status: Draft Utløpsdato: 2014-09-12 Side 47 av 47
