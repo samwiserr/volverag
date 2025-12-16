@@ -30,6 +30,7 @@ ENV/
 .idea/
 *.swp
 *.swo
+*.code-workspace
 
 # Data and vector database (exclude large files)
 vector_db/
