@@ -38,7 +38,7 @@ vector_db/
 data/indices/
 data/processed/
 
-# BUT allow vectorstore and cache files for deployment (pre-built index)
+# BUT allow vectorstore for deployment (pre-built index)
 !advanced_rag/data/vectorstore/
 !advanced_rag/data/vectorstore/**
 !advanced_rag/data/well_picks_cache.json
