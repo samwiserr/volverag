@@ -15,6 +15,7 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
+import logging
 from typing import List, Optional
 
 import streamlit as st
@@ -235,13 +236,18 @@ def main():
         st.caption("Index build remains CLI-based: `python -m src.main --build-index`.")
         
         # Debug: show current working directory and vectorstore path
-        from pathlib import Path
         cwd = Path.cwd()
         vs_path = Path(persist_dir)
         vs_abs = vs_path.resolve()
         st.caption(f"🔍 CWD: {cwd}")
         st.caption(f"🔍 Vectorstore: {vs_abs}")
         st.caption(f"🔍 Exists: {vs_abs.exists()}")
+
+        # Also emit to the process logs for Streamlit Cloud visibility
+        logger = logging.getLogger(__name__)
+        logger.info(f"CWD: {cwd}")
+        logger.info(f"Vectorstore path: {vs_abs}")
+        logger.info(f"Vectorstore exists: {vs_abs.exists()}")
 
     # Chat history (multi-turn)
     if "messages" not in st.session_state:
