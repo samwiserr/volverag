@@ -1,36 +1,3 @@
-# Data Policy
-
-## What Should NOT Be Committed
-
-**Never commit the following to this repository:**
-
-### Raw Volve Dataset Files
-
-The `spwla_volve-main/` directory and all raw data files should **never** be committed:
-
-- **LAS files**: `.las`, `.LAS` (well log data)
-- **PDF reports**: `.pdf`, `.PDF` (petrophysical reports)
-- **DOC/DOCX files**: `.doc`, `.DOC`, `.docx`, `.DOCX` (LFP reports)
-- **DAT files**: `.dat`, `.DAT` (well picks, formation data)
-- **DLIS/LIS files**: `.dlis`, `.DLIS`, `.lis`, `.LIS` (log data formats)
-- **Excel files**: `.xlsx`, `.XLSX` (inventory, metadata)
-- **ASC files**: `.asc`, `.ASC` (ASCII log data)
-
-### Generated Artifacts
-
-These are created during indexing and should not be versioned:
-
-- **Vector databases**: `vector_db/`, `data/vectorstore/`
-- **Processed data**: `data/processed/`
-- **Cache files**: `*.cache`, `*.jsonl`, `*.pkl`, `*.pickle`
-- **Indices**: `*.index`, `*.bin`
-- **Database files**: `*.sqlite3`, `*.db`
-
-### Sensitive Files
-
-- **Environment variables**: `.env`, `.env.local`
-- **Streamlit secrets**: `.streamlit/secrets.toml`
-
 ## How to Handle Data
 
 ### For Users
