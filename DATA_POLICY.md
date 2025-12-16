@@ -47,20 +47,3 @@
 4. **Place dataset** at expected path (e.g., `../spwla_volve-main/`)
 5. **Build index**: `python -m src.main --build-index --documents-path ../spwla_volve-main`
 6. **Run application**: `streamlit run web_app.py`
-
-## What IS Committed
-
-✅ **Source code**: All Python modules in `advanced_rag/src/`
-✅ **Configuration templates**: `.env.example`, `requirements.txt`
-✅ **Documentation**: README, SETUP, CONTRIBUTING, etc.
-✅ **Scripts**: Build and run scripts (`.bat`, `.sh`, `.ps1`)
-✅ **Tests**: Test files (if any)
-✅ **Licenses**: LICENSE file
-
-## Questions?
-
-If you're unsure whether a file should be committed:
-- **Ask yourself**: "Is this source code, documentation, or configuration?"
-- **If yes**: Commit it
-- **If no**: Check this policy or ask in an issue
-
