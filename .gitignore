@@ -31,6 +31,7 @@ ENV/
 *.swp
 *.swo
 *.code-workspace
+*.code-workspace
 
 # Data and vector database (exclude large files)
 vector_db/
