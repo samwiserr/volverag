@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Tuple, Iterable
 from langchain.tools import tool
 from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from pydantic import BaseModel, Field
 from rank_bm25 import BM25Okapi

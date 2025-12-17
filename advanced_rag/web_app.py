@@ -98,19 +98,196 @@ def _parse_citations(answer: str) -> List[Citation]:
     return cits
 
 
-def _pdf_iframe(file_path: str, page: Optional[int]) -> str:
-    p = Path(file_path)
-    if not p.exists():
-        return f"<div>File not found: {p}</div>"
+def _download_and_extract_pdfs(zip_url: str, target_dir: Path) -> bool:
+    """
+    Download PDFs ZIP from URL and extract to target directory.
+    
+    Args:
+        zip_url: URL to the ZIP file containing PDFs
+        target_dir: Directory where PDFs should be extracted
+        
+    Returns:
+        True if successful, False otherwise
+    """
+    try:
+        logger.info(f"Downloading PDFs from {zip_url}...")
+        
+        # Create target directory if it doesn't exist
+        target_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Download to temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.zip') as tmp_file:
+            tmp_zip_path = tmp_file.name
+        
+        try:
+            # Download with progress
+            urllib.request.urlretrieve(zip_url, tmp_zip_path)
+            logger.info(f"Download complete. Extracting PDFs to {target_dir}...")
+            
+            # Extract ZIP
+            with zipfile.ZipFile(tmp_zip_path, 'r') as zip_ref:
+                # Get list of all file paths in ZIP
+                all_files = zip_ref.namelist()
+                
+                # Check if all files are under a single root directory
+                root_dirs = set()
+                for file_path in all_files:
+                    # Skip empty entries
+                    if not file_path or file_path.endswith('/'):
+                        continue
+                    # Get the first directory component
+                    parts = file_path.split('/')
+                    if len(parts) > 1:
+                        root_dirs.add(parts[0])
+                
+                # If there's a single root directory, extract its contents
+                if len(root_dirs) == 1:
+                    root_dir = list(root_dirs)[0]
+                    logger.info(f"ZIP contains root directory '{root_dir}'. Extracting contents...")
+                    
+                    # Extract to temporary location first
+                    with tempfile.TemporaryDirectory() as tmp_extract:
+                        zip_ref.extractall(tmp_extract)
+                        source_dir = Path(tmp_extract) / root_dir
+                        
+                        # Move contents from root_dir to target_dir
+                        if source_dir.exists():
+                            for item in source_dir.iterdir():
+                                dest = target_dir / item.name
+                                if item.is_dir():
+                                    if dest.exists():
+                                        shutil.rmtree(dest)
+                                    shutil.copytree(item, dest)
+                                else:
+                                    shutil.copy2(item, dest)
+                else:
+                    # Files are at root level, extract directly
+                    logger.info("ZIP contains files at root level. Extracting directly...")
+                    zip_ref.extractall(target_dir)
+            
+            # Verify extraction was successful by checking for PDF files
+            pdf_count = len(list(target_dir.glob("**/*.pdf")))
+            if pdf_count == 0:
+                logger.error(f"No PDFs found after extraction in {target_dir}")
+                return False
+            
+            logger.info(f"Extraction complete. Found {pdf_count} PDF files in {target_dir}")
+            return True
+            
+        finally:
+            # Clean up temporary ZIP file
+            if Path(tmp_zip_path).exists():
+                Path(tmp_zip_path).unlink()
+                
+    except Exception as e:
+        logger.error(f"Failed to download/extract PDFs: {e}", exc_info=True)
+        return False
 
-    b64 = base64.b64encode(p.read_bytes()).decode("utf-8")
-    # Best-effort: encourage the viewer to land at the top of the cited page
-    # (reduces cases where continuous-scroll highlights the next thumbnail).
-    frag = f"#page={page}&view=FitH&zoom=page-width" if page else ""
-    return (
-        f'<iframe src="data:application/pdf;base64,{b64}{frag}" '
-        f'width="100%" height="900" type="application/pdf"></iframe>'
-    )
+
+def _ensure_pdfs_available(pdfs_dir: Path) -> bool:
+    """
+    Ensure PDFs are available, downloading from GitHub Releases if needed.
+    
+    Args:
+        pdfs_dir: Directory where PDFs should be stored
+        
+    Returns:
+        True if PDFs are available, False otherwise
+    """
+    # Check if PDFs already exist
+    if pdfs_dir.exists() and any(pdfs_dir.glob("**/*.pdf")):
+        return True
+    
+    # Try to get PDFS_URL from environment or Streamlit secrets
+    pdfs_url = os.getenv("PDFS_URL")
+    if not pdfs_url:
+        try:
+            if "PDFS_URL" in st.secrets:
+                pdfs_url = str(st.secrets["PDFS_URL"])
+        except Exception:
+            pass
+    
+    if not pdfs_url:
+        return False  # No URL configured, can't download
+    
+    # Download and extract
+    return _download_and_extract_pdfs(pdfs_url, pdfs_dir)
+
+
+def _find_pdf_file(file_path: str, pdfs_dir: Path) -> Optional[Path]:
+    """
+    Find a PDF file by name, searching in the downloaded PDFs directory.
+    
+    Args:
+        file_path: Original file path (may be a local Windows path)
+        pdfs_dir: Directory where PDFs are stored
+        
+    Returns:
+        Path to the PDF file if found, None otherwise
+    """
+    original_path = Path(file_path)
+    filename = original_path.name
+    
+    # If the original path exists, use it
+    if original_path.exists():
+        return original_path
+    
+    # Search in PDFs directory
+    if pdfs_dir.exists():
+        # Try exact match first
+        exact_match = pdfs_dir / filename
+        if exact_match.exists():
+            return exact_match
+        
+        # Try recursive search
+        matches = list(pdfs_dir.glob(f"**/{filename}"))
+        if matches:
+            return matches[0]
+        
+        # Try case-insensitive search
+        for pdf_file in pdfs_dir.glob("**/*.pdf"):
+            if pdf_file.name.lower() == filename.lower():
+                return pdf_file
+    
+    return None
+
+
+def _pdf_iframe(file_path: str, page: Optional[int]) -> str:
+    """
+    Display PDF in iframe, handling both local and downloaded paths.
+    """
+    # Try to find the PDF file
+    pdfs_dir = Path(__file__).resolve().parent / "data" / "pdfs"
+    p = _find_pdf_file(file_path, pdfs_dir)
+    
+    if p is None or not p.exists():
+        # PDF not available - show helpful message
+        filename = Path(file_path).name
+        return f"""
+        <div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
+            <p style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">📄 PDF not available</p>
+            <p style="margin-bottom: 5px;">File: <code style="background-color: #e8e8e8; padding: 2px 6px; border-radius: 3px;">{filename}</code></p>
+            <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                The PDF file could not be located.<br>
+                If running on Streamlit Cloud, ensure <code>PDFS_URL</code> is set in secrets.<br>
+                For local use, ensure the Volve dataset is accessible.
+            </p>
+        </div>
+        """
+
+    # PDF found - display it
+    try:
+        b64 = base64.b64encode(p.read_bytes()).decode("utf-8")
+        # Best-effort: encourage the viewer to land at the top of the cited page
+        # (reduces cases where continuous-scroll highlights the next thumbnail).
+        frag = f"#page={page}&view=FitH&zoom=page-width" if page else ""
+        return (
+            f'<iframe src="data:application/pdf;base64,{b64}{frag}" '
+            f'width="100%" height="900" type="application/pdf"></iframe>'
+        )
+    except Exception as e:
+        logger.error(f"Failed to load PDF {p}: {e}")
+        return f'<div style="padding: 20px; text-align: center;">Error loading PDF: {e}</div>'
 
 
 @st.cache_data(show_spinner=False)
@@ -124,9 +301,12 @@ def _render_pdf_page_png(file_path: str, page_1based: int, zoom: float = 2.0) ->
     except Exception:
         return None
 
-    p = Path(file_path)
-    if not p.exists():
-        return None
+    # Try to find the PDF file
+    pdfs_dir = Path(__file__).resolve().parent / "data" / "pdfs"
+    p = _find_pdf_file(file_path, pdfs_dir)
+    
+    if p is None or not p.exists():
+        return None  # PDF not available (e.g., on Streamlit Cloud without PDFS_URL)
     if page_1based < 1:
         return None
 
@@ -477,6 +657,30 @@ def main():
                 """)
                 st.stop()
                 return
+        
+        # Ensure PDFs are available (download if needed, but don't block if unavailable)
+        pdfs_dir = Path(__file__).resolve().parent / "data" / "pdfs"
+        if not _ensure_pdfs_available(pdfs_dir):
+            # Show info in sidebar but don't block - app can work without PDFs
+            pdfs_url = os.getenv("PDFS_URL")
+            if not pdfs_url:
+                try:
+                    if "PDFS_URL" in st.secrets:
+                        pdfs_url = str(st.secrets["PDFS_URL"])
+                except Exception:
+                    pass
+            
+            if pdfs_url:
+                with st.sidebar:
+                    with st.spinner("Downloading PDFs... This may take a few minutes."):
+                        if _ensure_pdfs_available(pdfs_dir):
+                            st.success("PDFs downloaded!")
+                            st.rerun()
+                        else:
+                            st.warning("PDFs not available. PDF viewer will show messages instead of documents.")
+            else:
+                # No PDFS_URL configured - silently continue (PDFs optional)
+                pass
         
         # Check if vectorstore exists before allowing queries
         graph = _get_graph(persist_dir, embedding_model, cache_version=2)
