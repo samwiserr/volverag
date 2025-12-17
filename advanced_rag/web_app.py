@@ -878,7 +878,8 @@ def main():
                     ql = user_input.lower()
                     param_keywords = ["petrophysical parameters", "petrophysical parameter", "net to gross", "net-to-gross", "netgros", "net/gross", "ntg", "n/g", "phif", "phi", "poro", "porosity", "water saturation", "sw", "klogh", "permeability", "permeab", "perm"]
                     has_param_keyword = any(k in ql for k in param_keywords) or bool(re.search(r'\bsw\b', ql, re.IGNORECASE))
-                    has_well_pattern = ("15" in ql and "9" in ql) or (extracted_well is not None if 'extracted_well' in locals() else False)
+                    extracted_well_for_routing = extracted_well if 'extracted_well' in locals() else None
+                    has_well_pattern = ("15" in ql and "9" in ql) or (extracted_well_for_routing is not None)
                     should_route = has_param_keyword and (cache_exists or has_well_pattern)
                     
                     st.write("---")
