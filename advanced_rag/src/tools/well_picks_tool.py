@@ -122,8 +122,8 @@ class WellPicksTool:
         try:
             self._load_or_parse()
         except FileNotFoundError:
-            logger.warning(
-                f"[WELL_PICKS] Well picks data not available (dat: {self.dat_path}, cache: {self.cache_path}). Tool will return helpful messages."
+            logger.info(
+                f"[WELL_PICKS] Well picks data not available (dat: {self.dat_path}, cache: {self.cache_path}). Tool will return helpful messages. This is optional - app works without it."
             )
             # Initialize empty - tool will still work but return informative messages
             self._rows = []
