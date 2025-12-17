@@ -371,24 +371,37 @@ def _pdf_iframe(file_path: str, page: Optional[int]) -> str:
     """
     # Try to find the PDF file
     pdfs_dir = Path(__file__).resolve().parent / "data" / "pdfs"
+    logger.info(f"[PDF_VIEWER] Looking for PDF: original_path='{file_path}', pdfs_dir='{pdfs_dir}'")
+    
     p = _find_pdf_file(file_path, pdfs_dir)
     
     if p is None or not p.exists():
         # PDF not available - show helpful message
         filename = Path(file_path).name
+        clean_path = _clean_source_path(file_path)
+        logger.warning(f"[PDF_VIEWER] PDF not found: original='{file_path}', cleaned='{clean_path}', pdfs_dir='{pdfs_dir}'")
+        
+        # Check if PDFs directory exists and list what's available
+        available_info = ""
+        if pdfs_dir.exists():
+            available_pdfs = list(pdfs_dir.glob("*.pdf"))[:5]
+            if available_pdfs:
+                available_info = f"<br>Available PDFs (sample): {', '.join([p.name for p in available_pdfs])}"
+        
         return f"""
         <div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
             <p style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">📄 PDF not available</p>
-            <p style="margin-bottom: 5px;">File: <code style="background-color: #e8e8e8; padding: 2px 6px; border-radius: 3px;">{filename}</code></p>
+            <p style="margin-bottom: 5px;">File: <code style="background-color: #e8e8e8; padding: 2px 6px; border-radius: 3px;">{clean_path}</code></p>
             <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
                 The PDF file could not be located.<br>
                 If running on Streamlit Cloud, ensure <code>PDFS_URL</code> is set in secrets.<br>
-                For local use, ensure the Volve dataset is accessible.
+                For local use, ensure the Volve dataset is accessible.{available_info}
             </p>
         </div>
         """
 
     # PDF found - display it
+    logger.info(f"[PDF_VIEWER] Found PDF: {p}, page={page}")
     try:
         b64 = base64.b64encode(p.read_bytes()).decode("utf-8")
         # Best-effort: encourage the viewer to land at the top of the cited page
