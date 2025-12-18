@@ -1119,45 +1119,61 @@ def main():
                     st.caption(f"Cited page preview (page {vpage})")
                     st.image(png, width='stretch')
                     
-                    # Add button to open full PDF in new tab using blob URL
+                    # Add button to open full PDF in new tab using blob URL, with download fallback
                     pdf_data_uri = _get_pdf_data_uri(vp)
                     if pdf_data_uri:
                         # Use JavaScript blob URL to open PDF in new tab (Chrome allows this)
                         import streamlit.components.v1 as components
                         clean_path = _clean_source_path(vp)
+                        filename = Path(vp).name
                         # Escape the base64 string for JavaScript
                         b64 = pdf_data_uri.split(',')[1]  # Extract base64 part
                         b64_escaped = b64.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r")
                         
                         components.html(
                             f"""
-                            <button onclick="(function() {{
-                                const base64 = '{b64_escaped}';
-                                try {{
-                                    const binaryString = atob(base64);
-                                    const bytes = new Uint8Array(binaryString.length);
-                                    for (let i = 0; i < binaryString.length; i++) {{
-                                        bytes[i] = binaryString.charCodeAt(i);
+                            <div style="margin-top: 0.5rem;">
+                                <button onclick="(function() {{
+                                    const base64 = '{b64_escaped}';
+                                    try {{
+                                        const binaryString = atob(base64);
+                                        const bytes = new Uint8Array(binaryString.length);
+                                        for (let i = 0; i < binaryString.length; i++) {{
+                                            bytes[i] = binaryString.charCodeAt(i);
+                                        }}
+                                        const blob = new Blob([bytes], {{ type: 'application/pdf' }});
+                                        const url = URL.createObjectURL(blob);
+                                        const newWindow = window.open(url, '_blank');
+                                        if (newWindow) {{
+                                            // Clean up blob URL after a delay
+                                            setTimeout(() => URL.revokeObjectURL(url), 1000);
+                                        }} else {{
+                                            // Pop-up blocked, offer download instead
+                                            const downloadLink = document.createElement('a');
+                                            downloadLink.href = url;
+                                            downloadLink.download = '{filename}';
+                                            downloadLink.click();
+                                            URL.revokeObjectURL(url);
+                                        }}
+                                    }} catch (error) {{
+                                        console.error('Failed to open PDF:', error);
+                                        // Fallback to download
+                                        const downloadLink = document.createElement('a');
+                                        downloadLink.href = 'data:application/pdf;base64,' + base64;
+                                        downloadLink.download = '{filename}';
+                                        downloadLink.click();
                                     }}
-                                    const blob = new Blob([bytes], {{ type: 'application/pdf' }});
-                                    const url = URL.createObjectURL(blob);
-                                    const newWindow = window.open(url, '_blank');
-                                    if (newWindow) {{
-                                        // Clean up blob URL after a delay (optional)
-                                        setTimeout(() => URL.revokeObjectURL(url), 1000);
-                                    }} else {{
-                                        alert('Please allow pop-ups to view the PDF');
-                                    }}
-                                }} catch (error) {{
-                                    console.error('Failed to open PDF:', error);
-                                    alert('Failed to open PDF. Please try downloading it instead.');
-                                }}
-                            }})()" 
-                            style="padding: 0.5rem 1rem; background-color: #1f77b4; color: white; border: none; border-radius: 0.25rem; margin-top: 0.5rem; font-weight: 500; cursor: pointer; font-size: 0.9rem;">
-                                📄 Open full PDF in new tab
-                            </button>
+                                }})()" 
+                                style="padding: 0.5rem 1rem; background-color: #1f77b4; color: white; border: none; border-radius: 0.25rem; font-weight: 500; cursor: pointer; font-size: 0.9rem; margin-right: 0.5rem;">
+                                    📄 Open full PDF in new tab
+                                </button>
+                                <a href="{pdf_data_uri}" download="{filename}" 
+                                   style="display: inline-block; padding: 0.5rem 1rem; background-color: #6c757d; color: white; text-decoration: none; border-radius: 0.25rem; font-weight: 500; font-size: 0.9rem;">
+                                    ⬇️ Download PDF
+                                </a>
+                            </div>
                             """,
-                            height=50
+                            height=60
                         )
                     else:
                         st.caption("⚠️ Full PDF not available")
