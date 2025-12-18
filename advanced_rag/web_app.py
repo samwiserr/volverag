@@ -443,7 +443,17 @@ def _pdf_full_viewer(file_path: str, initial_page: Optional[int] = None) -> str:
                 if (!pdfDoc) return;
                 
                 pdfDoc.getPage(pageNum).then(function(page) {{
-                    const scale = 1.5;
+                    // Calculate scale to fit container width (with some padding)
+                    const viewer = document.getElementById(viewerId);
+                    const containerWidth = viewer.clientWidth || 800; // Fallback to 800px
+                    const padding = 40; // Padding on each side
+                    const availableWidth = containerWidth - padding;
+                    
+                    // Get page dimensions at scale 1.0
+                    const viewport1 = page.getViewport({{scale: 1.0}});
+                    // Calculate scale to fit width
+                    const scale = Math.min(availableWidth / viewport1.width, 2.0); // Max scale of 2.0
+                    
                     const viewport = page.getViewport({{scale: scale}});
                     
                     const canvas = document.createElement('canvas');
@@ -453,8 +463,9 @@ def _pdf_full_viewer(file_path: str, initial_page: Optional[int] = None) -> str:
                     canvas.style.marginBottom = '10px';
                     canvas.style.border = '1px solid #ddd';
                     canvas.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    canvas.style.maxWidth = '100%';
+                    canvas.style.height = 'auto';
                     
-                    const viewer = document.getElementById(viewerId);
                     viewer.innerHTML = '';
                     viewer.appendChild(canvas);
                     
