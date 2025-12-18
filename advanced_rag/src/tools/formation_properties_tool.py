@@ -270,6 +270,20 @@ class FormationPropertiesTool:
     def _lookup_all_wells(self) -> str:
         """Return formations and properties for all wells."""
         logger.info(f"[FORMATION_PROPERTIES] _lookup_all_wells() called - processing all wells")
+        
+        # Debug: Check if well picks is loaded
+        logger.info(f"[FORMATION_PROPERTIES] Well picks _by_well has {len(self._well_picks._by_well)} entries")
+        logger.info(f"[FORMATION_PROPERTIES] Well picks _rows has {len(self._well_picks._rows)} rows")
+        logger.info(f"[FORMATION_PROPERTIES] Well picks cache_path: {self._well_picks.cache_path}")
+        logger.info(f"[FORMATION_PROPERTIES] Well picks cache_path exists: {self._well_picks.cache_path.exists()}")
+        if self._well_picks._by_well:
+            sample_keys = list(self._well_picks._by_well.keys())[:5]
+            logger.info(f"[FORMATION_PROPERTIES] Sample _by_well keys: {sample_keys}")
+        
+        if not self._well_picks._by_well:
+            logger.warning(f"[FORMATION_PROPERTIES] Well picks _by_well is empty! Cache path: {self._well_picks.cache_path}, dat path: {self._well_picks.dat_path}")
+            return "[WELL_FORMATION_PROPERTIES] No well picks data available. Please ensure well_picks_cache.json exists in the data directory."
+        
         lines: List[str] = []
         lines.append("[WELL_FORMATION_PROPERTIES] All Wells")
         lines.append("")
