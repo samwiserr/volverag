@@ -515,21 +515,32 @@ def _download_and_extract_vectorstore(zip_url: str, target_dir: Path) -> bool:
                     root_dir = list(root_dirs)[0]
                     logger.info(f"ZIP contains root directory '{root_dir}'. Extracting contents...")
                     
-                    # Extract to temporary location first
-                    with tempfile.TemporaryDirectory() as tmp_extract:
-                        zip_ref.extractall(tmp_extract)
-                        source_dir = Path(tmp_extract) / root_dir
+                    # Manually extract files, stripping the root_dir prefix
+                    extracted_count = 0
+                    for orig_path, norm_path in normalized_files:
+                        # Check if this file is under the root directory
+                        if not norm_path.startswith(root_dir + '/'):
+                            continue
                         
-                        # Move contents from root_dir to target_dir
-                        if source_dir.exists():
-                            for item in source_dir.iterdir():
-                                dest = target_dir / item.name
-                                if item.is_dir():
-                                    if dest.exists():
-                                        shutil.rmtree(dest)
-                                    shutil.copytree(item, dest)
-                                else:
-                                    shutil.copy2(item, dest)
+                        # Get relative path within root_dir
+                        rel_path = norm_path[len(root_dir) + 1:]
+                        if not rel_path:
+                            continue
+                        
+                        # Create destination path
+                        dest_path = target_dir / rel_path
+                        dest_path.parent.mkdir(parents=True, exist_ok=True)
+                        
+                        # Extract the file
+                        try:
+                            with zip_ref.open(orig_path) as source:
+                                with open(dest_path, 'wb') as dest:
+                                    dest.write(source.read())
+                            extracted_count += 1
+                        except Exception as e:
+                            logger.warning(f"Failed to extract {orig_path}: {e}")
+                    
+                    logger.info(f"Extracted {extracted_count} files from '{root_dir}' directory")
                 else:
                     # Files are at root level OR have mixed paths - need to handle Windows-style paths
                     # Check if files have a common prefix like "vectorstore/"
