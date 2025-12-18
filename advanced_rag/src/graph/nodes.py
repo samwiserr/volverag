@@ -414,6 +414,8 @@ def generate_query_or_respond(state: MessagesState, tools):
         is_eval_params = has_well_pattern_eval and any(t in ql for t in eval_params_terms)
         if is_eval_params:
             logger.info(f"[ROUTING] ✅ Detected eval params query - routing to lookup_evaluation_parameters. Query: '{question[:100] if isinstance(question, str) else question}', well_pattern={has_well_pattern_eval}, extracted_well='{extracted_well_eval}'")
+            # Add retriever as fallback in case eval params tool doesn't have data for this well
+            # This ensures we can still answer from documents even if structured lookup fails
             forced = AIMessage(
                 content="",
                 tool_calls=[
@@ -421,6 +423,11 @@ def generate_query_or_respond(state: MessagesState, tools):
                         "name": "lookup_evaluation_parameters",
                         "args": {"query": tool_query},
                         "id": "call_lookup_evaluation_parameters_1",
+                    },
+                    {
+                        "name": "retrieve_petrophysical_docs",
+                        "args": {"query": tool_query},
+                        "id": "call_retrieve_petrophysical_docs_eval_fallback_1",
                     }
                 ],
             )
