@@ -256,6 +256,7 @@ class RetrieverTool:
         Field-aware query expansion:
         - Well-name normalization/variants (15/9-F-11 == 15_9-F-11 == 15-9-F-11)
         - Acronym expansion (OWC, ODT, RKB, etc.)
+        - Evaluation parameter synonyms (matrix density -> rhoma, ρma, etc.)
         """
         q = query.strip()
         ql = q.lower()
@@ -271,6 +272,22 @@ class RetrieverTool:
             "wlc": "well log correlation",
             "lfp": "log formation parameters",
         }
+        
+        # Evaluation parameter synonyms for better retrieval
+        eval_param_expansions = []
+        if "matrix density" in ql or "matrix dens" in ql:
+            eval_param_expansions.extend(["rhoma", "ρma", "rho ma", "matrix density", "evaluation parameters", "evaluation parameter table"])
+        if "fluid density" in ql or "fluid dens" in ql:
+            eval_param_expansions.extend(["rhofl", "ρfl", "rho fl", "fluid density", "evaluation parameters", "evaluation parameter table"])
+        if "density" in ql and ("matrix" not in ql and "fluid" not in ql):
+            # Generic density query - add both
+            eval_param_expansions.extend(["rhoma", "rhofl", "ρma", "ρfl", "matrix density", "fluid density", "evaluation parameters"])
+        if "grmax" in ql or "gr max" in ql:
+            eval_param_expansions.extend(["gamma ray max", "gr maximum", "evaluation parameters", "evaluation parameter table"])
+        if "grmin" in ql or "gr min" in ql:
+            eval_param_expansions.extend(["gamma ray min", "gr minimum", "evaluation parameters", "evaluation parameter table"])
+        if "archie" in ql:
+            eval_param_expansions.extend(["archie a", "archie m", "archie n", "tortuosity", "cementation exponent", "saturation exponent", "evaluation parameters"])
 
         expanded_terms: List[str] = []
         for ac, full in acronyms.items():
