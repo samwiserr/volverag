@@ -221,17 +221,24 @@ class PetroParamsTool:
             )
 
         # Multi-strategy well matching (same approach as FormationPropertiesTool)
+        logger.info(f"[PETRO_PARAMS] Starting well matching for '{well}'")
         nwell = _norm_well(well)
+        logger.info(f"[PETRO_PARAMS] Normalized well: '{nwell}'")
         rows = self._by_well.get(nwell, [])
+        logger.info(f"[PETRO_PARAMS] Initial lookup result: rows={len(rows) if rows else 0}")
 
         if not rows:
             # Try normalizing like well picks (remove NO/WELL etc)
+            logger.info(f"[PETRO_PARAMS] Trying well picks normalization...")
             try:
                 nw2 = _norm_well_picks(well)
-            except Exception:
+                logger.info(f"[PETRO_PARAMS] Well picks norm: '{nw2}'")
+            except Exception as e:
+                logger.info(f"[PETRO_PARAMS] Well picks normalization failed: {e}")
                 nw2 = None
             if nw2:
                 rows = self._by_well.get(nw2, [])
+                logger.info(f"[PETRO_PARAMS] Well picks lookup result: rows={len(rows) if rows else 0}")
 
         if not rows:
             # Try extracting just the numeric/cleaned part
