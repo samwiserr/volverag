@@ -414,6 +414,27 @@ def generate_query_or_respond(state: MessagesState, tools):
         is_eval_params = has_well_pattern_eval and any(t in ql for t in eval_params_terms)
         if is_eval_params:
             logger.info(f"[ROUTING] ✅ Detected eval params query - routing to lookup_evaluation_parameters. Query: '{question[:100] if isinstance(question, str) else question}', well_pattern={has_well_pattern_eval}, extracted_well='{extracted_well_eval}'")
+            # Enhance retriever query with evaluation parameter synonyms for better retrieval
+            # Map query terms to evaluation parameter synonyms
+            eval_param_synonyms = {
+                "matrix density": ["rhoma", "ρma", "matrix density", "evaluation parameters", "density matrix"],
+                "fluid density": ["rhofl", "ρfl", "fluid density", "evaluation parameters", "density fluid"],
+                "density": ["rhoma", "rhofl", "ρma", "ρfl", "matrix density", "fluid density", "evaluation parameters"],
+                "grmax": ["gr max", "gamma ray max", "gr maximum", "evaluation parameters"],
+                "grmin": ["gr min", "gamma ray min", "gr minimum", "evaluation parameters"],
+                "archie": ["archie a", "archie m", "archie n", "tortuosity", "cementation", "saturation exponent", "evaluation parameters"],
+            }
+            
+            # Build enhanced query with synonyms
+            enhanced_retriever_query = tool_query
+            ql_lower = ql.lower()
+            for term, synonyms in eval_param_synonyms.items():
+                if term in ql_lower:
+                    # Add synonyms to query to improve retrieval
+                    enhanced_retriever_query = f"{tool_query} {' '.join(synonyms)}"
+                    logger.info(f"[ROUTING] Enhanced retriever query with eval param synonyms: '{enhanced_retriever_query[:150]}'")
+                    break
+            
             # Add retriever as fallback in case eval params tool doesn't have data for this well
             # This ensures we can still answer from documents even if structured lookup fails
             forced = AIMessage(
@@ -426,7 +447,7 @@ def generate_query_or_respond(state: MessagesState, tools):
                     },
                     {
                         "name": "retrieve_petrophysical_docs",
-                        "args": {"query": tool_query},
+                        "args": {"query": enhanced_retriever_query},  # Use enhanced query
                         "id": "call_retrieve_petrophysical_docs_eval_fallback_1",
                     }
                 ],
