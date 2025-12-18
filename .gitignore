@@ -46,17 +46,9 @@ data/processed/
 *.sqlite3
 *.db
 
-# THEN allow specific vectorstore files (negation rules after)
-!advanced_rag/data/vectorstore/
-!advanced_rag/data/vectorstore/**
-!advanced_rag/data/vectorstore/*.sqlite3
-!advanced_rag/data/vectorstore/*.bin
-!advanced_rag/data/vectorstore/*.pickle
-!advanced_rag/data/vectorstore/**/*.bin
-!advanced_rag/data/vectorstore/**/*.pickle
-!advanced_rag/data/vectorstore/*.json
-!advanced_rag/data/vectorstore/*.jsonl
-!advanced_rag/data/well_picks_cache.json
+# Vectorstore directory (downloaded from GitHub Releases, not in repo)
+advanced_rag/data/vectorstore/
+advanced_rag/data/vectorstore/**
 
 # Volve dataset (DO NOT COMMIT - large files, licensing issues)
 # Users should download separately and place outside repository
