@@ -438,47 +438,6 @@ def generate_query_or_respond(state: MessagesState, tools):
             )
             return {"messages": [forced]}
 
-        # Deterministic routing: Petrophysical parameters table (Net/Gross, PHIF, SW, KLOGH) by well/formation/parameter
-        # Prefer structured petrophysical lookup when a local cache exists (no hardcoded well-number requirement)
-        # IMPORTANT: This check must happen BEFORE the fact-like query routing to catch param queries
-        try:
-            vectorstore_dir = Path(__file__).resolve().parents[2] / "data" / "vectorstore"
-            cache_path = vectorstore_dir / "petro_params_cache.json"
-            has_petro_cache = cache_path.exists()
-            logger.info(f"[ROUTING] Checking petro cache: path='{cache_path}', exists={has_petro_cache}")
-
-            # Check for parameter keywords (including variations)
-            param_keywords = ["petrophysical parameters", "petrophysical parameter", "net to gross", "net-to-gross", "netgros", "net/gross", "ntg", "n/g", "phif", "phi", "poro", "porosity", "water saturation", "sw", "klogh", "permeability", "permeab", "perm"]
-            has_param_keyword = any(k in ql for k in param_keywords) or re.search(r'\bsw\b', ql, re.IGNORECASE) or re.search(r'\bk\b', ql, re.IGNORECASE)
-            
-            # Check for well pattern (15/9 or similar)
-            extracted_well = extract_well(question)
-            has_well_pattern = ("15" in ql and "9" in ql) or extracted_well is not None or nq.well is not None
-            logger.info(f"[ROUTING] Well detection: extracted_well='{extracted_well}', nq.well='{nq.well}', has_well_pattern={has_well_pattern}")
-            logger.info(f"[ROUTING] Query text (ql): '{ql[:100]}'")
-            logger.info(f"[ROUTING] has_param_keyword={has_param_keyword}")
-
-            is_param_query = has_param_keyword and (has_petro_cache or has_well_pattern)
-            
-            if is_param_query:
-                logger.info(f"[ROUTING] ✅ Detected param query - routing to lookup_petrophysical_params. Query: '{question[:100]}'")
-                logger.info(f"[ROUTING] has_param_keyword={has_param_keyword}, has_petro_cache={has_petro_cache}, has_well_pattern={has_well_pattern}")
-                forced = AIMessage(
-                    content="",
-                    tool_calls=[
-                        {
-                            "name": "lookup_petrophysical_params",
-                            "args": {"query": tool_query},
-                            "id": "call_lookup_petrophysical_params_1",
-                        }
-                    ],
-                )
-                return {"messages": [forced]}
-            else:
-                logger.warning(f"[ROUTING] ❌ NOT routing to petro params tool. has_param_keyword={has_param_keyword}, has_petro_cache={has_petro_cache}, has_well_pattern={has_well_pattern}")
-        except Exception as e:
-            logger.error(f"[ROUTING] Exception in petro params routing: {e}", exc_info=True)
-
         # Check for specific well name FIRST before checking wants_all_wells
         # This prevents "all formations in Well NO 15/9-F-15 A" from matching wants_all_wells
         # Import well extraction function for direct check
