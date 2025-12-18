@@ -1298,75 +1298,10 @@ def main():
         vp = st.session_state.viewer.get("path")
         vpage = st.session_state.viewer.get("page")
         if vp:
-            # Exact citation preview (always correct page)
-            if isinstance(vpage, int) and vpage > 0:
-                png = _render_pdf_page_png(vp, vpage)
-                if png:
-                    st.caption(f"Cited page preview (page {vpage})")
-                    st.image(png, width='stretch')
-                    
-                    # Add button to open full PDF in new tab using blob URL, with download fallback
-                    pdf_data_uri = _get_pdf_data_uri(vp)
-                    if pdf_data_uri:
-                        # Use JavaScript blob URL to open PDF in new tab (Chrome allows this)
-                        import streamlit.components.v1 as components
-                        clean_path = _clean_source_path(vp)
-                        filename = Path(vp).name
-                        # Escape the base64 string for JavaScript
-                        b64 = pdf_data_uri.split(',')[1]  # Extract base64 part
-                        b64_escaped = b64.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r")
-                        
-                        components.html(
-                            f"""
-                            <div style="margin-top: 0.5rem;">
-                                <button onclick="(function() {{
-                                    const base64 = '{b64_escaped}';
-                                    try {{
-                                        const binaryString = atob(base64);
-                                        const bytes = new Uint8Array(binaryString.length);
-                                        for (let i = 0; i < binaryString.length; i++) {{
-                                            bytes[i] = binaryString.charCodeAt(i);
-                                        }}
-                                        const blob = new Blob([bytes], {{ type: 'application/pdf' }});
-                                        const url = URL.createObjectURL(blob);
-                                        const newWindow = window.open(url, '_blank');
-                                        if (newWindow) {{
-                                            // Clean up blob URL after a delay
-                                            setTimeout(() => URL.revokeObjectURL(url), 1000);
-                                        }} else {{
-                                            // Pop-up blocked, offer download instead
-                                            const downloadLink = document.createElement('a');
-                                            downloadLink.href = url;
-                                            downloadLink.download = '{filename}';
-                                            downloadLink.click();
-                                            URL.revokeObjectURL(url);
-                                        }}
-                                    }} catch (error) {{
-                                        console.error('Failed to open PDF:', error);
-                                        // Fallback to download
-                                        const downloadLink = document.createElement('a');
-                                        downloadLink.href = 'data:application/pdf;base64,' + base64;
-                                        downloadLink.download = '{filename}';
-                                        downloadLink.click();
-                                    }}
-                                }})()" 
-                                style="padding: 0.5rem 1rem; background-color: #1f77b4; color: white; border: none; border-radius: 0.25rem; font-weight: 500; cursor: pointer; font-size: 0.9rem; margin-right: 0.5rem;">
-                                    📄 Open full PDF in new tab
-                                </button>
-                                <a href="{pdf_data_uri}" download="{filename}" 
-                                   style="display: inline-block; padding: 0.5rem 1rem; background-color: #6c757d; color: white; text-decoration: none; border-radius: 0.25rem; font-weight: 500; font-size: 0.9rem;">
-                                    ⬇️ Download PDF
-                                </a>
-                            </div>
-                            """,
-                            height=60
-                        )
-                    else:
-                        st.caption("⚠️ Full PDF not available")
-                else:
-                    st.info("PDF page preview not available. The PDF file may not be accessible.")
-            else:
-                st.info("Click **View page** next to a source to open it here.")
+            # Show full PDF viewer with navigation (starts at cited page)
+            import streamlit.components.v1 as components
+            initial_page = vpage if isinstance(vpage, int) and vpage > 0 else 1
+            components.html(_pdf_full_viewer(vp, initial_page), height=900)
         else:
             st.info("Click **View page** next to a source to open it here.")
 
