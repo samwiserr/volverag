@@ -50,15 +50,19 @@ def _canonicalize_well(s: str) -> str:
 def extract_well(text: str) -> Optional[str]:
     """
     Extract well name from query. Supports multiple well formats:
-    - Platform wells: 15/9-F-5, 15/9-F-15 A
+    - Platform wells: 15/9-F-5, 15/9-F5, 15/9-F-15 A
     - Non-platform wells: 15/9-19A, 19/9-19 bt2
     - With "Well NO" prefix: Well NO 15/9-F-5
     """
     # Generic pattern: match any well format like "XX/YY-ZZZ" or "XX/YY-ABC-ZZZ"
-    # Pattern 1: Platform format (XX/YY-F-NN or XX/YY-F-NN A)
+    # Pattern 1: Platform format (XX/YY-F-NN or XX/YY-FNN or XX/YY-F-NN A)
+    # Handle both "F-5" and "F5" formats
     m = re.search(r"(?:Well\s+NO\s+)?(\d+[\s_/-]*\d+[\s_/-]*[A-Z][\s_/-]*-?\s*\d+(?:\s+[A-Z0-9]+|[A-Z0-9]+)?)\b", text, re.IGNORECASE)
     if m:
-        return _canonicalize_well(m.group(1))
+        well = m.group(1)
+        # Normalize F5 to F-5 format for consistency
+        well = re.sub(r'([A-Z])(\d+)', r'\1-\2', well, flags=re.IGNORECASE)
+        return _canonicalize_well(well)
     
     # Pattern 2: Non-platform format (XX/YY-NNN or XX/YY-NNN suffix)
     m2 = re.search(r"(?:Well\s+NO\s+)?(\d+[\s_/-]*\d+[\s_/-]*-?\s*\d+(?:\s+[A-Z0-9]+|[A-Z0-9]+)?)\b", text, re.IGNORECASE)

@@ -295,7 +295,8 @@ class RetrieverTool:
                 expanded_terms.append(full)
 
         # Well-name variants
-        # Capture patterns like 15/9-F-11, 15_9-F-11, 15-9-F-11, 15/9-19A, etc.
+        # Capture patterns like 15/9-F-11, 15_9-F-11, 15-9-F-11, 15/9-19A, 15/9-F5, etc.
+        # Handle both "F-5" and "F5" formats
         m = re.search(r"(15[\s_/-]*9[\s_/-]*(?:f[\s_/-]*)?\d+[a-z]?(?:[\s_/-]*t2)?)", q, re.IGNORECASE)
         well_variants: List[str] = []
         if m:
@@ -307,6 +308,14 @@ class RetrieverTool:
             variants.add(well_clean.replace("_", "/").replace("-", "/"))
             variants.add(well_clean.replace("/", "_").replace("-", "_"))
             variants.add(well_clean.replace("/", "-").replace("_", "-"))
+            # Handle F5 vs F-5 format variations
+            # If we have "F5" format, also add "F-5" format and vice versa
+            f5_match = re.search(r"f(\d+)", well_clean, re.IGNORECASE)
+            if f5_match:
+                num = f5_match.group(1)
+                # Add both F5 and F-5 formats
+                variants.add(re.sub(r"f(\d+)", rf"f-{num}", well_clean, flags=re.IGNORECASE))
+                variants.add(re.sub(r"f-(\d+)", rf"f{num}", well_clean, flags=re.IGNORECASE))
             # Keep original too
             variants.add(well_raw)
             # Also add with "Well " prefix commonly seen
@@ -685,7 +694,8 @@ class RetrieverTool:
     def _extract_well_name(self, query: str) -> Optional[str]:
         """Extract well name from query."""
         import re
-        # Pattern: 15/9-19A, 15_9-19A, 15-9-19A, etc.
+        # Pattern: 15/9-19A, 15_9-19A, 15-9-19A, 15/9-F5, 15/9-F-5, etc.
+        # Handle both F5 and F-5 formats
         # Try full well name first (15/9-19A)
         patterns = [
             r'(15[_\s/-]9[_\s/-]?\d+[A-Z]?)',  # 15/9-19A format (full well name)
