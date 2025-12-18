@@ -1118,9 +1118,28 @@ def main():
                 if png:
                     st.caption(f"Cited page preview (page {vpage})")
                     st.image(png, width='stretch')
-            # Use st.components.v1.html for better JavaScript support
-            import streamlit.components.v1 as components
-            components.html(_pdf_iframe(vp, vpage), height=900)
+                    
+                    # Add button to open full PDF in new tab
+                    pdf_data_uri = _get_pdf_data_uri(vp)
+                    if pdf_data_uri:
+                        # Create a button that opens PDF in new tab using HTML
+                        import streamlit.components.v1 as components
+                        clean_path = _clean_source_path(vp)
+                        components.html(
+                            f"""
+                            <a href="{pdf_data_uri}" target="_blank" 
+                               style="display: inline-block; padding: 0.5rem 1rem; background-color: #1f77b4; color: white; text-decoration: none; border-radius: 0.25rem; margin-top: 0.5rem; font-weight: 500;">
+                                📄 Open full PDF in new tab
+                            </a>
+                            """,
+                            height=50
+                        )
+                    else:
+                        st.caption("⚠️ Full PDF not available")
+                else:
+                    st.info("PDF page preview not available. The PDF file may not be accessible.")
+            else:
+                st.info("Click **View page** next to a source to open it here.")
         else:
             st.info("Click **View page** next to a source to open it here.")
 
