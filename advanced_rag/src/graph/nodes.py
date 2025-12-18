@@ -386,10 +386,53 @@ def generate_query_or_respond(state: MessagesState, tools):
         except Exception as e:
             logger.error(f"[ROUTING] Exception in petro params routing: {e}", exc_info=True)
 
+        # Deterministic routing: "Evaluation parameters" tables (Rhoma/Rhofl/GRmin/GRmax/Archie a,n,m, etc.)
+        # IMPORTANT: This must happen BEFORE fact-like query routing to catch density/rho queries
+        # Users often ask for these values without saying "evaluation parameters", so we key off parameter terms too.
+        # Use same well detection logic as petro params routing (not just "15" and "9")
+        extracted_well_eval = extract_well(question)
+        has_well_pattern_eval = ("15" in ql and "9" in ql) or extracted_well_eval is not None or nq.well is not None
+        
+        eval_params_terms = [
+            "evaluation parameter",
+            "evaluation parameters",
+            "grmax",
+            "grmin",
+            "rhoma",
+            "rhofl",
+            "archie a",
+            "archie m",
+            "archie n",
+            "tortuosity factor",
+            "cementation exponent",
+            "saturation exponent",
+            "matrix density",
+            "fluid density",
+            "ρma",
+            "ρfl",
+        ]
+        is_eval_params = has_well_pattern_eval and any(t in ql for t in eval_params_terms)
+        if is_eval_params:
+            logger.info(f"[ROUTING] ✅ Detected eval params query - routing to lookup_evaluation_parameters. Query: '{question[:100] if isinstance(question, str) else question}', well_pattern={has_well_pattern_eval}, extracted_well='{extracted_well_eval}'")
+            forced = AIMessage(
+                content="",
+                tool_calls=[
+                    {
+                        "name": "lookup_evaluation_parameters",
+                        "args": {"query": tool_query},
+                        "id": "call_lookup_evaluation_parameters_1",
+                    }
+                ],
+            )
+            return {"messages": [forced]}
+
         # For fact-like queries, do typo-tolerant property resolution:
         # - fuzzy match over registry
         # - if ambiguous, ask a clarification question (agent)
-        if nq.well and (("density" in ql) or ("rho" in ql) or ("archie" in ql) or ("gr" in ql) or ("dens" in ql) or ("permeability" in ql) or ("permeab" in ql) or ("perm" in ql) or ("porosity" in ql) or ("poro" in ql) or ("phi" in ql) or re.search(r'\bk\b', ql, re.IGNORECASE) or nq.intent == "fact"):
+        # NOTE: "matrix density" and "fluid density" are handled by evaluation parameters routing above
+        # Exclude eval params terms from fact-like routing to avoid conflicts
+        eval_params_in_query = any(t in ql for t in ["matrix density", "fluid density", "rhoma", "rhofl", "grmax", "grmin", "archie a", "archie m", "archie n", "tortuosity factor", "cementation exponent", "saturation exponent", "ρma", "ρfl"])
+        if nq.well and not eval_params_in_query and (("density" in ql) or ("rho" in ql) or ("archie" in ql) or ("gr" in ql) or ("dens" in ql) or ("permeability" in ql) or ("permeab" in ql) or ("perm" in ql) or ("porosity" in ql) or ("poro" in ql) or ("phi" in ql) or re.search(r'\bk\b', ql, re.IGNORECASE) or nq.intent == "fact"):
             registry = _get_registry()
             # Start from normalized property if present, otherwise resolve with fuzzy
             entry = next((e for e in registry if e.canonical == nq.property), None) if nq.property else None
