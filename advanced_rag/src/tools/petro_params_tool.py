@@ -58,6 +58,50 @@ def _extract_well(text: str) -> Optional[str]:
     return extract_well(text)
 
 
+def _extract_formation(query: str) -> Optional[str]:
+    """Extract formation name from query using normalization."""
+    from ..normalize.query_normalizer import normalize_formation
+    return normalize_formation(query)
+
+
+def _match_formation_fuzzy(query_formation: str, available_formations: List[str]) -> Optional[str]:
+    """
+    Fuzzy match formation name against available formations.
+    Returns the best match if score is above threshold.
+    """
+    if not query_formation or not available_formations:
+        return None
+    
+    try:
+        from rapidfuzz import fuzz, process
+        
+        # Case-insensitive matching
+        lower_map = {f.lower(): f for f in available_formations if isinstance(f, str) and f.strip()}
+        if not lower_map:
+            return None
+        
+        query_lower = query_formation.lower()
+        
+        # Try exact match first
+        if query_lower in lower_map:
+            return lower_map[query_lower]
+        
+        # Fuzzy match
+        hits = process.extract(query_lower, list(lower_map.keys()), scorer=fuzz.partial_ratio, limit=3)
+        if hits:
+            best_match, score, _ = hits[0]
+            second_score = hits[1][1] if len(hits) > 1 else 0.0
+            
+            # Threshold: 85% match with 10% margin over second best
+            if score >= 85.0 and (score - second_score) >= 10.0:
+                logger.info(f"[PETRO_PARAMS] Fuzzy formation match: '{query_formation}' -> '{lower_map[best_match]}' (score: {score:.1f}%)")
+                return lower_map[best_match]
+    except Exception as e:
+        logger.debug(f"[PETRO_PARAMS] Fuzzy formation matching failed: {e}")
+    
+    return None
+
+
 def _safe_float(tok: str) -> Optional[float]:
     try:
         return float(tok)
@@ -387,6 +431,46 @@ class PetroParamsTool:
                 {"error": "no_rows_for_well", "well": well, "message": f"No petrophysical parameter rows found for well {well}."},
                 ensure_ascii=False,
             )
+
+        # Extract and match formation from query (with fuzzy matching for typos)
+        formation = _extract_formation(query)
+        logger.info(f"[PETRO_PARAMS] Extracted formation: '{formation}'")
+        
+        # Filter rows by formation if specified
+        if formation:
+            # Get available formations from rows
+            available_formations = sorted({r.formation for r in rows if r.formation})
+            logger.info(f"[PETRO_PARAMS] Available formations for well '{well}': {available_formations}")
+            
+            # Try fuzzy matching if exact match fails
+            matched_formation = None
+            if formation in available_formations:
+                matched_formation = formation
+                logger.info(f"[PETRO_PARAMS] ✅ Exact formation match: '{formation}'")
+            else:
+                matched_formation = _match_formation_fuzzy(formation, available_formations)
+                if matched_formation:
+                    logger.info(f"[PETRO_PARAMS] ✅ Fuzzy formation match: '{formation}' -> '{matched_formation}'")
+                else:
+                    logger.warning(f"[PETRO_PARAMS] ❌ No formation match found for '{formation}'. Available: {available_formations}")
+            
+            # Filter rows by matched formation
+            if matched_formation:
+                original_count = len(rows)
+                rows = [r for r in rows if r.formation == matched_formation]
+                logger.info(f"[PETRO_PARAMS] Filtered from {original_count} to {len(rows)} rows for formation '{matched_formation}'")
+            else:
+                # If formation specified but no match, return error with suggestions
+                return "[PETRO_PARAMS_JSON] " + json.dumps(
+                    {
+                        "error": "formation_not_found",
+                        "well": well,
+                        "formation": formation,
+                        "available_formations": available_formations,
+                        "message": f"Formation '{formation}' not found for well {well}. Available formations: {', '.join(available_formations)}"
+                    },
+                    ensure_ascii=False,
+                )
 
         # Build a formation->values mapping. Values remain raw numbers (no interpretation).
         formations = sorted({r.formation for r in rows})
