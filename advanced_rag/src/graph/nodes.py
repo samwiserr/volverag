@@ -1460,8 +1460,17 @@ def generate_answer(state: MessagesState):
             # Cell: parameter + formation
             if f and p and isinstance(values, dict):
                 row = values.get(f) or {}
+                # Edge case: row is not a dict (malformed data)
+                if not isinstance(row, dict):
+                    logger.warning(f"[ANSWER] Row for formation '{f}' is not a dict: {type(row)}")
+                    row = {}
+                
                 # Check if the formation has a value for this parameter
                 param_value = row.get(p)
+                
+                # Edge case: param_value is a string "N/A" or empty string
+                if isinstance(param_value, str) and param_value.strip().upper() in ["N/A", "NA", "NONE", ""]:
+                    param_value = None
                 
                 # If value is None or N/A, provide a helpful message
                 if param_value is None and p != "klogh":
