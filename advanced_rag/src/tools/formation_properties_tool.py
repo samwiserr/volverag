@@ -67,6 +67,35 @@ class FormationPropertiesTool:
         petro_params_cache_path: str,
         well_picks_cache_path: str = "./data/well_picks_cache.json",
     ):
+        # Resolve paths to absolute paths to ensure they work from any directory
+        from pathlib import Path
+        
+        # Resolve well_picks_dat_path
+        if not Path(well_picks_dat_path).is_absolute():
+            # Try relative to current file location
+            tool_dir = Path(__file__).resolve().parents[2]  # advanced_rag/
+            abs_dat_path = tool_dir / well_picks_dat_path
+            if abs_dat_path.exists():
+                well_picks_dat_path = str(abs_dat_path)
+            else:
+                # Fallback to cwd
+                abs_dat_path = Path.cwd() / well_picks_dat_path
+                if abs_dat_path.exists():
+                    well_picks_dat_path = str(abs_dat_path)
+        
+        # Resolve well_picks_cache_path
+        if not Path(well_picks_cache_path).is_absolute():
+            # Try relative to current file location
+            tool_dir = Path(__file__).resolve().parents[2]  # advanced_rag/
+            abs_cache_path = tool_dir / well_picks_cache_path
+            if abs_cache_path.exists() or abs_cache_path.parent.exists():
+                well_picks_cache_path = str(abs_cache_path)
+            else:
+                # Fallback to cwd
+                abs_cache_path = Path.cwd() / well_picks_cache_path
+                if abs_cache_path.exists() or abs_cache_path.parent.exists():
+                    well_picks_cache_path = str(abs_cache_path)
+        
         self._well_picks = WellPicksTool(dat_path=well_picks_dat_path, cache_path=well_picks_cache_path)
         self._petro = PetroParamsTool(cache_path=petro_params_cache_path)
 
