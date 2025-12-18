@@ -328,6 +328,7 @@ def generate_query_or_respond(state: MessagesState, tools):
         # Deterministic routing: Petrophysical parameters table (Net/Gross, PHIF, SW, KLOGH) by well/formation/parameter
         # IMPORTANT: This must happen BEFORE fact-like query routing to catch param queries
         # Prefer structured petrophysical lookup when a local cache exists (no hardcoded well-number requirement)
+        logger.info(f"[ROUTING] Starting petro params routing check. ql='{ql[:100]}', question='{question[:100] if isinstance(question, str) else question}'")
         try:
             vectorstore_dir = Path(__file__).resolve().parents[2] / "data" / "vectorstore"
             cache_path = vectorstore_dir / "petro_params_cache.json"
