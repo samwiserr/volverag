@@ -421,34 +421,56 @@ def _pdf_iframe(file_path: str, page: Optional[int]) -> str:
         # Best-effort: encourage the viewer to land at the top of the cited page
         frag = f"#page={page}&view=FitH&zoom=page-width" if page else ""
         
-        # Escape the base64 string for use in JavaScript
-        b64_escaped = b64.replace("'", "\\'").replace('"', '\\"')
+        # Create a unique ID based on file path hash
+        import hashlib
+        unique_id = hashlib.md5(str(p).encode()).hexdigest()[:8]
+        
+        # Escape the base64 string for use in JavaScript (escape backslashes and quotes)
+        b64_escaped = b64.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r")
         
         return f"""
-        <iframe id="pdf-viewer-{id(p)}" width="100%" height="900" style="border: 1px solid #ddd; border-radius: 5px;"></iframe>
+        <div id="pdf-container-{unique_id}">
+            <iframe id="pdf-viewer-{unique_id}" width="100%" height="900" style="border: 1px solid #ddd; border-radius: 5px;"></iframe>
+        </div>
         <script>
         (function() {{
-            const base64 = "{b64_escaped}";
-            try {{
-                const binaryString = atob(base64);
-                const bytes = new Uint8Array(binaryString.length);
-                for (let i = 0; i < binaryString.length; i++) {{
-                    bytes[i] = binaryString.charCodeAt(i);
+            function loadPDF() {{
+                const base64 = "{b64_escaped}";
+                const iframeId = "pdf-viewer-{unique_id}";
+                const iframe = document.getElementById(iframeId);
+                
+                if (!iframe) {{
+                    console.error('PDF iframe not found:', iframeId);
+                    return;
                 }}
-                const blob = new Blob([bytes], {{ type: 'application/pdf' }});
-                const url = URL.createObjectURL(blob);
-                const iframe = document.getElementById('pdf-viewer-{id(p)}');
-                iframe.src = url + "{frag}";
-                // Clean up blob URL when iframe is unloaded (optional, but good practice)
-                iframe.addEventListener('load', function() {{
-                    // Keep blob URL alive while iframe is loaded
-                }});
-            }} catch (error) {{
-                console.error('Failed to load PDF:', error);
-                const iframe = document.getElementById('pdf-viewer-{id(p)}');
-                iframe.style.display = 'none';
-                const container = iframe.parentElement;
-                container.innerHTML = '<div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;"><p>Failed to load PDF viewer.</p><p><a href="data:application/pdf;base64,' + base64 + '" download="{p.name}">Download PDF</a></p></div>';
+                
+                try {{
+                    const binaryString = atob(base64);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {{
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }}
+                    const blob = new Blob([bytes], {{ type: 'application/pdf' }});
+                    const url = URL.createObjectURL(blob);
+                    const frag = "{frag}";
+                    iframe.src = url + frag;
+                    console.log('PDF blob URL created successfully');
+                }} catch (error) {{
+                    console.error('Failed to load PDF:', error);
+                    iframe.style.display = 'none';
+                    const container = document.getElementById('pdf-container-{unique_id}');
+                    if (container) {{
+                        container.innerHTML = '<div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;"><p>Failed to load PDF viewer.</p><p><a href="data:application/pdf;base64,' + base64 + '" download="{p.name}">Download PDF</a></p></div>';
+                    }}
+                }}
+            }}
+            
+            // Try to load immediately, or wait for DOM
+            if (document.readyState === 'loading') {{
+                document.addEventListener('DOMContentLoaded', loadPDF);
+            }} else {{
+                // DOM already loaded, but wait a tick to ensure iframe exists
+                setTimeout(loadPDF, 100);
             }}
         }})();
         </script>
