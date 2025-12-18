@@ -238,6 +238,29 @@ class PetroParamsTool:
             cleaned = well.upper().replace("WELL", "").replace("NO", "").strip()
             nw3 = _norm_well(cleaned)
             rows = self._by_well.get(nw3, [])
+        
+        # Try matching with suffixes stripped from cache keys
+        # Well names in cache may have suffixes like "PETROPHYSICAL", "DATO", "FORMATION"
+        if not rows:
+            common_suffixes = ["PETROPHYSICAL", "DATO", "FORMATION", "REPORT"]
+            query_base = nwell
+            logger.debug(f"[PETRO_PARAMS] Trying suffix-stripped matching for '{well}' (norm: '{nwell}')")
+            
+            for stored_norm, stored_rows in self._by_well.items():
+                if not stored_rows:
+                    continue
+                # Strip suffixes from stored key
+                stored_base = stored_norm
+                for suffix in common_suffixes:
+                    if stored_base.endswith(suffix):
+                        stored_base = stored_base[:-len(suffix)]
+                        logger.debug(f"[PETRO_PARAMS] Stripped suffix '{suffix}' from '{stored_norm}' -> '{stored_base}'")
+                        break
+                # Match if bases are equal
+                if query_base == stored_base:
+                    logger.info(f"[PETRO_PARAMS] ✅ Found match (suffix stripped): '{well}' (base: '{query_base}') -> '{stored_norm}' (base: '{stored_base}')")
+                    rows = stored_rows
+                    break
 
         if not rows:
             # Try matching against all stored well keys using normalized comparisons
