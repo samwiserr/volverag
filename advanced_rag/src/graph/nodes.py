@@ -1266,6 +1266,15 @@ def generate_answer(state: MessagesState):
             sources = payload.get("sources") or []
             ql = question.lower() if isinstance(question, str) else ""
 
+            # Edge case: Handle malformed payload (not a dict, missing required fields)
+            if not isinstance(payload, dict):
+                return {"messages": [AIMessage(content="Petrophysical parameters: invalid payload format.")]}
+            
+            # Edge case: Check for additional error types
+            if payload.get("error") in ["formation_no_data", "no_data_after_filtering", "no_valid_formations"]:
+                error_message = payload.get("message", "Unknown error")
+                return {"messages": [AIMessage(content=error_message)]}
+
             def detect_formation() -> Optional[str]:
                 """Detect formation from query, with improved matching and fuzzy matching for typos."""
                 if not isinstance(formations, list) or not formations:

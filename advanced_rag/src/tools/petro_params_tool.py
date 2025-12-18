@@ -477,6 +477,18 @@ class PetroParamsTool:
                 original_count = len(rows)
                 rows = [r for r in rows if r.formation == matched_formation]
                 logger.info(f"[PETRO_PARAMS] Filtered from {original_count} to {len(rows)} rows for formation '{matched_formation}'")
+                
+                # Edge case: Formation matched but no rows after filtering
+                if not rows:
+                    return "[PETRO_PARAMS_JSON] " + json.dumps(
+                        {
+                            "error": "formation_no_data",
+                            "well": well,
+                            "formation": matched_formation,
+                            "message": f"Formation '{matched_formation}' was found for well {well}, but no petrophysical parameter data is available for this formation."
+                        },
+                        ensure_ascii=False,
+                    )
             else:
                 # If formation specified but no match, return error with suggestions
                 return "[PETRO_PARAMS_JSON] " + json.dumps(
@@ -490,12 +502,26 @@ class PetroParamsTool:
                     ensure_ascii=False,
                 )
 
+        # Edge case: No rows after all filtering (shouldn't happen, but defensive check)
+        if not rows:
+            logger.warning(f"[PETRO_PARAMS] No rows remaining after filtering for well '{well}'")
+            return "[PETRO_PARAMS_JSON] " + json.dumps(
+                {
+                    "error": "no_data_after_filtering",
+                    "well": well,
+                    "message": f"No petrophysical parameter data available for well {well} after filtering."
+                },
+                ensure_ascii=False,
+            )
+
         # Build a formation->values mapping. Values remain raw numbers (no interpretation).
-        formations = sorted({r.formation for r in rows})
+        formations = sorted({r.formation for r in rows if r.formation})  # Filter out None formations
         by_form: Dict[str, Dict[str, Optional[float]]] = {}
         sources: Dict[Tuple[str, Optional[int], Optional[int]], None] = {}
 
         for r in rows:
+            if not r.formation:  # Skip rows with None formation
+                continue
             by_form[r.formation] = {
                 "netgros": r.netgros,
                 "phif": r.phif,
@@ -505,6 +531,18 @@ class PetroParamsTool:
                 "klogh_g": r.klogh_g,
             }
             sources[(r.source, r.page_start, r.page_end)] = None
+
+        # Edge case: Empty formations list after building mapping
+        if not formations:
+            logger.warning(f"[PETRO_PARAMS] No valid formations found after building mapping for well '{well}'")
+            return "[PETRO_PARAMS_JSON] " + json.dumps(
+                {
+                    "error": "no_valid_formations",
+                    "well": well,
+                    "message": f"No valid formation data found for well {well}."
+                },
+                ensure_ascii=False,
+            )
 
         payload = {
             "well": well,
