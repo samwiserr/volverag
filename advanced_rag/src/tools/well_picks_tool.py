@@ -112,8 +112,37 @@ class WellPicksTool:
         dat_path: str,
         cache_path: str = "./data/well_picks_cache.json",
     ):
-        self.dat_path = Path(dat_path)
-        self.cache_path = Path(cache_path)
+        # Resolve paths to absolute to ensure they work from any directory
+        dat_path_obj = Path(dat_path)
+        if not dat_path_obj.is_absolute():
+            # Try relative to current file location
+            tool_dir = Path(__file__).resolve().parents[2]  # advanced_rag/
+            abs_dat_path = tool_dir / dat_path
+            if abs_dat_path.exists():
+                dat_path_obj = abs_dat_path
+            else:
+                # Fallback to cwd
+                abs_dat_path = Path.cwd() / dat_path
+                if abs_dat_path.exists():
+                    dat_path_obj = abs_dat_path
+            dat_path = str(dat_path_obj.resolve())
+        
+        cache_path_obj = Path(cache_path)
+        if not cache_path_obj.is_absolute():
+            # Try relative to current file location
+            tool_dir = Path(__file__).resolve().parents[2]  # advanced_rag/
+            abs_cache_path = tool_dir / cache_path
+            if abs_cache_path.exists() or abs_cache_path.parent.exists():
+                cache_path_obj = abs_cache_path
+            else:
+                # Fallback to cwd
+                abs_cache_path = Path.cwd() / cache_path
+                if abs_cache_path.exists() or abs_cache_path.parent.exists():
+                    cache_path_obj = abs_cache_path
+            cache_path = str(cache_path_obj.resolve())
+        
+        self.dat_path = Path(dat_path).resolve()  # Ensure absolute
+        self.cache_path = Path(cache_path).resolve()  # Ensure absolute
         self._rows: List[WellPickRow] = []
         self._by_well: Dict[str, List[WellPickRow]] = {}
         self._well_labels: List[Tuple[str, str]] = []  # (original_label, normalized_key) for fuzzy matching
