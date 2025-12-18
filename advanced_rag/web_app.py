@@ -377,6 +377,192 @@ def _find_pdf_file(file_path: str, pdfs_dir: Path) -> Optional[Path]:
     return None
 
 
+def _pdf_full_viewer(file_path: str, initial_page: Optional[int] = None) -> str:
+    """
+    Display full PDF with page navigation using PDF.js.
+    Users can scroll through all pages without downloading.
+    Includes optional download button.
+    """
+    pdfs_dir = Path(__file__).resolve().parent / "data" / "pdfs"
+    logger.info(f"[PDF_VIEWER] Looking for PDF: original_path='{file_path}', pdfs_dir='{pdfs_dir}'")
+    
+    p = _find_pdf_file(file_path, pdfs_dir)
+    
+    if p is None or not p.exists():
+        filename = Path(file_path).name
+        clean_path = _clean_source_path(file_path)
+        return f"""
+        <div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
+            <p style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">📄 PDF not available</p>
+            <p style="margin-bottom: 5px;">File: <code style="background-color: #e8e8e8; padding: 2px 6px; border-radius: 3px;">{clean_path}</code></p>
+        </div>
+        """
+
+    logger.info(f"[PDF_VIEWER] Found PDF: {p}, initial_page={initial_page}")
+    try:
+        b64 = base64.b64encode(p.read_bytes()).decode("utf-8")
+        import hashlib
+        unique_id = hashlib.md5(str(p).encode()).hexdigest()[:8]
+        b64_escaped = b64.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r")
+        filename = p.name
+        
+        start_page = initial_page if initial_page else 1
+        
+        return f"""
+        <div id="pdf-container-{unique_id}" style="border: 1px solid #ddd; border-radius: 5px; background-color: #f5f5f5;">
+            <div id="pdf-controls-{unique_id}" style="padding: 10px; background-color: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <button id="prev-btn-{unique_id}" onclick="changePage(-1)" style="padding: 0.4rem 0.8rem; background-color: #1f77b4; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">◀ Previous</button>
+                <span id="page-info-{unique_id}" style="font-weight: 500;">Page <span id="current-page-{unique_id}">1</span> of <span id="total-pages-{unique_id}">-</span></span>
+                <button id="next-btn-{unique_id}" onclick="changePage(1)" style="padding: 0.4rem 0.8rem; background-color: #1f77b4; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">Next ▶</button>
+                <input type="number" id="page-input-{unique_id}" min="1" value="{start_page}" style="width: 60px; padding: 0.3rem; border: 1px solid #ddd; border-radius: 0.25rem;" onchange="goToPage(this.value)">
+                <button onclick="goToPage(document.getElementById('page-input-{unique_id}').value)" style="padding: 0.4rem 0.8rem; background-color: #6c757d; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">Go</button>
+                <div style="margin-left: auto;">
+                    <button onclick="downloadPDF()" style="padding: 0.4rem 0.8rem; background-color: #28a745; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">⬇️ Download PDF</button>
+                </div>
+            </div>
+            <div id="pdf-viewer-{unique_id}" style="padding: 10px; overflow-y: auto; max-height: 800px; text-align: center;"></div>
+            <div id="pdf-loading-{unique_id}" style="text-align: center; padding: 20px;">Loading PDF...</div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+        <script>
+        (function() {{
+            let pdfDoc = null;
+            let currentPage = {start_page};
+            const base64 = "{b64_escaped}";
+            const filename = "{filename}";
+            const containerId = "pdf-container-{unique_id}";
+            const viewerId = "pdf-viewer-{unique_id}";
+            const loadingId = "pdf-loading-{unique_id}";
+            const pageInfoId = "current-page-{unique_id}";
+            const totalPagesId = "total-pages-{unique_id}";
+            const pageInputId = "page-input-{unique_id}";
+            const prevBtnId = "prev-btn-{unique_id}";
+            const nextBtnId = "next-btn-{unique_id}";
+            
+            function renderPage(pageNum) {{
+                if (!pdfDoc) return;
+                
+                pdfDoc.getPage(pageNum).then(function(page) {{
+                    const scale = 1.5;
+                    const viewport = page.getViewport({{scale: scale}});
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    canvas.style.marginBottom = '10px';
+                    canvas.style.border = '1px solid #ddd';
+                    canvas.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    
+                    const viewer = document.getElementById(viewerId);
+                    viewer.innerHTML = '';
+                    viewer.appendChild(canvas);
+                    
+                    const renderContext = {{
+                        canvasContext: context,
+                        viewport: viewport
+                    }};
+                    
+                    page.render(renderContext).promise.then(function() {{
+                        currentPage = pageNum;
+                        document.getElementById(pageInfoId).textContent = pageNum;
+                        document.getElementById(pageInputId).value = pageNum;
+                        document.getElementById(prevBtnId).disabled = (pageNum <= 1);
+                        document.getElementById(nextBtnId).disabled = (pageNum >= pdfDoc.numPages);
+                    }});
+                }});
+            }}
+            
+            window.changePage = function(delta) {{
+                const newPage = currentPage + delta;
+                if (newPage >= 1 && newPage <= pdfDoc.numPages) {{
+                    renderPage(newPage);
+                }}
+            }};
+            
+            window.goToPage = function(pageNum) {{
+                const num = parseInt(pageNum);
+                if (num >= 1 && num <= pdfDoc.numPages) {{
+                    renderPage(num);
+                }}
+            }};
+            
+            window.downloadPDF = function() {{
+                try {{
+                    const binaryString = atob(base64);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {{
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }}
+                    const blob = new Blob([bytes], {{ type: 'application/pdf' }});
+                    const url = URL.createObjectURL(blob);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = url;
+                    downloadLink.download = filename;
+                    downloadLink.click();
+                    URL.revokeObjectURL(url);
+                }} catch (error) {{
+                    console.error('Failed to download PDF:', error);
+                    // Fallback to data URI
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = 'data:application/pdf;base64,' + base64;
+                    downloadLink.download = filename;
+                    downloadLink.click();
+                }}
+            }};
+            
+            function loadPDF() {{
+                const viewer = document.getElementById(viewerId);
+                const loading = document.getElementById(loadingId);
+                
+                if (!viewer) return;
+                
+                try {{
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    
+                    const binaryString = atob(base64);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {{
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }}
+                    
+                    pdfjsLib.getDocument({{data: bytes}}).promise.then(function(pdf) {{
+                        pdfDoc = pdf;
+                        loading.style.display = 'none';
+                        document.getElementById(totalPagesId).textContent = pdf.numPages;
+                        document.getElementById(pageInputId).max = pdf.numPages;
+                        renderPage({start_page});
+                    }}).catch(function(error) {{
+                        console.error('Error loading PDF:', error);
+                        loading.style.display = 'none';
+                        viewer.innerHTML = '<div style="padding: 20px; text-align: center;"><p>Failed to load PDF.</p></div>';
+                    }});
+                }} catch (error) {{
+                    console.error('Failed to load PDF:', error);
+                    loading.style.display = 'none';
+                    viewer.innerHTML = '<div style="padding: 20px; text-align: center;"><p>Error loading PDF viewer.</p></div>';
+                }}
+            }}
+            
+            if (typeof pdfjsLib !== 'undefined') {{
+                if (document.readyState === 'loading') {{
+                    document.addEventListener('DOMContentLoaded', loadPDF);
+                }} else {{
+                    setTimeout(loadPDF, 100);
+                }}
+            }} else {{
+                window.addEventListener('load', function() {{
+                    setTimeout(loadPDF, 500);
+                }});
+            }}
+        }})();
+        </script>
+        """
+    except Exception as e:
+        logger.error(f"Failed to load PDF {p}: {e}")
+        return f'<div style="padding: 20px; text-align: center;">Error loading PDF: {e}</div>'
+
+
 def _get_pdf_data_uri(file_path: str) -> Optional[str]:
     """
     Get a data URI for the PDF file that can be opened in a new tab.
