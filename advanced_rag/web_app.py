@@ -413,64 +413,107 @@ def _pdf_iframe(file_path: str, page: Optional[int]) -> str:
         </div>
         """
 
-    # PDF found - display it using JavaScript blob URL (works in Chrome)
+    # PDF found - display it using PDF.js (bypasses Chrome blocking)
     logger.info(f"[PDF_VIEWER] Found PDF: {p}, page={page}")
     try:
         b64 = base64.b64encode(p.read_bytes()).decode("utf-8")
-        # Use JavaScript blob URL - Chrome allows this approach
-        # Best-effort: encourage the viewer to land at the top of the cited page
-        frag = f"#page={page}&view=FitH&zoom=page-width" if page else ""
         
         # Create a unique ID based on file path hash
         import hashlib
         unique_id = hashlib.md5(str(p).encode()).hexdigest()[:8]
         
-        # Escape the base64 string for use in JavaScript (escape backslashes and quotes)
+        # Escape the base64 string for use in JavaScript
         b64_escaped = b64.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r")
         
+        # Use PDF.js from CDN to render PDF (bypasses Chrome blocking)
+        target_page = page if page else 1
+        
         return f"""
-        <div id="pdf-container-{unique_id}">
-            <iframe id="pdf-viewer-{unique_id}" width="100%" height="900" style="border: 1px solid #ddd; border-radius: 5px;"></iframe>
+        <div id="pdf-container-{unique_id}" style="border: 1px solid #ddd; border-radius: 5px; overflow: auto; height: 900px; background-color: #f5f5f5;">
+            <div id="pdf-viewer-{unique_id}" style="padding: 10px;"></div>
+            <div id="pdf-loading-{unique_id}" style="text-align: center; padding: 20px;">Loading PDF...</div>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
         <script>
         (function() {{
             function loadPDF() {{
                 const base64 = "{b64_escaped}";
-                const iframeId = "pdf-viewer-{unique_id}";
-                const iframe = document.getElementById(iframeId);
+                const containerId = "pdf-container-{unique_id}";
+                const viewerId = "pdf-viewer-{unique_id}";
+                const loadingId = "pdf-loading-{unique_id}";
+                const targetPage = {target_page};
                 
-                if (!iframe) {{
-                    console.error('PDF iframe not found:', iframeId);
+                const container = document.getElementById(containerId);
+                const viewer = document.getElementById(viewerId);
+                const loading = document.getElementById(loadingId);
+                
+                if (!viewer || !container) {{
+                    console.error('PDF container not found');
                     return;
                 }}
                 
                 try {{
+                    // Set up PDF.js
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    
+                    // Convert base64 to Uint8Array
                     const binaryString = atob(base64);
                     const bytes = new Uint8Array(binaryString.length);
                     for (let i = 0; i < binaryString.length; i++) {{
                         bytes[i] = binaryString.charCodeAt(i);
                     }}
-                    const blob = new Blob([bytes], {{ type: 'application/pdf' }});
-                    const url = URL.createObjectURL(blob);
-                    const frag = "{frag}";
-                    iframe.src = url + frag;
-                    console.log('PDF blob URL created successfully');
+                    
+                    // Load PDF
+                    pdfjsLib.getDocument({{data: bytes}}).promise.then(function(pdf) {{
+                        loading.style.display = 'none';
+                        
+                        // Render the target page
+                        const pageNum = Math.min(Math.max(1, targetPage), pdf.numPages);
+                        pdf.getPage(pageNum).then(function(page) {{
+                            const scale = 1.5;
+                            const viewport = page.getViewport({{scale: scale}});
+                            
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            
+                            viewer.innerHTML = '';
+                            viewer.appendChild(canvas);
+                            
+                            const renderContext = {{
+                                canvasContext: context,
+                                viewport: viewport
+                            }};
+                            
+                            page.render(renderContext).promise.then(function() {{
+                                console.log('PDF page rendered successfully');
+                            }});
+                        }});
+                    }}).catch(function(error) {{
+                        console.error('Error loading PDF:', error);
+                        loading.style.display = 'none';
+                        viewer.innerHTML = '<div style="padding: 20px; text-align: center;"><p>Failed to load PDF.</p><p><a href="data:application/pdf;base64,' + base64 + '" download="{p.name}">Download PDF</a></p></div>';
+                    }});
                 }} catch (error) {{
                     console.error('Failed to load PDF:', error);
-                    iframe.style.display = 'none';
-                    const container = document.getElementById('pdf-container-{unique_id}');
-                    if (container) {{
-                        container.innerHTML = '<div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;"><p>Failed to load PDF viewer.</p><p><a href="data:application/pdf;base64,' + base64 + '" download="{p.name}">Download PDF</a></p></div>';
-                    }}
+                    loading.style.display = 'none';
+                    viewer.innerHTML = '<div style="padding: 20px; text-align: center;"><p>Error loading PDF viewer.</p><p><a href="data:application/pdf;base64,' + base64 + '" download="{p.name}">Download PDF</a></p></div>';
                 }}
             }}
             
-            // Try to load immediately, or wait for DOM
-            if (document.readyState === 'loading') {{
-                document.addEventListener('DOMContentLoaded', loadPDF);
+            // Wait for PDF.js to load, then load PDF
+            if (typeof pdfjsLib !== 'undefined') {{
+                if (document.readyState === 'loading') {{
+                    document.addEventListener('DOMContentLoaded', loadPDF);
+                }} else {{
+                    setTimeout(loadPDF, 100);
+                }}
             }} else {{
-                // DOM already loaded, but wait a tick to ensure iframe exists
-                setTimeout(loadPDF, 100);
+                // Wait for PDF.js script to load
+                window.addEventListener('load', function() {{
+                    setTimeout(loadPDF, 500);
+                }});
             }}
         }})();
         </script>
