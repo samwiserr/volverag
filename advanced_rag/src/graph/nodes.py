@@ -209,6 +209,18 @@ def generate_query_or_respond(state: MessagesState, tools):
     try:
         logger.info(f"[ROUTING] Entering routing logic. State messages: {len(state.get('messages', []))}")
         question = _latest_user_question(state.get("messages"))
+        
+        # Edge case: Empty or None question
+        if not question or not isinstance(question, str) or not question.strip():
+            logger.warning(f"[ROUTING] Empty or invalid question: '{question}'")
+            return {"messages": [AIMessage(content="I didn't receive a valid question. Please ask a question about the Volve petrophysical reports.")]}
+        
+        # Edge case: Very long queries (potential abuse or copy-paste errors)
+        MAX_QUERY_LENGTH = 5000
+        if len(question) > MAX_QUERY_LENGTH:
+            logger.warning(f"[ROUTING] Query too long: {len(question)} characters")
+            return {"messages": [AIMessage(content=f"Your question is too long ({len(question)} characters). Please keep questions under {MAX_QUERY_LENGTH} characters. You can break complex questions into smaller parts.")]}
+        
         ql = question.lower() if isinstance(question, str) else ""
         logger.info(f"[ROUTING] Initial question: '{question[:100] if isinstance(question, str) else question}', ql: '{ql[:100]}'")
         
