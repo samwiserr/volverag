@@ -413,20 +413,46 @@ def _pdf_iframe(file_path: str, page: Optional[int]) -> str:
         </div>
         """
 
-    # PDF found - display it using object tag (works better in Chrome)
+    # PDF found - display it using JavaScript blob URL (works in Chrome)
     logger.info(f"[PDF_VIEWER] Found PDF: {p}, page={page}")
     try:
         b64 = base64.b64encode(p.read_bytes()).decode("utf-8")
-        # Use object tag instead of iframe - Chrome allows this
+        # Use JavaScript blob URL - Chrome allows this approach
         # Best-effort: encourage the viewer to land at the top of the cited page
         frag = f"#page={page}&view=FitH&zoom=page-width" if page else ""
-        return (
-            f'<object data="data:application/pdf;base64,{b64}{frag}" '
-            f'type="application/pdf" width="100%" height="900" style="border: 1px solid #ddd; border-radius: 5px;">'
-            f'<p style="padding: 20px; text-align: center;">Your browser does not support PDFs. '
-            f'<a href="data:application/pdf;base64,{b64}" download="{p.name}">Download PDF</a></p>'
-            f'</object>'
-        )
+        
+        # Escape the base64 string for use in JavaScript
+        b64_escaped = b64.replace("'", "\\'").replace('"', '\\"')
+        
+        return f"""
+        <iframe id="pdf-viewer-{id(p)}" width="100%" height="900" style="border: 1px solid #ddd; border-radius: 5px;"></iframe>
+        <script>
+        (function() {{
+            const base64 = "{b64_escaped}";
+            try {{
+                const binaryString = atob(base64);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {{
+                    bytes[i] = binaryString.charCodeAt(i);
+                }}
+                const blob = new Blob([bytes], {{ type: 'application/pdf' }});
+                const url = URL.createObjectURL(blob);
+                const iframe = document.getElementById('pdf-viewer-{id(p)}');
+                iframe.src = url + "{frag}";
+                // Clean up blob URL when iframe is unloaded (optional, but good practice)
+                iframe.addEventListener('load', function() {{
+                    // Keep blob URL alive while iframe is loaded
+                }});
+            }} catch (error) {{
+                console.error('Failed to load PDF:', error);
+                const iframe = document.getElementById('pdf-viewer-{id(p)}');
+                iframe.style.display = 'none';
+                const container = iframe.parentElement;
+                container.innerHTML = '<div style="padding: 20px; text-align: center; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;"><p>Failed to load PDF viewer.</p><p><a href="data:application/pdf;base64,' + base64 + '" download="{p.name}">Download PDF</a></p></div>';
+            }}
+        }})();
+        </script>
+        """
     except Exception as e:
         logger.error(f"Failed to load PDF {p}: {e}")
         return f'<div style="padding: 20px; text-align: center;">Error loading PDF: {e}</div>'
