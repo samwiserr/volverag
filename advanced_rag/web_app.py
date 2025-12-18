@@ -992,13 +992,16 @@ def _get_graph(persist_dir: str, embedding_model: str, cache_version: int = 2):
     # Start with retrieval tool; add WellPicksTool only if data/cache is available
     tools = [retrieve_tool]
     
-    # Resolve well_picks_cache_path - it's in the data directory, not vectorstore
-    # Try multiple locations: data/well_picks_cache.json relative to persist_dir, or data/well_picks_cache.json relative to web_app.py
-    data_dir = Path(persist_dir).parent  # Go up from vectorstore to data directory
-    well_picks_cache_path = data_dir / "well_picks_cache.json"
+    # Resolve well_picks_cache_path - it's in the vectorstore directory (from app_assets.zip)
+    # Try multiple locations: vectorstore/well_picks_cache.json, or data/well_picks_cache.json
+    well_picks_cache_path = Path(persist_dir) / "well_picks_cache.json"  # First try vectorstore directory
     if not well_picks_cache_path.exists():
-        # Fallback: try relative to web_app.py location
-        well_picks_cache_path = Path(__file__).resolve().parent / "data" / "well_picks_cache.json"
+        # Fallback: try data directory
+        data_dir = Path(persist_dir).parent  # Go up from vectorstore to data directory
+        well_picks_cache_path = data_dir / "well_picks_cache.json"
+        if not well_picks_cache_path.exists():
+            # Final fallback: try relative to web_app.py location
+            well_picks_cache_path = Path(__file__).resolve().parent / "data" / "well_picks_cache.json"
     
     try:
         well_picks_tool = WellPicksTool(dat_path=dat_path, cache_path=str(well_picks_cache_path))
