@@ -244,7 +244,8 @@ class PetroParamsTool:
         if not rows:
             common_suffixes = ["PETROPHYSICAL", "DATO", "FORMATION", "REPORT"]
             query_base = nwell
-            logger.debug(f"[PETRO_PARAMS] Trying suffix-stripped matching for '{well}' (norm: '{nwell}')")
+            logger.info(f"[PETRO_PARAMS] Trying suffix-stripped matching for '{well}' (norm: '{nwell}', base: '{query_base}')")
+            logger.info(f"[PETRO_PARAMS] Checking {len(self._by_well)} stored well keys...")
             
             for stored_norm, stored_rows in self._by_well.items():
                 if not stored_rows:
@@ -254,13 +255,15 @@ class PetroParamsTool:
                 for suffix in common_suffixes:
                     if stored_base.endswith(suffix):
                         stored_base = stored_base[:-len(suffix)]
-                        logger.debug(f"[PETRO_PARAMS] Stripped suffix '{suffix}' from '{stored_norm}' -> '{stored_base}'")
+                        logger.info(f"[PETRO_PARAMS] Stripped suffix '{suffix}' from '{stored_norm}' -> '{stored_base}'")
                         break
                 # Match if bases are equal
                 if query_base == stored_base:
                     logger.info(f"[PETRO_PARAMS] ✅ Found match (suffix stripped): '{well}' (base: '{query_base}') -> '{stored_norm}' (base: '{stored_base}')")
                     rows = stored_rows
                     break
+                else:
+                    logger.debug(f"[PETRO_PARAMS] No match: query_base='{query_base}' != stored_base='{stored_base}' (from '{stored_norm}')")
 
         if not rows:
             # Try matching against all stored well keys using normalized comparisons
