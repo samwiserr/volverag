@@ -220,6 +220,16 @@ class SectionLookupTool:
         keywords = ["summary", "introduction", "conclusion", "results", "discussion", "abstract"]
         ql = q.lower()
         q_kw = next((k for k in keywords if k in ql), None)
+        
+        # If user asks for "summary" but no summary section exists, try fallback keywords
+        # This handles cases where PDFs have "Results" or "Introduction" instead of "Summary"
+        fallback_keywords = []
+        if q_kw == "summary":
+            # If asking for summary, also consider results/introduction as fallbacks
+            fallback_keywords = ["results", "introduction"]
+        elif q_kw == "introduction":
+            # If asking for introduction, also consider summary as fallback
+            fallback_keywords = ["summary"]
 
         # Extract numeric part from query well for strict matching (e.g., "4" from "F-4")
         query_well_num = None
@@ -325,6 +335,69 @@ class SectionLookupTool:
                 best_i = i
 
         logger.info(f"[SECTION_LOOKUP] Checked {sections_checked} sections, rejected {sections_rejected} for well mismatch, best_score: {best_score}")
+        
+        # If no exact match found but we have a keyword and fallback keywords, try fallback
+        if best_i is None or best_score < 10.0:
+            if q_kw and fallback_keywords and q_well:
+                logger.info(f"[SECTION_LOOKUP] No exact match for '{q_kw}', trying fallback keywords: {fallback_keywords}")
+                # Reset and try with fallback keywords
+                best_i = None
+                best_score = -1.0
+                sections_checked = 0
+                sections_rejected = 0
+                for i, e in enumerate(self._entries):
+                    sections_checked += 1
+                    # Apply same well filtering
+                    if q_well:
+                        heading_well = _extract_query_well(e.heading)
+                        heading_well_n = _norm_compact(heading_well) if heading_well else None
+                        
+                        if query_well_num:
+                            source_well_match = False
+                            source_well_num = None
+                            if e.source:
+                                source_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', e.source, re.IGNORECASE)
+                                if source_match:
+                                    source_well_num = source_match.group(1)
+                                    if source_well_num == query_well_num:
+                                        source_well_match = True
+                                    else:
+                                        sections_rejected += 1
+                                        continue
+                            
+                            if not source_well_match:
+                                if heading_well:
+                                    heading_well_num_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', heading_well, re.IGNORECASE)
+                                    if heading_well_num_match:
+                                        heading_well_num = heading_well_num_match.group(1)
+                                        if heading_well_num != query_well_num:
+                                            sections_rejected += 1
+                                            continue
+                                elif heading_well_n and heading_well_n != q_well_n:
+                                    sections_rejected += 1
+                                    continue
+                                else:
+                                    sections_rejected += 1
+                                    continue
+                    
+                    # Score with fallback keywords
+                    score = 0.0
+                    if e.heading_norm == qn:
+                        score += 50.0
+                    # Check if heading contains any fallback keyword
+                    heading_lower = e.heading.lower()
+                    if any(fb_kw in heading_lower for fb_kw in fallback_keywords):
+                        score += 10.0
+                    if q_well_n and q_well_n in _norm_compact(e.heading):
+                        score += 15.0
+                    overlap = sum(1 for t in re.findall(r"[a-z0-9]{3,}", qn) if t in e.heading_norm)
+                    score += min(10.0, overlap)
+                    
+                    if score > best_score:
+                        best_score = score
+                        best_i = i
+                
+                logger.info(f"[SECTION_LOOKUP] Fallback search: checked {sections_checked} sections, rejected {sections_rejected}, best_score: {best_score}")
         
         if best_i is None or best_score < 10.0:
             if q_well and query_well_num:
