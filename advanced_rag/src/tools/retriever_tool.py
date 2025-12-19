@@ -732,10 +732,10 @@ class RetrieverTool:
             
             if normalized_matches:
                 well_name = normalized_matches[0]
-                logger.debug(f"[EXTRACT_WELL] Extracted well name: '{well_name}' from query (found {len(all_matches)} matches, using first)")
+                logger.info(f"[EXTRACT_WELL] Extracted well name: '{well_name}' from query (found {len(all_matches)} matches, using first)")
                 return well_name
         
-        logger.debug(f"[EXTRACT_WELL] No well name found in query: '{query[:100]}'")
+        logger.info(f"[EXTRACT_WELL] No well name found in query: '{query[:100]}'")
         return None
     
     def _filter_docs_by_well(self, docs: List[Document], well_name: str) -> List[Document]:
@@ -790,13 +790,24 @@ class RetrieverTool:
                 # Check in source/filename first (most reliable)
                 if doc_source or doc_filename:
                     source_text = f"{doc_source} {doc_filename}"
-                    if not numeric_pattern.search(source_text):
-                        # If numeric part doesn't match in source, check if it's a different well
-                        # Extract any well numbers from source/filename
-                        other_well_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', source_text, re.IGNORECASE)
-                        if other_well_match and other_well_match.group(1) != numeric_part:
+                    # First, check if source/filename contains a well number
+                    well_number_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', source_text, re.IGNORECASE)
+                    if well_number_match:
+                        # If source has a well number, it MUST match the query well number
+                        source_well_number = well_number_match.group(1)
+                        if source_well_number != numeric_part:
                             numeric_match = False
-                            logger.debug(f"[FILTER] Rejecting doc: well number mismatch ({numeric_part} vs {other_well_match.group(1)}) in source: {doc_source}")
+                            logger.info(f"[FILTER] Rejecting doc: well number mismatch in source ({numeric_part} vs {source_well_number}). Source: {doc_source[:100]}")
+                        else:
+                            # Well number matches in source - this is good
+                            logger.debug(f"[FILTER] Well number {numeric_part} matches in source: {doc_source[:100]}")
+                    else:
+                        # Source doesn't have a well number pattern - check if it contains well name variants
+                        # This handles cases where source is a generic path
+                        source_has_well_variant = any(variant in source_text for variant in well_variants)
+                        if not source_has_well_variant:
+                            # Source doesn't have well name - check doc text more carefully
+                            logger.debug(f"[FILTER] Source has no well number, checking doc text: {doc_source[:100]}")
             
             # Check if well name appears in document (with boundaries for exact match)
             matches = (
