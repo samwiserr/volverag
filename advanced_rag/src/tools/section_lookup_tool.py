@@ -214,7 +214,7 @@ class SectionLookupTool:
         q_well = _extract_query_well(q)
         q_well_n = _norm_compact(q_well) if q_well else None
 
-        logger.info(f"[SECTION_LOOKUP] Query: '{query[:200]}', extracted well: '{q_well}'")
+        logger.info(f"[SECTION_LOOKUP] Query: '{query[:200]}', extracted well: '{q_well}', normalized: '{q_well_n}'")
 
         # Heuristic: prefer headings that contain requested keyword + well if present
         keywords = ["summary", "introduction", "conclusion", "results", "discussion", "abstract"]
@@ -227,12 +227,18 @@ class SectionLookupTool:
             well_num_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', q_well, re.IGNORECASE)
             if well_num_match:
                 query_well_num = well_num_match.group(1)
+                logger.info(f"[SECTION_LOOKUP] Extracted well number from query: '{query_well_num}'")
+            else:
+                logger.warning(f"[SECTION_LOOKUP] Could not extract well number from well: '{q_well}'")
 
         best_i = None
         best_score = -1.0
+        sections_checked = 0
+        sections_rejected = 0
         for i, e in enumerate(self._entries):
+            sections_checked += 1
             # CRITICAL FIX: If a well is specified in query, ONLY consider sections that match that well
-            if q_well_n and query_well_num:
+            if q_well and query_well_num:
                 heading_well = _extract_query_well(e.heading)
                 heading_well_n = _norm_compact(heading_well) if heading_well else None
                 
@@ -240,16 +246,22 @@ class SectionLookupTool:
                 source_well_match = False
                 source_well_num = None
                 if e.source:
-                    # Extract well number from source (e.g., "15_9-F-4" or "15/9-F-4")
+                    # Extract well number from source (e.g., "15_9-F-4" or "15/9-F-4" or "15_9-F1")
+                    # Handle both "F-4" and "F4" formats, and also "F15" (no dash)
                     source_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', e.source, re.IGNORECASE)
                     if source_match:
                         source_well_num = source_match.group(1)
                         if source_well_num == query_well_num:
                             source_well_match = True
+                            logger.debug(f"[SECTION_LOOKUP] Section '{e.heading[:100]}' matches well number {query_well_num} in source")
                         else:
                             # Different well number in source - skip this section
-                            logger.debug(f"[SECTION_LOOKUP] Rejecting section '{e.heading[:100]}' - well number mismatch in source (query: {query_well_num}, source: {source_well_num})")
+                            sections_rejected += 1
+                            logger.info(f"[SECTION_LOOKUP] Rejecting section '{e.heading[:100]}' - well number mismatch in source (query: {query_well_num}, source: {source_well_num}, source_path: {e.source[:100]})")
                             continue
+                    else:
+                        # No well number found in source - will check heading
+                        logger.debug(f"[SECTION_LOOKUP] No well number found in source path: {e.source[:100]}")
                 
                 # If source doesn't have well number, check heading
                 if not source_well_match:
@@ -288,6 +300,8 @@ class SectionLookupTool:
                 best_score = score
                 best_i = i
 
+        logger.info(f"[SECTION_LOOKUP] Checked {sections_checked} sections, rejected {sections_rejected} for well mismatch, best_score: {best_score}")
+        
         if best_i is None or best_score < 10.0:
             logger.warning(f"[SECTION_LOOKUP] No matching section found for query: '{query[:200]}' (best_score: {best_score})")
             return "[SECTION] No matching section heading found for query."
