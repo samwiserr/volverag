@@ -721,9 +721,15 @@ class RetrieverTool:
         normalized_query_well = self._normalize_well_name(well_name)
         filtered_docs = []
         
+        logger.info(f"[FILTER] Filtering {len(docs)} documents for well: {well_name} (normalized: {normalized_query_well})")
+        
         # Extract just the well identifier part (e.g., "F-5" from "15/9-F-5")
         well_id_match = re.search(r'([Ff][\s_/-]*-?\s*\d+[A-Z]?|\d+[A-Z]?)$', well_name)
         well_id = well_id_match.group(1) if well_id_match else well_name
+        
+        # Also extract the numeric part for strict matching (e.g., "4" from "F-4")
+        numeric_part_match = re.search(r'(\d+)([A-Z]?)$', well_id)
+        numeric_part = numeric_part_match.group(1) if numeric_part_match else None
         
         for doc in docs:
             doc_text = doc.page_content.upper()
@@ -751,17 +757,38 @@ class RetrieverTool:
             # Pattern: well identifier must be preceded/followed by non-alphanumeric or start/end
             well_pattern = re.compile(r'(^|[^0-9A-Z])' + re.escape(normalized_query_well) + r'([^0-9A-Z]|$)', re.IGNORECASE)
             
+            # CRITICAL: Also check that the numeric part matches exactly
+            # This prevents "F-4" from matching "F-14" or "F-1" from matching "F-15"
+            numeric_match = True
+            if numeric_part:
+                # Check if the document contains the exact numeric part with proper boundaries
+                # e.g., for "F-4", we want to match "F-4" but not "F-14" or "F-41"
+                numeric_pattern = re.compile(r'[Ff][\s_/-]*-?\s*' + re.escape(numeric_part) + r'([^0-9]|$)', re.IGNORECASE)
+                # Check in source/filename first (most reliable)
+                if doc_source or doc_filename:
+                    source_text = f"{doc_source} {doc_filename}"
+                    if not numeric_pattern.search(source_text):
+                        # If numeric part doesn't match in source, check if it's a different well
+                        # Extract any well numbers from source/filename
+                        other_well_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', source_text, re.IGNORECASE)
+                        if other_well_match and other_well_match.group(1) != numeric_part:
+                            numeric_match = False
+                            logger.debug(f"[FILTER] Rejecting doc: well number mismatch ({numeric_part} vs {other_well_match.group(1)}) in source: {doc_source}")
+            
             # Check if well name appears in document (with boundaries for exact match)
             matches = (
-                well_pattern.search(doc_normalized) or  # Exact normalized match with boundaries
-                any(re.search(r'\b' + re.escape(variant) + r'\b', doc_text) for variant in well_variants) or
-                any(re.search(r'\b' + re.escape(variant) + r'\b', doc_source) for variant in well_variants) or
-                any(re.search(r'\b' + re.escape(variant) + r'\b', doc_filename) for variant in well_variants)
+                numeric_match and (  # Only match if numeric part is correct
+                    well_pattern.search(doc_normalized) or  # Exact normalized match with boundaries
+                    any(re.search(r'\b' + re.escape(variant) + r'\b', doc_text) for variant in well_variants) or
+                    any(re.search(r'\b' + re.escape(variant) + r'\b', doc_source) for variant in well_variants) or
+                    any(re.search(r'\b' + re.escape(variant) + r'\b', doc_filename) for variant in well_variants)
+                )
             )
             
             if matches:
                 filtered_docs.append(doc)
         
+        logger.info(f"[FILTER] Filtered to {len(filtered_docs)} documents for well {well_name}")
         return filtered_docs
         
         @tool
