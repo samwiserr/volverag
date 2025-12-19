@@ -813,6 +813,16 @@ class RetrieverTool:
         
         logger.info(f"[FILTER] Filtered to {len(filtered_docs)} documents for well {well_name}")
         return filtered_docs
+    
+    def get_retriever_tool(self):
+        """
+        Get the retriever tool for LangGraph agent.
+        
+        Returns:
+            LangChain tool function
+        """
+        if not self.retriever:
+            raise RuntimeError("Retriever not initialized. Call build_vectorstore() or load_vectorstore() first.")
         
         @tool
         def retrieve_petrophysical_docs(query: str) -> str:
