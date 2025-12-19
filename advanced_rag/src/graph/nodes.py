@@ -144,7 +144,12 @@ GRADE_PROMPT = (
 REWRITE_PROMPT = (
     "You are a question rewriter. Given the following question and context, "
     "rewrite the question to be more specific and retrieval-friendly. "
-    "If the context is not relevant, ask a better question based on the original question. \n"
+    "If the context is not relevant, ask a better question based on the original question.\n\n"
+    "CRITICAL RULES:\n"
+    "- DO NOT add well names, formation names, or other entities that were NOT in the original question.\n"
+    "- If the original question asks about well 15/9-F-4, the rewritten question must ONLY mention 15/9-F-4, not other wells.\n"
+    "- DO NOT add comparison questions (e.g., 'compare to well X') unless the original question explicitly asks for comparison.\n"
+    "- Focus on making the question more specific for retrieval, but keep the same entities (wells, formations, parameters).\n\n"
     "Original question: {question} \n"
     "Context: {context} \n"
     "Rewritten question:"
@@ -226,6 +231,11 @@ def generate_query_or_respond(state: MessagesState, tools):
         
         # Store original question for "all wells" detection (before any modifications)
         original_question = question if isinstance(question, str) else ""
+        # CRITICAL: Extract well name from ORIGINAL question before any rewriting/decomposition
+        # This ensures filtering uses the user's intended well, not wells added by rewrite
+        original_well = extract_well(original_question) if original_question else None
+        if original_well:
+            logger.info(f"[ROUTING] Extracted well from original question: {original_well}")
         
         # Phase 1.5: Handle incomplete queries
         completed_query = None
@@ -320,10 +330,43 @@ def generate_query_or_respond(state: MessagesState, tools):
 
         # Build an "effective query" for tools so follow-ups like "matrix density"
         # still include well/formation context inferred from chat history.
+        # CRITICAL: Use original_well if available (from original question) to prevent
+        # rewritten queries from adding wrong well names
         tool_query = question if isinstance(question, str) else ""
         tool_query = tool_query.strip()
-        if nq.well and extract_well(tool_query) is None:
-            tool_query = (tool_query + f" in well {nq.well}").strip()
+        
+        # CRITICAL FIX: If rewrite added a different well, remove it and use original well
+        # Prefer original_well over nq.well to avoid using wells added by rewrite
+        well_for_tool = original_well or nq.well
+        if original_well and well_for_tool:
+            # Remove any well mentions from rewritten query that don't match original
+            import re
+            # Find all well mentions in tool_query
+            well_mentions = re.findall(r'15[_\s/-]?9[_\s/-]?[Ff]?[_\s/-]*-?\s*\d+[A-Z]?', tool_query, re.IGNORECASE)
+            # Remove well mentions that don't match original_well
+            for mention in well_mentions:
+                normalized_mention = re.sub(r'[\s_/-]', '', mention.upper())
+                normalized_original = re.sub(r'[\s_/-]', '', original_well.upper())
+                if normalized_mention != normalized_original:
+                    # Remove this well mention from tool_query
+                    tool_query = re.sub(re.escape(mention), '', tool_query, flags=re.IGNORECASE).strip()
+                    tool_query = re.sub(r'\s+', ' ', tool_query)  # Clean up extra spaces
+                    logger.info(f"[ROUTING] Removed well mention '{mention}' from rewritten query (doesn't match original '{original_well}')")
+        
+        # Ensure original well is in tool_query for filtering
+        if well_for_tool and extract_well(tool_query) is None:
+            tool_query = (tool_query + f" in well {well_for_tool}").strip()
+        elif well_for_tool:
+            # Verify the well in tool_query matches original_well
+            extracted = extract_well(tool_query)
+            if extracted:
+                normalized_extracted = re.sub(r'[\s_/-]', '', extracted.upper())
+                normalized_original = re.sub(r'[\s_/-]', '', well_for_tool.upper())
+                if normalized_extracted != normalized_original:
+                    # Replace with original well
+                    tool_query = re.sub(re.escape(extracted), well_for_tool, tool_query, flags=re.IGNORECASE)
+                    logger.info(f"[ROUTING] Replaced well '{extracted}' with original well '{well_for_tool}' in tool_query")
+        
         if nq.formation and nq.formation.lower() not in tool_query.lower():
             tool_query = (tool_query + f" formation {nq.formation}").strip()
 
