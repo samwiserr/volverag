@@ -864,6 +864,11 @@ class RetrieverTool:
                 logger.info(f"[RETRIEVE] Detected well name in query: {well_name}")
             else:
                 logger.warning(f"[RETRIEVE] No well name extracted from query: '{query[:200]}'")
+                # Try to extract well from original query context if available
+                # This is a fallback for cases where the rewritten query doesn't include the well
+                # Check if query mentions "well" but no well name was extracted
+                if "well" in query_lower and ("15" in query_lower or "9" in query_lower):
+                    logger.warning(f"[RETRIEVE] Query mentions 'well' and numbers but extraction failed. Query: '{query[:200]}'")
             
             # Detect formation-related queries
             is_formation_query = any(term in query_lower for term in [
