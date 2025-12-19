@@ -770,11 +770,14 @@ def grade_documents(state: MessagesState) -> Literal["generate_answer", "rewrite
         
         # Extract tool message content
         if isinstance(msg, ToolMessage):
+            tool_name = getattr(msg, 'name', 'unknown')
+            logger.info(f"[GRADE] Found ToolMessage from tool '{tool_name}', content length: {len(msg.content) if isinstance(msg.content, str) else 'non-string'}")
             context_parts.append(msg.content)
         elif hasattr(msg, 'content') and msg.content:
             # Check if it's a tool message by content length and structure
             if isinstance(msg.content, str) and len(msg.content) > 100:
                 # Could be tool message content
+                logger.debug(f"[GRADE] Found potential tool message content (length: {len(msg.content)})")
                 context_parts.append(msg.content)
     
     # Prevent infinite rewrite loops
