@@ -1023,12 +1023,61 @@ class RetrieverTool:
                 all_docs = docs
             
             # DOCUMENT-LEVEL RETRIEVAL: Retrieve ALL chunks from relevant documents
-            # Identify unique document sources from initial retrieval
-            relevant_sources = set()
-            for doc in all_docs:
-                source = doc.metadata.get('source', '')
-                if source:
-                    relevant_sources.add(source)
+            # CRITICAL: Only use sources that passed well filtering (if well name was specified)
+            # This prevents retrieving ALL chunks from wrong-well documents
+            if well_name and not is_comprehensive_list:
+                # Pre-filter sources by well name before document-level retrieval
+                # Check source paths/filenames for well name match
+                import re
+                well_id_match = re.search(r'([Ff][\s_/-]*-?\s*\d+[A-Z]?|\d+[A-Z]?)$', well_name)
+                well_id = well_id_match.group(1) if well_id_match else well_name
+                numeric_part_match = re.search(r'(\d+)([A-Z]?)$', well_id)
+                numeric_part = numeric_part_match.group(1) if numeric_part_match else None
+                
+                filtered_sources = set()
+                for doc in all_docs:
+                    source = doc.metadata.get('source', '')
+                    filename = doc.metadata.get('filename', '')
+                    source_text = f"{source} {filename}".upper()
+                    
+                    # Check if source contains the well name
+                    well_variants = [
+                        well_name.upper(),
+                        f"15/9-{well_id.upper()}",
+                        f"15_9-{well_id.upper()}",
+                        f"15-9-{well_id.upper()}",
+                    ]
+                    
+                    # Check numeric part in source (most reliable)
+                    source_matches = False
+                    if numeric_part:
+                        numeric_pattern = re.compile(r'[Ff][\s_/-]*-?\s*' + re.escape(numeric_part) + r'([^0-9]|$)', re.IGNORECASE)
+                        if numeric_pattern.search(source_text):
+                            # Verify it's not a different well (e.g., F-4 vs F-14)
+                            other_well_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', source_text, re.IGNORECASE)
+                            if other_well_match and other_well_match.group(1) == numeric_part:
+                                source_matches = True
+                    else:
+                        # Fallback to variant matching
+                        source_matches = any(variant in source_text for variant in well_variants)
+                    
+                    if source_matches and source:
+                        filtered_sources.add(source)
+                
+                if filtered_sources:
+                    logger.info(f"[RETRIEVE] Pre-filtered sources to {len(filtered_sources)} documents matching well {well_name}")
+                    relevant_sources = filtered_sources
+                else:
+                    # If no sources match, use all sources but will filter chunks later
+                    relevant_sources = {doc.metadata.get('source', '') for doc in all_docs if doc.metadata.get('source', '')}
+                    logger.warning(f"[RETRIEVE] No sources matched well {well_name}, will filter chunks after retrieval")
+            else:
+                # No well filtering needed - use all sources
+                relevant_sources = set()
+                for doc in all_docs:
+                    source = doc.metadata.get('source', '')
+                    if source:
+                        relevant_sources.add(source)
             
             if relevant_sources:
                 logger.info(f"[RETRIEVE] Identified {len(relevant_sources)} relevant document(s), retrieving ALL chunks")
@@ -1408,12 +1457,61 @@ class RetrieverTool:
                 all_docs = docs
             
             # DOCUMENT-LEVEL RETRIEVAL: Retrieve ALL chunks from relevant documents
-            # Identify unique document sources from initial retrieval
-            relevant_sources = set()
-            for doc in all_docs:
-                source = doc.metadata.get('source', '')
-                if source:
-                    relevant_sources.add(source)
+            # CRITICAL: Only use sources that passed well filtering (if well name was specified)
+            # This prevents retrieving ALL chunks from wrong-well documents
+            if well_name and not is_comprehensive_list:
+                # Pre-filter sources by well name before document-level retrieval
+                # Check source paths/filenames for well name match
+                import re
+                well_id_match = re.search(r'([Ff][\s_/-]*-?\s*\d+[A-Z]?|\d+[A-Z]?)$', well_name)
+                well_id = well_id_match.group(1) if well_id_match else well_name
+                numeric_part_match = re.search(r'(\d+)([A-Z]?)$', well_id)
+                numeric_part = numeric_part_match.group(1) if numeric_part_match else None
+                
+                filtered_sources = set()
+                for doc in all_docs:
+                    source = doc.metadata.get('source', '')
+                    filename = doc.metadata.get('filename', '')
+                    source_text = f"{source} {filename}".upper()
+                    
+                    # Check if source contains the well name
+                    well_variants = [
+                        well_name.upper(),
+                        f"15/9-{well_id.upper()}",
+                        f"15_9-{well_id.upper()}",
+                        f"15-9-{well_id.upper()}",
+                    ]
+                    
+                    # Check numeric part in source (most reliable)
+                    source_matches = False
+                    if numeric_part:
+                        numeric_pattern = re.compile(r'[Ff][\s_/-]*-?\s*' + re.escape(numeric_part) + r'([^0-9]|$)', re.IGNORECASE)
+                        if numeric_pattern.search(source_text):
+                            # Verify it's not a different well (e.g., F-4 vs F-14)
+                            other_well_match = re.search(r'[Ff][\s_/-]*-?\s*(\d+)', source_text, re.IGNORECASE)
+                            if other_well_match and other_well_match.group(1) == numeric_part:
+                                source_matches = True
+                    else:
+                        # Fallback to variant matching
+                        source_matches = any(variant in source_text for variant in well_variants)
+                    
+                    if source_matches and source:
+                        filtered_sources.add(source)
+                
+                if filtered_sources:
+                    logger.info(f"[RETRIEVE] Pre-filtered sources to {len(filtered_sources)} documents matching well {well_name}")
+                    relevant_sources = filtered_sources
+                else:
+                    # If no sources match, use all sources but will filter chunks later
+                    relevant_sources = {doc.metadata.get('source', '') for doc in all_docs if doc.metadata.get('source', '')}
+                    logger.warning(f"[RETRIEVE] No sources matched well {well_name}, will filter chunks after retrieval")
+            else:
+                # No well filtering needed - use all sources
+                relevant_sources = set()
+                for doc in all_docs:
+                    source = doc.metadata.get('source', '')
+                    if source:
+                        relevant_sources.add(source)
             
             if relevant_sources:
                 logger.info(f"[RETRIEVE] Identified {len(relevant_sources)} relevant document(s), retrieving ALL chunks")
