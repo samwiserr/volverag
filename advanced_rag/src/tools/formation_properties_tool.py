@@ -156,36 +156,48 @@ class FormationPropertiesTool:
     def lookup(self, query: str) -> str:
         ql = query.lower()
         
-        # Check if this is an "all wells" query - improved detection
-        # Match patterns like:
-        # - "list all well formations and their properties"
-        # - "all formations and their properties"
-        # - "all wells formations and properties"
-        # - "each well formations and properties"
-        # - "list all formations and their properties"
-        # - "list all available formation" (singular, no properties)
-        # - "list all formations" (without properties)
+        # Enhanced detection for petrophysicist query patterns
+        # Must distinguish between:
+        # - "all formations in X well" → single-well lookup
+        # - "all available formations" → all-wells lookup
         
         # First, check if a specific well is mentioned (this takes priority)
         well = _extract_platform_or_well(query)
         
-        # If no specific well detected, check for "all wells" patterns
-        # More flexible: allow queries without "properties" if they have "list all" + "formation"
+        # Enhanced property detection - more flexible for petrophysicist language
+        has_properties = any(k in ql for k in [
+            "properties", "petrophysical", "petro", "parameter", "parameters", 
+            "reported", "values", "data", "net", "gross", "phif", "sw", "klogh"
+        ])
+        
         has_formation_keyword = "formation" in ql or "formations" in ql
         has_all_keyword = any(k in ql for k in ["all", "each", "every", "complete", "entire", "list all"])
         has_list_all = "list" in ql and "all" in ql
-        has_properties = "properties" in ql or "petrophysical" in ql
+        has_in_well = "in" in ql and ("well" in ql or well is not None)  # "all formations in 15/9-F-5"
+        has_for_well = "for" in ql and ("well" in ql or well is not None)  # "all formations for 15/9-F-5"
         
+        # Check for "all formations in [specific well]" pattern
+        # This should use single-well lookup (don't route to all-wells)
+        is_single_well_all_formations = (
+            well is not None  # A specific well is mentioned
+            and has_formation_keyword
+            and has_all_keyword
+            and (has_in_well or has_for_well)  # "all formations in X" or "all formations for X"
+        )
+        
+        # Check for "all wells" patterns (no specific well)
         wants_all_wells = (
             not well  # No specific well detected
             and has_formation_keyword
             and (
-                # Pattern 1: Has "properties" or "petrophysical" + "all" keyword
+                # Pattern 1: Has properties keywords + "all" keyword
                 (has_properties and has_all_keyword)
                 # Pattern 2: "list all" + "formation" (even without properties)
                 or (has_list_all and has_formation_keyword)
-                # Pattern 3: "all" + "formation" + "available" (e.g., "list all available formation")
+                # Pattern 3: "all" + "formation" + "available" 
                 or (has_all_keyword and has_formation_keyword and "available" in ql)
+                # Pattern 4: "all formations" with properties keywords anywhere
+                or (has_all_keyword and has_formation_keyword and has_properties)
             )
         )
         
@@ -197,6 +209,7 @@ class FormationPropertiesTool:
             return result
         
         # If we have a specific well, use single-well lookup
+        # This handles both "all formations in X" and regular formation queries
         if not well:
             logger.warning(f"[FORMATION_PROPERTIES] No well detected in query: '{query}'")
             return "[WELL_FORMATION_PROPERTIES] No well detected. Provide a well like 15/9-F-4, or ask for 'all formations and their properties' to see all wells."

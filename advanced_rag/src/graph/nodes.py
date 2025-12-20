@@ -613,27 +613,65 @@ def generate_query_or_respond(state: MessagesState, tools):
         )
         
         # Deterministic routing: one-shot "formations + petrophysical properties"
-        # Check for "all formations and properties" queries first (no well required)
-        # Improved detection to handle "list all well formations and their properties"
-        # Also handle "list all available formation" (singular, no properties)
+        # Enhanced detection for petrophysicist query patterns
+        # Must distinguish between:
+        # - "all formations in X well" → single-well lookup
+        # - "all available formations" → all-wells lookup
+        
         has_formation_keyword = "formation" in ql or "formations" in ql
         has_all_keyword = any(k in ql for k in ["all", "each", "every", "complete", "entire", "list all"])
         has_list_all = "list" in ql and "all" in ql
-        has_properties = "properties" in ql or "petrophysical" in ql
+        # Enhanced property detection - more flexible for petrophysicist language
+        has_properties = any(k in ql for k in [
+            "properties", "petrophysical", "petro", "parameter", "parameters", 
+            "reported", "values", "data", "net", "gross", "phif", "sw", "klogh"
+        ])
+        has_in_well = "in" in ql and ("well" in ql or has_specific_well)  # "all formations in 15/9-F-5"
+        has_for_well = "for" in ql and ("well" in ql or has_specific_well)  # "all formations for 15/9-F-5"
         
-        is_all_formations_properties = (
+        # Check for "all formations in [specific well]" pattern FIRST
+        # This should route to single-well lookup, NOT all-wells
+        is_single_well_all_formations = (
+            has_specific_well  # A specific well is mentioned
+            and has_formation_keyword
+            and has_all_keyword
+            and (has_in_well or has_for_well)  # "all formations in X" or "all formations for X"
+        )
+        
+        # Check for "all formations across all wells" pattern
+        # This should route to all-wells lookup
+        is_all_wells_formations = (
             not has_specific_well  # No specific well mentioned
             and has_formation_keyword
             and (
-                # Pattern 1: Has "properties" or "petrophysical" + "all" keyword
-                (has_properties and has_all_keyword)
+                # Pattern 1: "all" + "formation" + properties-related keywords
+                (has_all_keyword and has_properties)
                 # Pattern 2: "list all" + "formation" (even without properties)
                 or (has_list_all and has_formation_keyword)
                 # Pattern 3: "all" + "formation" + "available" (e.g., "list all available formation")
                 or (has_all_keyword and has_formation_keyword and "available" in ql)
+                # Pattern 4: "all formations" with properties keywords anywhere (e.g., "with petrophysical properties reported")
+                or (has_all_keyword and has_formation_keyword and has_properties)
             )
         )
-        if is_all_formations_properties:
+        
+        # Route single-well "all formations" queries first (priority)
+        if is_single_well_all_formations:
+            logger.info(f"[ROUTING] Routing to formation properties tool for SINGLE well: {nq.well or extract_well(question)}")
+            forced = AIMessage(
+                content="",
+                tool_calls=[
+                    {
+                        "name": "lookup_formation_properties",
+                        "args": {"query": tool_query},
+                        "id": "call_lookup_formation_properties_single_well_1",
+                    }
+                ],
+            )
+            return {"messages": [forced]}
+        
+        # Route all-wells "all formations" queries
+        if is_all_wells_formations:
             logger.info(f"[ROUTING] Routing to formation properties tool for ALL wells")
             # Use original question for "all wells" queries to preserve detection keywords like "every", "all", etc.
             all_wells_query = original_question if original_question else tool_query
@@ -2237,4 +2275,5 @@ def generate_answer(state: MessagesState):
     
     logger.info("[ANSWER] Generated final answer")
     return {"messages": [AIMessage(content=answer_content)]}
+
 
