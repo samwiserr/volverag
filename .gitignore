@@ -114,6 +114,13 @@ advanced_rag/data/processed/rag_system.log
 out.txt
 *.bak
 
+# PowerShell command history artifacts (accidentally created files)
+*tatus*
+*sys.path.insert*
+*Phase 3 components*
+*Cache: OK*
+*Rate limiter: OK*
+
 # Large asset files (hosted on GitHub Releases, not in repo)
 app_assets.zip
 app_assets.tgz
