@@ -7,6 +7,7 @@ from src.core.path_resolver import PathResolver
 from src.core.result import Result
 
 
+@pytest.mark.unit
 class TestPathResolver:
     """Test PathResolver class."""
     

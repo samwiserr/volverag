@@ -5,6 +5,7 @@ import pytest
 from src.core.result import Result, AppError, ErrorType
 
 
+@pytest.mark.unit
 class TestResult:
     """Test Result monad operations."""
     
@@ -102,6 +103,7 @@ class TestResult:
         assert "Result.err" in repr(result_err)
 
 
+@pytest.mark.unit
 class TestAppError:
     """Test AppError dataclass."""
     

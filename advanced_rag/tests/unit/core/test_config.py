@@ -15,6 +15,7 @@ from src.core.config import (
 from src.core.exceptions import ConfigurationError
 
 
+@pytest.mark.unit
 class TestAppConfig:
     """Test AppConfig class."""
     
