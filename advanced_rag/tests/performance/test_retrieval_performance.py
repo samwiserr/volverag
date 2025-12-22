@@ -15,10 +15,13 @@ from pathlib import Path
 class TestRetrievalPerformance:
     """Performance tests for document retrieval."""
     
-    def test_retrieval_latency_baseline(self, mock_config):
+    def test_retrieval_latency_baseline(self, mock_config, monkeypatch):
         """Test baseline retrieval latency."""
         try:
             from src.tools.retriever_tool import RetrieverTool
+            
+            # Mock API key to avoid requirement
+            monkeypatch.setenv("OPENAI_API_KEY", "test-key")
             
             # Mock vectorstore to avoid actual database access
             with patch('src.tools.retriever_tool.Chroma') as mock_chroma:
@@ -47,10 +50,13 @@ class TestRetrievalPerformance:
         except ImportError:
             pytest.skip("RetrieverTool not available")
     
-    def test_retrieval_throughput(self, mock_config):
+    def test_retrieval_throughput(self, mock_config, monkeypatch):
         """Test retrieval can handle multiple queries."""
         try:
             from src.tools.retriever_tool import RetrieverTool
+            
+            # Mock API key to avoid requirement
+            monkeypatch.setenv("OPENAI_API_KEY", "test-key")
             
             # Mock vectorstore
             with patch('src.tools.retriever_tool.Chroma') as mock_chroma:
@@ -79,12 +85,15 @@ class TestRetrievalPerformance:
         except ImportError:
             pytest.skip("RetrieverTool not available")
     
-    def test_retrieval_concurrent_queries(self, mock_config):
+    def test_retrieval_concurrent_queries(self, mock_config, monkeypatch):
         """Test retrieval handles concurrent queries."""
         import threading
         
         try:
             from src.tools.retriever_tool import RetrieverTool
+            
+            # Mock API key to avoid requirement
+            monkeypatch.setenv("OPENAI_API_KEY", "test-key")
             
             # Mock vectorstore
             with patch('src.tools.retriever_tool.Chroma') as mock_chroma:
@@ -122,10 +131,13 @@ class TestRetrievalPerformance:
         except ImportError:
             pytest.skip("RetrieverTool not available")
     
-    def test_retrieval_latency_percentiles(self, mock_config):
+    def test_retrieval_latency_percentiles(self, mock_config, monkeypatch):
         """Test retrieval latency percentiles."""
         try:
             from src.tools.retriever_tool import RetrieverTool
+            
+            # Mock API key to avoid requirement
+            monkeypatch.setenv("OPENAI_API_KEY", "test-key")
             
             # Mock vectorstore
             with patch('src.tools.retriever_tool.Chroma') as mock_chroma:
@@ -159,11 +171,14 @@ class TestRetrievalPerformance:
         except ImportError:
             pytest.skip("RetrieverTool not available")
     
-    def test_retrieval_memory_usage(self, mock_config):
+    def test_retrieval_memory_usage(self, mock_config, monkeypatch):
         """Test retrieval doesn't leak memory."""
         try:
             import sys
             from src.tools.retriever_tool import RetrieverTool
+            
+            # Mock API key to avoid requirement
+            monkeypatch.setenv("OPENAI_API_KEY", "test-key")
             
             # Mock vectorstore
             with patch('src.tools.retriever_tool.Chroma') as mock_chroma:
