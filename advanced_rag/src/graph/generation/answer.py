@@ -64,6 +64,33 @@ GENERATE_PROMPT = (
 )
 
 
+def _extract_tool_content(content: str) -> str:
+    """
+    Extract actual content from ToolMessage, handling Result.ok() string representation.
+    
+    Sometimes ToolMessage.content is the string representation of a Result object
+    like "Result.ok('[PETRO_PARAMS_JSON] ...')" instead of the actual JSON string.
+    This function extracts the inner value.
+    
+    Args:
+        content: ToolMessage content (may be Result.ok('...') format)
+        
+    Returns:
+        Extracted content string
+    """
+    if content.startswith("Result.ok(") and content.endswith(")"):
+        try:
+            # Remove "Result.ok(" and trailing ")"
+            inner = content[10:-1]
+            # Handle quoted strings - remove outer quotes if present
+            if (inner.startswith("'") and inner.endswith("'")) or (inner.startswith('"') and inner.endswith('"')):
+                return inner[1:-1]
+            return inner
+        except Exception:
+            pass
+    return content
+
+
 def generate_answer(state: MessagesState):
     """
     Generate final answer from relevant documents.
@@ -86,7 +113,8 @@ def generate_answer(state: MessagesState):
     has_well_picks_formations_in_messages = False
     for msg in messages:
         if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
-            if msg.content.startswith("[WELL_PICKS]") and "formations:" in msg.content:
+            content = _extract_tool_content(msg.content)
+            if content and content.startswith("[WELL_PICKS]") and "formations:" in content:
                 has_well_picks_formations_in_messages = True
                 break
     
@@ -94,10 +122,11 @@ def generate_answer(state: MessagesState):
     eval_params_error_with_retriever = False
     for msg in messages:
         if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
-            if msg.content.startswith("[EVAL_PARAMS_JSON]"):
+            content = _extract_tool_content(msg.content)
+            if content and content.startswith("[EVAL_PARAMS_JSON]"):
                 try:
                     import json
-                    raw = msg.content[len("[EVAL_PARAMS_JSON]"):].strip()
+                    raw = content[len("[EVAL_PARAMS_JSON]"):].strip()
                     payload = json.loads(raw)
                     if isinstance(payload, dict) and payload.get("error") == "no_table_for_well":
                         # Check if we have retriever context
@@ -118,29 +147,33 @@ def generate_answer(state: MessagesState):
     for msg in messages:
         # Extract tool message content
         if isinstance(msg, ToolMessage):
+            # Extract actual content (handle Result.ok() string representation)
+            content = _extract_tool_content(msg.content) if isinstance(msg.content, str) else msg.content
+            
             # If we have well picks formations, skip evaluation parameters context
             if has_well_picks_formations_in_messages:
-                if isinstance(msg.content, str) and ("Evaluation Parameters" in msg.content or "A — Well" in msg.content):
+                if isinstance(content, str) and ("Evaluation Parameters" in content or "A — Well" in content):
                     logger.info(f"[ANSWER] Skipping evaluation parameters context to prevent parameter extraction")
                     continue
             # If eval params returned error but we have retriever context, exclude the error message
             if eval_params_error_with_retriever:
-                if isinstance(msg.content, str) and msg.content.startswith("[EVAL_PARAMS_JSON]"):
+                if isinstance(content, str) and content.startswith("[EVAL_PARAMS_JSON]"):
                     try:
                         import json
-                        raw = msg.content[len("[EVAL_PARAMS_JSON]"):].strip()
+                        raw = content[len("[EVAL_PARAMS_JSON]"):].strip()
                         payload = json.loads(raw)
                         if isinstance(payload, dict) and payload.get("error") == "no_table_for_well":
                             logger.info(f"[ANSWER] Excluding eval params error message from context - using retriever context only")
                             continue
                     except Exception:
                         pass
-            context_parts.append(msg.content)
+            context_parts.append(content if isinstance(content, str) else str(msg.content))
         elif hasattr(msg, 'content') and msg.content:
             # Check if it's a tool message by content length and structure
             if isinstance(msg.content, str) and len(msg.content) > 100:
-                # Could be tool message content
-                context_parts.append(msg.content)
+                # Could be tool message content - extract if it's Result.ok() format
+                content = _extract_tool_content(msg.content)
+                context_parts.append(content if isinstance(content, str) else str(msg.content))
 
     # If a structured tool returned an authoritative output, bypass LLM and return as-is
     # CRITICAL: Check for well picks formations FIRST, before any other processing
@@ -149,11 +182,12 @@ def generate_answer(state: MessagesState):
     
     for msg in messages:
         if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            content = _extract_tool_content(msg.content)
             # PRIORITY 1: Well picks formations list - MUST bypass LLM to prevent parameter extraction
-            if msg.content.startswith("[WELL_PICKS]") and "formations:" in msg.content:
+            if content and content.startswith("[WELL_PICKS]") and "formations:" in content:
                 if is_formation_query:
                     # Format the well picks formations list directly - NEVER let LLM process this
-                    lines = msg.content.split("\n")
+                    lines = content.split("\n")
                     if len(lines) > 1:
                         # Extract well name and formations
                         header = lines[0]  # e.g., "[WELL_PICKS] Well 15/9-F-15 formations:"
@@ -177,36 +211,39 @@ def generate_answer(state: MessagesState):
                             return {"messages": [AIMessage(content=formatted)]}
             
             # PRIORITY 2: Other structured outputs
-            if msg.content.startswith("[WELL_PICKS_ALL]"):
-                return {"messages": [AIMessage(content=msg.content)]}
-            if msg.content.startswith("[WELL_FORMATION_PROPERTIES]"):
-                return {"messages": [AIMessage(content=msg.content)]}
-            if msg.content.startswith("[SECTION]"):
-                return {"messages": [AIMessage(content=msg.content)]}
+            if content and content.startswith("[WELL_PICKS_ALL]"):
+                return {"messages": [AIMessage(content=content)]}
+            if content and content.startswith("[WELL_FORMATION_PROPERTIES]"):
+                return {"messages": [AIMessage(content=content)]}
+            if content and content.startswith("[SECTION]"):
+                return {"messages": [AIMessage(content=content)]}
             
             # PRIORITY 3: Well picks errors for formation queries
-            if msg.content.startswith("[WELL_PICKS]") and ("No rows found" in msg.content or "No well detected" in msg.content):
+            if content and content.startswith("[WELL_PICKS]") and ("No rows found" in content or "No well detected" in content):
                 if is_formation_query:
                     # Return the error message directly - DO NOT let LLM process evaluation parameters
-                    logger.warning(f"[ANSWER] Well picks tool returned error for formation query: {msg.content}")
+                    logger.warning(f"[ANSWER] Well picks tool returned error for formation query: {content}")
                     # Format the error nicely but don't let LLM extract parameter values
-                    error_msg = f"Could not find formations for the specified well. {msg.content}"
+                    error_msg = f"Could not find formations for the specified well. {content}"
                     return {"messages": [AIMessage(content=error_msg)]}
             
             # PRIORITY 4: Check for well detection errors in structured tools
-            if isinstance(msg.content, str):
+            if isinstance(content, str):
                 # Check for well detection errors from structured facts, eval params, petro params
-                if ("no_well_detected" in msg.content or "No well detected" in msg.content) and ("error" in msg.content.lower() or "FACTS_JSON" in msg.content or "EVAL_PARAMS_JSON" in msg.content or "PETRO_PARAMS_JSON" in msg.content):
-                    logger.warning(f"[ANSWER] Structured tool returned well detection error: {msg.content}")
+                if ("no_well_detected" in content or "No well detected" in content) and ("error" in content.lower() or "FACTS_JSON" in content or "EVAL_PARAMS_JSON" in content or "PETRO_PARAMS_JSON" in content):
+                    logger.warning(f"[ANSWER] Structured tool returned well detection error: {content}")
                     return {"messages": [AIMessage(content="I couldn't identify which well you're asking about. Please specify the well name clearly (e.g., 15/9-F-5, 19/9-19 bt2).")]}
             # PETRO params now flows through a structured JSON formatter below
 
     # Special deterministic formatting: Evaluation parameters JSON payload -> one clean technical answer.
     for msg in messages:
-        if isinstance(msg, ToolMessage) and isinstance(msg.content, str) and msg.content.startswith("[EVAL_PARAMS_JSON]"):
+        if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            content = _extract_tool_content(msg.content)
+            if not content or not content.startswith("[EVAL_PARAMS_JSON]"):
+                continue
+            
             import json
-
-            raw = msg.content[len("[EVAL_PARAMS_JSON]") :].strip()
+            raw = content[len("[EVAL_PARAMS_JSON]") :].strip()
             try:
                 payload = json.loads(raw)
             except Exception:
@@ -571,14 +608,20 @@ def generate_answer(state: MessagesState):
 
     # Special deterministic formatting: Petrophysical parameters JSON payload -> cell/row/column/full table
     for msg in messages:
-        if isinstance(msg, ToolMessage) and isinstance(msg.content, str) and msg.content.startswith("[PETRO_PARAMS_JSON]"):
-            import json
+        if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            # Extract actual content (handle Result.ok() string representation)
+            content = _extract_tool_content(msg.content)
+            if not content or not content.startswith("[PETRO_PARAMS_JSON]"):
+                continue
+            
+            if content.startswith("[PETRO_PARAMS_JSON]"):
+                import json
 
-            raw = msg.content[len("[PETRO_PARAMS_JSON]") :].strip()
-            try:
-                payload = json.loads(raw)
-            except Exception:
-                return {"messages": [AIMessage(content="Petrophysical parameters: failed to parse structured payload.")]}
+                raw = content[len("[PETRO_PARAMS_JSON]") :].strip()
+                try:
+                    payload = json.loads(raw)
+                except Exception:
+                    return {"messages": [AIMessage(content="Petrophysical parameters: failed to parse structured payload.")]}
 
             if isinstance(payload, dict) and payload.get("error"):
                 # Provide helpful deterministic error message instead of breaking
@@ -980,15 +1023,20 @@ def generate_answer(state: MessagesState):
 
     # Special deterministic formatting: Evaluation parameters JSON payload -> cell/row/column/full table
     for msg in messages:
-        if isinstance(msg, ToolMessage) and isinstance(msg.content, str) and msg.content.startswith("[EVAL_PARAMS_JSON]"):
-            import json
+        if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            content = _extract_tool_content(msg.content)
+            if not content or not content.startswith("[EVAL_PARAMS_JSON]"):
+                continue
+            
+            if content.startswith("[EVAL_PARAMS_JSON]"):
+                import json
 
-            raw = msg.content[len("[EVAL_PARAMS_JSON]") :].strip()
-            try:
-                payload = json.loads(raw)
-            except Exception:
-                # If parsing fails, continue to LLM answer generation
-                break
+                raw = content[len("[EVAL_PARAMS_JSON]") :].strip()
+                try:
+                    payload = json.loads(raw)
+                except Exception:
+                    # If parsing fails, continue to LLM answer generation
+                    break
 
             if isinstance(payload, dict) and payload.get("error"):
                 # Error handling - let retriever fallback handle it (already implemented above)
@@ -1156,10 +1204,13 @@ def generate_answer(state: MessagesState):
 
     # Special deterministic formatting: Structured facts JSON payload -> single value or list (no interpretation)
     for msg in messages:
-        if isinstance(msg, ToolMessage) and isinstance(msg.content, str) and msg.content.startswith("[FACTS_JSON]"):
+        if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            content = _extract_tool_content(msg.content)
+            if not content or not content.startswith("[FACTS_JSON]"):
+                continue
+            
             import json
-
-            raw = msg.content[len("[FACTS_JSON]") :].strip()
+            raw = content[len("[FACTS_JSON]") :].strip()
             try:
                 payload = json.loads(raw)
             except Exception:
@@ -1286,9 +1337,10 @@ def generate_answer(state: MessagesState):
     well_picks_formations_content = None
     for msg in messages:
         if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
-            if msg.content.startswith("[WELL_PICKS]") and "formations:" in msg.content:
+            content = _extract_tool_content(msg.content)
+            if content and content.startswith("[WELL_PICKS]") and "formations:" in content:
                 has_well_picks_formations = True
-                well_picks_formations_content = msg.content
+                well_picks_formations_content = content
                 break
     
     # For ANY formation query, add explicit instructions to prevent parameter extraction
@@ -1356,11 +1408,16 @@ def generate_answer(state: MessagesState):
     # Extract citations from structured JSON payloads
     for msg in messages:
         if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            # Extract actual content (handle Result.ok() string representation)
+            content = _extract_tool_content(msg.content)
+            if not content:
+                continue
+            
             # Extract from PETRO_PARAMS_JSON
-            if msg.content.startswith("[PETRO_PARAMS_JSON]"):
+            if content.startswith("[PETRO_PARAMS_JSON]"):
                 import json
                 try:
-                    raw = msg.content[len("[PETRO_PARAMS_JSON]"):].strip()
+                    raw = content[len("[PETRO_PARAMS_JSON]"):].strip()
                     payload = json.loads(raw)
                     sources = payload.get("sources", [])
                     if isinstance(sources, list) and sources:
@@ -1388,10 +1445,10 @@ def generate_answer(state: MessagesState):
                     logger.warning(f"[ANSWER] Failed to extract citations from PETRO_PARAMS_JSON: {e}")
             
             # Extract from EVAL_PARAMS_JSON
-            elif msg.content.startswith("[EVAL_PARAMS_JSON]"):
+            elif content.startswith("[EVAL_PARAMS_JSON]"):
                 import json
                 try:
-                    raw = msg.content[len("[EVAL_PARAMS_JSON]"):].strip()
+                    raw = content[len("[EVAL_PARAMS_JSON]"):].strip()
                     payload = json.loads(raw)
                     source = payload.get("source", "")
                     ps = payload.get("page_start")
@@ -1414,10 +1471,10 @@ def generate_answer(state: MessagesState):
                     logger.warning(f"[ANSWER] Failed to extract citations from EVAL_PARAMS_JSON: {e}")
             
             # Extract from FACTS_JSON
-            elif msg.content.startswith("[FACTS_JSON]"):
+            elif content.startswith("[FACTS_JSON]"):
                 import json
                 try:
-                    raw = msg.content[len("[FACTS_JSON]"):].strip()
+                    raw = content[len("[FACTS_JSON]"):].strip()
                     payload = json.loads(raw)
                     matches = payload.get("matches", [])
                     if isinstance(matches, list):
@@ -1448,11 +1505,15 @@ def generate_answer(state: MessagesState):
     
     for msg in messages:
         if isinstance(msg, ToolMessage) and isinstance(msg.content, str):
+            content = _extract_tool_content(msg.content)
             # Skip JSON payloads (already processed above)
-            if msg.content.startswith(("[PETRO_PARAMS_JSON]", "[EVAL_PARAMS_JSON]", "[FACTS_JSON]")):
+            if content and content.startswith(("[PETRO_PARAMS_JSON]", "[EVAL_PARAMS_JSON]", "[FACTS_JSON]")):
                 continue
             # Extract citations from tool message content
-            matches = re.findall(citation_pattern, msg.content)
+            if content:
+                matches = re.findall(citation_pattern, content)
+            else:
+                matches = []
             for match in matches:
                 source_path = match[0].strip()
                 page_single = match[1] if match[1] else None
