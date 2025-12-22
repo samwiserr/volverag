@@ -48,8 +48,8 @@ class TestAppConfig:
     def test_config_validates_chunk_overlap(self, monkeypatch):
         """Test config validates chunk_overlap < chunk_size."""
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
-        monkeypatch.setenv("CHUNK_SIZE", "500")
-        monkeypatch.setenv("CHUNK_OVERLAP", "600")  # Invalid: > chunk_size
+        monkeypatch.setenv("CHUNK_SIZE", "400")
+        monkeypatch.setenv("CHUNK_OVERLAP", "450")  # Invalid: > chunk_size
         
         reload_config()
         with pytest.raises(ConfigurationError):

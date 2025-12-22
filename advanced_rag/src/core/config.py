@@ -7,7 +7,7 @@ replacing scattered os.getenv() calls throughout the codebase.
 from pathlib import Path
 from typing import Optional, List
 from enum import Enum
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 
@@ -37,6 +37,12 @@ class LLMModel(str, Enum):
     def _missing_(cls, value):
         """Allow any string value, defaulting to GPT_4O if not in enum."""
         # For backward compatibility, accept any string and default to GPT_4O
+        # But first try to match case-insensitively
+        if isinstance(value, str):
+            value_lower = value.lower()
+            for member in cls:
+                if member.value.lower() == value_lower:
+                    return member
         return cls.GPT_4O
 
 
@@ -90,7 +96,8 @@ class AppConfig(BaseSettings):
     chunk_overlap: int = Field(
         default=150,
         ge=0,
-        le=500,
+        # Note: le constraint removed - validation done in field_validator
+        # to allow dynamic validation against chunk_size
         env="CHUNK_OVERLAP",
         description="Token overlap between chunks"
     )
@@ -218,14 +225,12 @@ class AppConfig(BaseSettings):
             return resolved.resolve()
         return path.resolve() if path.exists() else path
     
-    @field_validator("chunk_overlap")
-    @classmethod
-    def validate_overlap(cls, v, info):
+    @model_validator(mode='after')
+    def validate_overlap(self):
         """Overlap must be less than chunk size."""
-        if hasattr(info, 'data') and 'chunk_size' in info.data:
-            if v >= info.data['chunk_size']:
-                raise ValueError("chunk_overlap must be less than chunk_size")
-        return v
+        if self.chunk_overlap >= self.chunk_size:
+            raise ValueError("chunk_overlap must be less than chunk_size")
+        return self
     
     @field_validator("log_format")
     @classmethod
