@@ -18,23 +18,21 @@ from src.core.exceptions import ConfigurationError
 
 @pytest.fixture(autouse=True)
 def reset_config_between_tests():
-    """Reset configuration singleton before and after each test."""
+    """Reset configuration singleton and environment before and after each test."""
+    # Snapshot environment variables at test start
+    env_snapshot = dict(os.environ)
+    
+    # Reset config before test
     reset_config()
+    
     yield
+    
+    # Restore environment to snapshot (removes test-set variables)
+    os.environ.clear()
+    os.environ.update(env_snapshot)
+    
+    # Reset config after test (with clean environment)
     reset_config()
-    # Clear any test-specific environment variables
-    test_env_vars = [
-        "OPENAI_MODEL", "OPENAI_GRADE_MODEL", "RAG_RERANK_MODEL",
-        "RAG_DECOMPOSITION_MODEL", "RAG_ENTITY_RESOLVER_MODEL",
-        "CHUNK_SIZE", "CHUNK_OVERLAP", "LOG_FORMAT", "LOG_LEVEL",
-        "VECTORSTORE_PATH", "DOCUMENTS_PATH"
-    ]
-    for var in test_env_vars:
-        if var in os.environ:
-            # Only clear if it was set by a test (not a real env var)
-            # We can't easily detect this, so we'll just clear test-specific ones
-            # In CI, these shouldn't be set anyway
-            os.environ.pop(var, None)
 
 
 @pytest.mark.unit

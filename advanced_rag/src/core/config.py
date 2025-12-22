@@ -7,7 +7,7 @@ replacing scattered os.getenv() calls throughout the codebase.
 from pathlib import Path
 from typing import Optional, List, Annotated, Union
 from enum import Enum
-from pydantic import Field, field_validator, model_validator, BeforeValidator
+from pydantic import Field, field_validator, model_validator, BeforeValidator, AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 
@@ -76,23 +76,23 @@ class AppConfig(BaseSettings):
     # API Keys
     openai_api_key: str = Field(
         ...,
-        env="OPENAI_API_KEY",
+        validation_alias=AliasChoices("OPENAI_API_KEY", "openai_api_key"),
         description="OpenAI API key (required)"
     )
     
     # Models
     embedding_model: EmbeddingModel = Field(
         default=EmbeddingModel.TEXT_EMBEDDING_3_SMALL,
-        env="EMBEDDING_MODEL"
+        validation_alias=AliasChoices("EMBEDDING_MODEL", "embedding_model")
     )
     llm_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
         default=LLMModel.GPT_4O,
-        env="OPENAI_MODEL"
+        validation_alias=AliasChoices("OPENAI_MODEL", "llm_model")
     )
     
     grade_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
         default=LLMModel.GPT_4O,
-        env="OPENAI_GRADE_MODEL"
+        validation_alias=AliasChoices("OPENAI_GRADE_MODEL", "grade_model")
     )
     
     # Paths
@@ -292,10 +292,6 @@ class AppConfig(BaseSettings):
         case_sensitive=False,
         validate_assignment=True,
         extra="ignore",  # Ignore extra fields from environment (e.g., gemini_api_key)
-        # Custom JSON encoders for enum parsing
-        json_encoders={
-            LLMModel: lambda v: v.value if isinstance(v, LLMModel) else str(v)
-        },
     )
 
 
