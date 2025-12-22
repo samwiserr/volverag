@@ -208,7 +208,8 @@ def cached(
         def wrapper(*args: Any, **kwargs: Any) -> T:
             # If a specific cache instance was provided, use it directly
             # Otherwise, check if caching is enabled in config
-            if cache_instance is None:
+            using_default_cache = cache_instance is None
+            if using_default_cache:
                 try:
                     config = get_config()
                     if not config.enable_llm_cache:
