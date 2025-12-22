@@ -5,7 +5,7 @@
 ![Streamlit](https://img.shields.io/badge/streamlit-ready-orange.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 
-A state-of-the-art Retrieval-Augmented Generation (RAG) system for querying Volve petrophysical reports using natural language. Built with LangGraph, OpenAI GPT-4o, and advanced retrieval techniques.
+Retrieval-Augmented Generation (RAG) system for querying Volve petrophysical reports using natural language. Built with LangGraph, OpenAI GPT-4o, and advanced retrieval techniques.
 
 ## 📖 Overview
 
