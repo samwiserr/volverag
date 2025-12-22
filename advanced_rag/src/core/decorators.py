@@ -42,13 +42,16 @@ def handle_errors(
                 # Otherwise wrap in Result.ok()
                 return Result.ok(result)
             except Exception as e:
+                error_context = {
+                    "function": func.__name__,
+                    "module": func.__module__,
+                }
+                if args:
+                    error_context["args"] = str(args)[:200]
                 return Result.from_exception(
                     e,
                     error_type,
-                    context={
-                        "function": func.__name__,
-                        "args": str(args)[:200] if args else None,
-                    }
+                    context=error_context
                 )
         return wrapper  # type: ignore
     return decorator
@@ -78,7 +81,14 @@ def to_result(
                     return result
                 return Result.ok(result)
             except Exception as e:
-                return Result.from_exception(e, error_type)
+                return Result.from_exception(
+                    e,
+                    error_type,
+                    context={
+                        "function": func.__name__,
+                        "module": func.__module__,
+                    }
+                )
         return wrapper  # type: ignore
     return decorator
 

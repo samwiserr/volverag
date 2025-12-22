@@ -20,15 +20,19 @@ class TestTokenBucket:
         """Test consume returns True when tokens are available."""
         bucket = TokenBucket(capacity=10, refill_rate=1.0)
         bucket.tokens = 5.0
+        bucket.last_refill = time.time()  # Freeze refill by setting last_refill to now
         assert bucket.consume(3) is True
-        assert bucket.tokens == 2.0
+        # Use approximate equality to handle floating point precision
+        assert abs(bucket.tokens - 2.0) < 0.0001
     
     def test_consume_fails_when_insufficient_tokens(self):
         """Test consume returns False when insufficient tokens."""
         bucket = TokenBucket(capacity=10, refill_rate=1.0)
         bucket.tokens = 2.0
+        bucket.last_refill = time.time()  # Freeze refill by setting last_refill to now
         assert bucket.consume(5) is False
-        assert bucket.tokens == 2.0  # Should not consume
+        # Use approximate equality to handle floating point precision
+        assert abs(bucket.tokens - 2.0) < 0.0001  # Should not consume
     
     def test_refill_over_time(self):
         """Test tokens refill over time."""

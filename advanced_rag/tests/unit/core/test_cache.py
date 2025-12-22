@@ -152,8 +152,15 @@ class TestGenerateCacheKey:
 class TestCachedDecorator:
     """Test cached decorator."""
     
-    def test_caches_function_result(self):
+    def test_caches_function_result(self, monkeypatch):
         """Test decorator caches function results."""
+        # Enable caching for this test
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("ENABLE_LLM_CACHE", "true")
+        from src.core.config import reset_config, reload_config
+        reset_config()
+        reload_config()
+        
         call_count = 0
         
         @cached(ttl=3600)
@@ -169,8 +176,15 @@ class TestCachedDecorator:
         assert result2 == 10
         assert call_count == 1  # Function only called once
     
-    def test_cache_expires_after_ttl(self):
+    def test_cache_expires_after_ttl(self, monkeypatch):
         """Test cache expires after TTL."""
+        # Enable caching for this test
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("ENABLE_LLM_CACHE", "true")
+        from src.core.config import reset_config, reload_config
+        reset_config()
+        reload_config()
+        
         call_count = 0
         
         @cached(ttl=0.01)  # Very short TTL
@@ -187,8 +201,15 @@ class TestCachedDecorator:
         func(5)  # Should call again
         assert call_count == 2
     
-    def test_different_args_create_different_cache_entries(self):
+    def test_different_args_create_different_cache_entries(self, monkeypatch):
         """Test different arguments create different cache entries."""
+        # Enable caching for this test
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("ENABLE_LLM_CACHE", "true")
+        from src.core.config import reset_config, reload_config
+        reset_config()
+        reload_config()
+        
         call_count = 0
         
         @cached(ttl=3600)

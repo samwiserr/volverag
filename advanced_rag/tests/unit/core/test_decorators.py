@@ -68,7 +68,9 @@ class TestHandleErrors:
         result = test_func()
         assert result.is_err()
         error = result.error()
-        assert "function" in error.details or "function" in str(error.context)
+        # Check that context is populated and contains function name
+        assert error.context is not None, "Error context should not be None"
+        assert "function" in error.context, f"Error context should contain 'function', got: {error.context}"
     
     def test_handles_function_with_args(self):
         """Test decorator works with functions that have arguments."""

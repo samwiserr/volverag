@@ -101,18 +101,21 @@ class Result(Generic[T, E]):
         """
         if value is not None and error is not None:
             raise ValueError("Result cannot have both value and error")
-        if value is None and error is None:
-            raise ValueError("Result must have either value or error")
+        # Allow None as a valid value (represents successful None return)
+        # Only raise if error is provided without value being explicitly set
+        # (error=None and value=None is valid - it means Result.ok(None))
+        if error is not None and value is not None:
+            raise ValueError("Result cannot have both value and error")
         self._value: Optional[T] = value
         self._error: Optional[AppError] = error
     
     @classmethod
-    def ok(cls, value: T) -> 'Result[T, AppError]':
+    def ok(cls, value: Optional[T] = None) -> 'Result[T, AppError]':
         """
         Create successful result.
         
         Args:
-            value: Success value
+            value: Success value (can be None)
             
         Returns:
             Result containing the value
