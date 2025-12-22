@@ -50,13 +50,13 @@ def _md5_file(p: Path) -> str:
 
 def _norm_well(s: str) -> str:
     """Normalize well name (uses centralized utility)."""
-    from ...core.well_utils import normalize_well
+    from src.core.well_utils import normalize_well
     return normalize_well(s)
 
 
 def _extract_well(text: str) -> Optional[str]:
     """Extract well name using centralized extraction function."""
-    from ...core.well_utils import extract_well
+    from src.core.well_utils import extract_well
     return extract_well(text)
 
 

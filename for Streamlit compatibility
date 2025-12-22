@@ -1,0 +1,49 @@
+warning: in the working copy of 'advanced_rag/src/tools/petro_params_tool.py', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/advanced_rag/src/graph/routing/router.py b/advanced_rag/src/graph/routing/router.py[m
+[1mindex c643821..171ce1c 100644[m
+[1m--- a/advanced_rag/src/graph/routing/router.py[m
+[1m+++ b/advanced_rag/src/graph/routing/router.py[m
+[36m@@ -4,8 +4,8 @@[m [mQuery router that orchestrates routing strategies.[m
+ from typing import List[m
+ from langgraph.graph import MessagesState[m
+ from langchain_core.messages import AIMessage[m
+[31m-from ...core.result import Result, AppError, ErrorType[m
+[31m-from ...core.logging import get_logger[m
+[32m+[m[32mfrom src.core.result import Result, AppError, ErrorType[m
+[32m+[m[32mfrom src.core.logging import get_logger[m
+ from src.normalize.query_normalizer import normalize_query, extract_well[m
+ from src.graph.utils.message_utils import _latest_user_question, _infer_recent_context[m
+ from .strategies import ([m
+[1mdiff --git a/advanced_rag/src/graph/routing/strategies/base.py b/advanced_rag/src/graph/routing/strategies/base.py[m
+[1mindex 682a51f..b740f04 100644[m
+[1m--- a/advanced_rag/src/graph/routing/strategies/base.py[m
+[1m+++ b/advanced_rag/src/graph/routing/strategies/base.py[m
+[36m@@ -5,7 +5,7 @@[m [mfrom abc import ABC, abstractmethod[m
+ from typing import Optional[m
+ from langchain_core.messages import AIMessage[m
+ from src.normalize.query_normalizer import NormalizedQuery[m
+[31m-from ....core.result import Result, AppError, ErrorType[m
+[32m+[m[32mfrom src.core.result import Result, AppError, ErrorType[m
+ [m
+ class RoutingStrategy(ABC):[m
+     """[m
+[1mdiff --git a/advanced_rag/src/tools/petro_params_tool.py b/advanced_rag/src/tools/petro_params_tool.py[m
+[1mindex 1738629..17c2c04 100644[m
+[1m--- a/advanced_rag/src/tools/petro_params_tool.py[m
+[1m+++ b/advanced_rag/src/tools/petro_params_tool.py[m
+[36m@@ -50,13 +50,13 @@[m [mdef _md5_file(p: Path) -> str:[m
+ [m
+ def _norm_well(s: str) -> str:[m
+     """Normalize well name (uses centralized utility)."""[m
+[31m-    from ...core.well_utils import normalize_well[m
+[32m+[m[32m    from src.core.well_utils import normalize_well[m
+     return normalize_well(s)[m
+ [m
+ [m
+ def _extract_well(text: str) -> Optional[str]:[m
+     """Extract well name using centralized extraction function."""[m
+[31m-    from ...core.well_utils import extract_well[m
+[32m+[m[32m    from src.core.well_utils import extract_well[m
+     return extract_well(text)[m
+ [m
+ [m

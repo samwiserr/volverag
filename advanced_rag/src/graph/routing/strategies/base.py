@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from langchain_core.messages import AIMessage
 from src.normalize.query_normalizer import NormalizedQuery
-from ....core.result import Result, AppError, ErrorType
+from src.core.result import Result, AppError, ErrorType
 
 class RoutingStrategy(ABC):
     """
