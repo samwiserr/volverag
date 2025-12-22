@@ -1,10 +1,13 @@
 """
 Graph manager for initializing and caching the LangGraph RAG workflow.
 """
+import os
 import logging
 from pathlib import Path
+from typing import List
 
 import streamlit as st
+from langchain_openai import ChatOpenAI
 
 from src.graph.rag_graph import build_rag_graph
 from src.tools.formation_properties_tool import FormationPropertiesTool
@@ -14,8 +17,49 @@ from src.tools.retriever_tool import RetrieverTool
 from src.tools.section_lookup_tool import SectionLookupTool
 from src.tools.structured_facts_tool import StructuredFactsTool
 from src.tools.well_picks_tool import WellPicksTool
+from src.core.container import get_container
+from src.normalize.property_registry import default_registry, PropertyEntry
+from src.graph.nodes import (
+    SERVICE_KEY_RESPONSE_MODEL,
+    SERVICE_KEY_GRADER_MODEL,
+    SERVICE_KEY_REGISTRY
+)
 
 logger = logging.getLogger(__name__)
+
+
+def _register_services(persist_dir: str) -> None:
+    """
+    Register services in DI container.
+    
+    This function registers LLM models and property registry in the container
+    so they can be retrieved via dependency injection instead of global state.
+    
+    Args:
+        persist_dir: Directory containing the vectorstore (for registry)
+    """
+    container = get_container()
+    
+    # Register response model (if not already registered)
+    if not container.is_registered(ChatOpenAI, key=SERVICE_KEY_RESPONSE_MODEL):
+        model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
+        response_model = ChatOpenAI(model=model_name, temperature=0)
+        container.register(ChatOpenAI, response_model, key=SERVICE_KEY_RESPONSE_MODEL)
+        logger.debug(f"Registered response model: {model_name}")
+    
+    # Register grader model (if not already registered)
+    if not container.is_registered(ChatOpenAI, key=SERVICE_KEY_GRADER_MODEL):
+        model_name = os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "gpt-4o"))
+        grader_model = ChatOpenAI(model=model_name, temperature=0)
+        container.register(ChatOpenAI, grader_model, key=SERVICE_KEY_GRADER_MODEL)
+        logger.debug(f"Registered grader model: {model_name}")
+    
+    # Register property registry (if not already registered)
+    if container.get_by_key_or_none(SERVICE_KEY_REGISTRY) is None:
+        registry = default_registry(persist_dir)
+        # Register as keyed service (using string key since List[PropertyEntry] is not hashable as type)
+        container.register_keyed(SERVICE_KEY_REGISTRY, registry)
+        logger.debug(f"Registered property registry from: {persist_dir}")
 
 
 @st.cache_resource
@@ -31,6 +75,9 @@ def _get_graph(persist_dir: str, embedding_model: str, cache_version: int = 2):
     Returns:
         RAG graph or None if vectorstore not found
     """
+    # Register services in DI container
+    _register_services(persist_dir)
+    
     rt = RetrieverTool(persist_directory=persist_dir, embedding_model=embedding_model)
     if not rt.load_vectorstore():
         return None  # Return None instead of raising - let UI handle it

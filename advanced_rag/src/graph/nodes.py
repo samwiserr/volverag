@@ -22,15 +22,43 @@ from .generation.answer import generate_answer
 from .generation.rewriter import rewrite_question
 from .routing.router import generate_query_or_respond
 from .retrieval.grader import grade_documents
+from ..core.container import get_container
 
 logger = logging.getLogger(__name__)
 
 # Lazy-init chat models (avoid import-time crash if OPENAI_API_KEY not set)
+# DEPRECATED: These globals will be removed in favor of DI container
 _response_model: Optional[ChatOpenAI] = None
 _grader_model: Optional[ChatOpenAI] = None
 
 
+# Service keys for DI container
+SERVICE_KEY_RESPONSE_MODEL = "response_model"
+SERVICE_KEY_GRADER_MODEL = "grader_model"
+SERVICE_KEY_REGISTRY = "property_registry"
+
+
 def _get_response_model() -> ChatOpenAI:
+    """
+    Get response model (ChatOpenAI instance).
+    
+    Priority:
+    1. DI container (if registered with key 'response_model')
+    2. Global singleton (fallback for backward compatibility)
+    
+    DEPRECATED: Use _get_response_model_from_container() for new code.
+    """
+    # Try DI container first
+    try:
+        container = get_container()
+        if container.is_registered(ChatOpenAI, key=SERVICE_KEY_RESPONSE_MODEL):
+            model = container.get(ChatOpenAI, key=SERVICE_KEY_RESPONSE_MODEL)
+            if model is not None:
+                return model
+    except Exception:
+        pass  # Fallback to global
+    
+    # Fallback to global singleton (backward compatibility)
     global _response_model
     if _response_model is None:
         model = os.getenv("OPENAI_MODEL", "gpt-4o")
@@ -39,6 +67,26 @@ def _get_response_model() -> ChatOpenAI:
 
 
 def _get_grader_model() -> ChatOpenAI:
+    """
+    Get grader model (ChatOpenAI instance).
+    
+    Priority:
+    1. DI container (if registered with key 'grader_model')
+    2. Global singleton (fallback for backward compatibility)
+    
+    DEPRECATED: Use _get_grader_model_from_container() for new code.
+    """
+    # Try DI container first
+    try:
+        container = get_container()
+        if container.is_registered(ChatOpenAI, key=SERVICE_KEY_GRADER_MODEL):
+            model = container.get(ChatOpenAI, key=SERVICE_KEY_GRADER_MODEL)
+            if model is not None:
+                return model
+    except Exception:
+        pass  # Fallback to global
+    
+    # Fallback to global singleton (backward compatibility)
     global _grader_model
     if _grader_model is None:
         model = os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "gpt-4o"))
@@ -46,10 +94,29 @@ def _get_grader_model() -> ChatOpenAI:
     return _grader_model
 
 # Initialize property registry (lazy-loaded)
+# DEPRECATED: This global will be removed in favor of DI container
 _registry_cache: Optional[List[PropertyEntry]] = None
 
 def _get_registry() -> List[PropertyEntry]:
-    """Lazy-load the property registry."""
+    """
+    Lazy-load the property registry.
+    
+    Priority:
+    1. DI container (if registered with key 'property_registry')
+    2. Global singleton (fallback for backward compatibility)
+    
+    DEPRECATED: Use _get_registry_from_container() for new code.
+    """
+    # Try DI container first
+    try:
+        container = get_container()
+        registry = container.get_by_key_or_none(SERVICE_KEY_REGISTRY)
+        if registry is not None:
+            return registry
+    except Exception:
+        pass  # Fallback to global
+    
+    # Fallback to global singleton (backward compatibility)
     global _registry_cache
     if _registry_cache is None:
         _registry_cache = default_registry("./data/vectorstore")
