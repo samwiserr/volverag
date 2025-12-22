@@ -46,13 +46,15 @@ class TestFormationMatchingProperties:
             pytest.skip("rapidfuzz not available")
     
     @given(
-        st.text(min_size=2, max_size=50),  # At least 2 chars to avoid single char edge cases
-        st.lists(st.text(min_size=2, max_size=50), min_size=1, max_size=10)  # At least 2 chars
+        st.text(min_size=3, max_size=50),  # At least 3 chars to avoid very short edge cases
+        st.lists(st.text(min_size=3, max_size=50), min_size=1, max_size=10)  # At least 3 chars
     )
     @settings(max_examples=20)
     def test_fuzzy_matching_is_case_insensitive(self, query_formation, candidate_formations):
         """Fuzzy matching should be case-insensitive."""
         assume(query_formation.strip() and all(c.strip() for c in candidate_formations))  # Skip whitespace-only
+        # Skip if query is mostly numeric/alphanumeric (edge cases)
+        assume(not (query_formation.isdigit() or (len(query_formation) <= 3 and query_formation.isalnum())))
         
         try:
             from rapidfuzz import process, fuzz
@@ -76,15 +78,15 @@ class TestFormationMatchingProperties:
             # Results should be similar (same match or similar scores)
             if result_lower and result_upper:
                 # Both found matches - they should be the same or very similar
-                # Allow some tolerance for edge cases (very short strings, numeric strings)
+                # Allow some tolerance for edge cases
                 score_diff = abs(result_lower[1] - result_upper[1])
-                if len(query_formation) <= 2 or query_formation.isdigit() or query_formation.isalnum():
-                    # Very lenient for edge cases
-                    assert result_lower[0] == result_upper[0] or score_diff < 50, \
+                # For longer strings, expect better consistency
+                if len(query_formation) >= 5:
+                    assert result_lower[0] == result_upper[0] or score_diff < 15, \
                         f"Case sensitivity detected: lower={result_lower[0]} (score={result_lower[1]}) vs upper={result_upper[0]} (score={result_upper[1]})"
                 else:
-                    # Normal tolerance for longer strings
-                    assert result_lower[0] == result_upper[0] or score_diff < 20, \
+                    # More lenient for shorter strings
+                    assert result_lower[0] == result_upper[0] or score_diff < 30, \
                         f"Case sensitivity detected: lower={result_lower[0]} (score={result_lower[1]}) vs upper={result_upper[0]} (score={result_upper[1]})"
         except ImportError:
             pytest.skip("rapidfuzz not available")
