@@ -100,7 +100,7 @@ class TestToolWrapper:
             """This is a documented tool."""
             return Result.ok("result")
         
-        assert "documented tool" in my_tool.__doc__
+        assert "documented tool" in documented_tool.__doc__
     
     def test_handles_function_with_args(self):
         """Test handles function with arguments."""

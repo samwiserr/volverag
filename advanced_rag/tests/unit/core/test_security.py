@@ -4,6 +4,7 @@ Unit tests for security module (rate limiting and sanitization).
 import pytest
 import time
 from src.core.security import TokenBucket, RateLimiter, sanitize_input
+from src.core.result import Result
 
 
 @pytest.mark.unit
