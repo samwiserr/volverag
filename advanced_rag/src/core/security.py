@@ -90,10 +90,13 @@ class RateLimiter:
         """Get or create token bucket for identifier."""
         with self._lock:
             if identifier not in self._buckets:
-                self._buckets[identifier] = TokenBucket(
+                bucket = TokenBucket(
                     capacity=self._requests_per_minute,
                     refill_rate=self._refill_rate
                 )
+                # Initialize with full capacity so users can make requests immediately
+                bucket.tokens = float(self._requests_per_minute)
+                self._buckets[identifier] = bucket
             return self._buckets[identifier]
     
     def check_rate_limit(self, identifier: str) -> Result[bool, AppError]:
