@@ -7,6 +7,7 @@ and cache invalidation strategies. Designed to work seamlessly with Streamlit.
 import hashlib
 import json
 import time
+import threading
 from typing import Any, Callable, Dict, Optional, TypeVar, Union
 from functools import wraps
 from dataclasses import dataclass, field
@@ -47,20 +48,22 @@ class Cache:
     and provides efficient key-based lookups with automatic expiration.
     """
     
-    def __init__(self, default_ttl: int = 3600):
+    def __init__(self, default_ttl: int = 3600, max_size: Optional[int] = None):
         """
         Initialize cache.
         
         Args:
             default_ttl: Default time-to-live in seconds
+            max_size: Maximum number of entries (None for unlimited)
         """
         self._store: Dict[str, CacheEntry] = {}
         self._default_ttl = default_ttl
-        self._lock = None  # Will use threading.Lock if needed
+        self._max_size = max_size
+        self._lock = threading.Lock()  # Thread-safe lock for all operations
         
     def get(self, key: str) -> Optional[Any]:
         """
-        Get value from cache.
+        Get value from cache (thread-safe).
         
         Args:
             key: Cache key
@@ -68,74 +71,105 @@ class Cache:
         Returns:
             Cached value or None if not found/expired
         """
-        entry = self._store.get(key)
-        if entry is None:
-            return None
-        
-        if entry.is_expired():
-            # Remove expired entry
-            del self._store[key]
-            return None
-        
-        entry.touch()
-        return entry.value
+        with self._lock:
+            entry = self._store.get(key)
+            if entry is None:
+                return None
+            
+            if entry.is_expired():
+                # Remove expired entry
+                del self._store[key]
+                return None
+            
+            entry.touch()
+            return entry.value
     
     def set(self, key: str, value: Any, ttl: Optional[int] = None) -> None:
         """
-        Set value in cache.
+        Set value in cache (thread-safe with LRU eviction if max_size exceeded).
         
         Args:
             key: Cache key
             value: Value to cache
             ttl: Time-to-live in seconds (uses default if None)
         """
-        if ttl is None:
-            ttl = self._default_ttl
+        with self._lock:
+            # Check if we need to evict entries due to size limit
+            if self._max_size is not None and key not in self._store:
+                # If adding a new entry would exceed max_size, evict least recently used
+                if len(self._store) >= self._max_size:
+                    self._evict_lru()
+            
+            if ttl is None:
+                ttl = self._default_ttl
+            
+            expires_at = time.time() + ttl
+            self._store[key] = CacheEntry(
+                value=value,
+                expires_at=expires_at
+            )
+    
+    def _evict_lru(self) -> None:
+        """
+        Evict least recently used entry (thread-safe, called with lock held).
         
-        expires_at = time.time() + ttl
-        self._store[key] = CacheEntry(
-            value=value,
-            expires_at=expires_at
+        This is used when max_size is exceeded and a new entry needs to be added.
+        """
+        if not self._store:
+            return
+        
+        # Find entry with oldest last_accessed time
+        lru_key = min(
+            self._store.keys(),
+            key=lambda k: self._store[k].last_accessed
         )
+        del self._store[lru_key]
+        logger.debug(f"Evicted LRU entry: {lru_key}")
     
     def delete(self, key: str) -> None:
-        """Delete entry from cache."""
-        self._store.pop(key, None)
+        """Delete entry from cache (thread-safe)."""
+        with self._lock:
+            self._store.pop(key, None)
     
     def clear(self) -> None:
-        """Clear all entries from cache."""
-        self._store.clear()
+        """Clear all entries from cache (thread-safe)."""
+        with self._lock:
+            self._store.clear()
     
     def cleanup_expired(self) -> int:
         """
-        Remove all expired entries.
+        Remove all expired entries (thread-safe).
         
         Returns:
             Number of entries removed
         """
-        expired_keys = [
-            key for key, entry in self._store.items()
-            if entry.is_expired()
-        ]
-        for key in expired_keys:
-            del self._store[key]
-        return len(expired_keys)
+        with self._lock:
+            expired_keys = [
+                key for key, entry in self._store.items()
+                if entry.is_expired()
+            ]
+            for key in expired_keys:
+                del self._store[key]
+            return len(expired_keys)
     
     def stats(self) -> Dict[str, Any]:
         """
-        Get cache statistics.
+        Get cache statistics (thread-safe).
         
         Returns:
             Dictionary with cache stats
         """
-        total = len(self._store)
-        expired = sum(1 for e in self._store.values() if e.is_expired())
-        return {
-            "total_entries": total,
-            "expired_entries": expired,
-            "active_entries": total - expired,
-            "default_ttl": self._default_ttl,
-        }
+        with self._lock:
+            total = len(self._store)
+            expired = sum(1 for e in self._store.values() if e.is_expired())
+            return {
+                "total_entries": total,
+                "expired_entries": expired,
+                "active_entries": total - expired,
+                "default_ttl": self._default_ttl,
+                "max_size": self._max_size,
+                "size_limit_reached": self._max_size is not None and total >= self._max_size,
+            }
 
 
 # Global cache instances

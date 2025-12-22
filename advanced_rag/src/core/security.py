@@ -68,27 +68,57 @@ class TokenBucket:
 
 class RateLimiter:
     """
-    Rate limiter with per-user/IP tracking.
+    Thread-safe rate limiter with per-user/IP tracking.
     
     Supports multiple rate limiters for different endpoints or operations.
+    Automatically cleans up inactive buckets to prevent memory leaks.
     """
     
-    def __init__(self, requests_per_minute: int = 60):
+    def __init__(self, requests_per_minute: int = 60, cleanup_interval: int = 3600):
         """
         Initialize rate limiter.
         
         Args:
             requests_per_minute: Maximum requests per minute per user
+            cleanup_interval: Seconds of inactivity before bucket is removed (default: 1 hour)
         """
         self._buckets: Dict[str, TokenBucket] = {}
         self._requests_per_minute = requests_per_minute
         self._lock = Lock()
         # Refill rate: requests_per_minute / 60 seconds
         self._refill_rate = requests_per_minute / 60.0
+        self._cleanup_interval = cleanup_interval
+        self._last_cleanup: float = time.time()
+    
+    def _cleanup_old_buckets(self) -> None:
+        """
+        Remove buckets that haven't been accessed recently (thread-safe, called with lock held).
+        
+        This prevents memory leaks from accumulating buckets for inactive users/sessions.
+        """
+        now = time.time()
+        # Only cleanup every cleanup_interval to avoid overhead
+        if now - self._last_cleanup < self._cleanup_interval:
+            return
+        
+        self._last_cleanup = now
+        inactive_threshold = now - self._cleanup_interval
+        
+        inactive_keys = [
+            key for key, bucket in self._buckets.items()
+            if bucket.last_refill < inactive_threshold
+        ]
+        
+        for key in inactive_keys:
+            del self._buckets[key]
+            logger.debug(f"Cleaned up inactive rate limit bucket: {key}")
     
     def _get_bucket(self, identifier: str) -> TokenBucket:
-        """Get or create token bucket for identifier."""
+        """Get or create token bucket for identifier (thread-safe)."""
         with self._lock:
+            # Periodically cleanup old buckets
+            self._cleanup_old_buckets()
+            
             if identifier not in self._buckets:
                 bucket = TokenBucket(
                     capacity=self._requests_per_minute,
@@ -131,17 +161,29 @@ class RateLimiter:
             ))
     
     def get_remaining(self, identifier: str) -> int:
-        """Get remaining requests for identifier."""
+        """Get remaining requests for identifier (thread-safe)."""
         bucket = self._get_bucket(identifier)
         return bucket.available()
     
     def reset(self, identifier: Optional[str] = None) -> None:
-        """Reset rate limit for identifier (or all if None)."""
+        """Reset rate limit for identifier (or all if None) (thread-safe)."""
         with self._lock:
             if identifier:
                 self._buckets.pop(identifier, None)
             else:
                 self._buckets.clear()
+    
+    def cleanup_inactive(self) -> int:
+        """
+        Manually trigger cleanup of inactive buckets (thread-safe).
+        
+        Returns:
+            Number of buckets removed
+        """
+        with self._lock:
+            before = len(self._buckets)
+            self._cleanup_old_buckets()
+            return before - len(self._buckets)
 
 
 # Global rate limiter instance
