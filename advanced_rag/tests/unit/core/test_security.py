@@ -24,6 +24,7 @@ class TestTokenBucket:
         assert bucket.consume(3) is True
         # Use approximate equality to handle floating point precision
         assert abs(bucket.tokens - 2.0) < 0.0001
+        assert abs(bucket.tokens - 2.0) < 0.0001
     
     def test_consume_fails_when_insufficient_tokens(self):
         """Test consume returns False when insufficient tokens."""
