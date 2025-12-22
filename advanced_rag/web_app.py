@@ -1268,8 +1268,7 @@ def main():
                 st.error(f"⚠️ **Input sanitization failed:** {sanitize_result.error().message}")
                 return
             
-            from src.core.compat import unwrap_result
-            sanitized_input = unwrap_result(sanitize_result)
+            sanitized_input = sanitize_result.unwrap()
             
             # Rate limiting (use session ID as identifier)
             session_id = st.session_state.get("session_id", "default")
