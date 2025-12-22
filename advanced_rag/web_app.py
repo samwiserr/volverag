@@ -1253,7 +1253,7 @@ def main():
             # Input validation and sanitization
             from src.core.validation import validate_query
             from src.core.security import sanitize_input, get_rate_limiter
-            from src.core.result import unwrap_result
+            from src.core.compat import unwrap_result
             
             # Validate query
             is_valid, error_msg = validate_query(user_input)
