@@ -470,6 +470,44 @@ def generate_query_or_respond(state: MessagesState, tools):
             )
             return {"messages": [forced]}
 
+        # Deterministic routing: formation-pressure / pressure-data narrative queries -> retriever (RAG)
+        # Rationale: LLM tool-selection sometimes routes these to structured_facts (sparse facts table),
+        # which loses the narrative section ("Evaluation of Formation Pressure Data ...") that the user expects.
+        extracted_well_pressure = extract_well(question)
+        has_well_pattern_pressure = (nq.well is not None or extracted_well_pressure is not None)
+        is_formation_pressure_query = (
+            has_well_pattern_pressure
+            and any(k in ql for k in [
+                "formation pressure",
+                "formation pressures",
+                "pressure data",
+                "pressure test",
+                "pressure testing",
+                "testrak",
+                "testtrak",
+                "pres_form",
+                "pres_qual",
+            ])
+        )
+        if is_formation_pressure_query:
+            # Add common report tokens to improve retrieval recall while keeping the user's intent intact.
+            enhanced_query = (
+                tool_query
+                + " evaluation of formation pressure data"
+                + " testrak pres_form pres_qual"
+            )
+            forced = AIMessage(
+                content="",
+                tool_calls=[
+                    {
+                        "name": "retrieve_petrophysical_docs",
+                        "args": {"query": enhanced_query},
+                        "id": "call_retrieve_petrophysical_docs_pressure_1",
+                    }
+                ],
+            )
+            return {"messages": [forced]}
+
         # For fact-like queries, do typo-tolerant property resolution:
         # - fuzzy match over registry
         # - if ambiguous, ask a clarification question (agent)
