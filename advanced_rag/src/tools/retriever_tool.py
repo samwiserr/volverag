@@ -90,9 +90,26 @@ class RetrieverTool:
         self._mmr_enabled = os.getenv("RAG_MMR", "true").lower() in {"1", "true", "yes"}
         self._mmr_lambda = float(os.getenv("RAG_MMR_LAMBDA", "0.7"))
         self._embed_cache: Dict[str, List[float]] = {}
+
+        # Hybrid fusion method for dense + lexical retrieval
+        # - "weighted": weighted score merge (legacy/default)
+        # - "rrf": Reciprocal Rank Fusion (rank-based, score-agnostic)
+        fusion = (os.getenv("RAG_HYBRID_FUSION", "weighted") or "weighted").strip().lower()
+        if fusion not in {"weighted", "rrf"}:
+            logger.warning(f"[RETRIEVE] Unknown RAG_HYBRID_FUSION='{fusion}', falling back to 'weighted'")
+            fusion = "weighted"
+        self._fusion_method = fusion
+        try:
+            self._rrf_k = int(os.getenv("RAG_RRF_K", "60"))
+        except Exception:
+            self._rrf_k = 60
+        if self._rrf_k <= 0:
+            logger.warning(f"[RETRIEVE] Invalid RAG_RRF_K={self._rrf_k}, falling back to 60")
+            self._rrf_k = 60
         
         logger.info(f"[OK] RetrieverTool initialized with model: {embedding_model}")
         logger.info(f"[OK] Using IntelligentChunker: chunk_size={chunk_size}, overlap={chunk_overlap}")
+        logger.info(f"[OK] Hybrid fusion: {self._fusion_method} (rrf_k={self._rrf_k})")
     
     def build_vectorstore(self, documents: List[Document], chunk_size: int = None, chunk_overlap: int = None):
         """
@@ -591,17 +608,38 @@ class RetrieverTool:
             logger.warning(f"[RERANK] LLM rerank failed: {e}")
             return docs
 
-    def _hybrid_retrieve(self, queries: Iterable[str], k_vec: int = 20, k_lex: int = 30, k_final: int = 10) -> List[Document]:
-        # Run hybrid over expanded queries and merge
+    def _rrf_fuse(self, ranked_lists: List[List[Document]], rrf_k: int) -> List[Tuple[Document, float]]:
+        """
+        Reciprocal Rank Fusion (RRF) over multiple ranked lists.
+
+        Score(doc) = sum_{lists} 1 / (rrf_k + rank)
+
+        Notes:
+        - Rank is 1-based.
+        - Uses doc.metadata['lexical_id'] when present, otherwise `_doc_key(doc)` for stable de-duping.
+        """
+        if not ranked_lists:
+            return []
+        scores: Dict[str, float] = {}
+        doc_by_key: Dict[str, Document] = {}
+        for lst in ranked_lists:
+            for rank, doc in enumerate(lst, start=1):
+                key = doc.metadata.get("lexical_id") or self._doc_key(doc)
+                if key not in doc_by_key:
+                    doc_by_key[key] = doc
+                scores[key] = scores.get(key, 0.0) + (1.0 / (float(rrf_k) + float(rank)))
+        ranked_keys = sorted(scores.keys(), key=lambda k: scores[k], reverse=True)
+        return [(doc_by_key[k], scores[k]) for k in ranked_keys]
+
+    def _hybrid_candidates_weighted(self, queries: List[str], k_vec: int, k_lex: int, k_final: int) -> List[Document]:
+        """Return initial hybrid candidates using the legacy weighted score merge."""
         all_vec: List[Tuple[Document, float]] = []
         all_lex: List[Tuple[Document, float]] = []
         for q in queries:
             all_vec.extend(self._vector_search(q, k=k_vec))
             all_lex.extend(self._bm25_search(q, k=k_lex))
 
-        # Normalize BM25 scores to [0,1] using max
         max_bm = max((s for _d, s in all_lex), default=0.0)
-        # Merge with weighted score
         merged: Dict[str, Tuple[Document, float]] = {}
 
         for idx, (d, s) in enumerate(all_vec):
@@ -617,19 +655,35 @@ class RetrieverTool:
                 merged[key] = (d, max(prev[1], score) if prev else score)
 
         ranked = sorted(merged.values(), key=lambda t: t[1], reverse=True)
-        docs = [d for d, _s in ranked][: max(k_final, 24)]
+        return [d for d, _s in ranked][: max(k_final, 24)]
 
-        # Filter TOC-like chunks unless explicitly asked for TOC/pages
-        q0 = next(iter(queries))
-        q0l = (q0 or "").lower()
-        wants_toc = any(k in q0l for k in ["table of contents", "toc", "page", "pages"])
+    def _hybrid_candidates_rrf(self, queries: List[str], k_vec: int, k_lex: int, k_final: int) -> List[Document]:
+        """Return initial hybrid candidates using true Reciprocal Rank Fusion (RRF)."""
+        ranked_lists: List[List[Document]] = []
+        for q in queries:
+            vec = [d for d, _s in self._vector_search(q, k=k_vec)]
+            lex = [d for d, _s in self._bm25_search(q, k=k_lex)]
+            if vec:
+                ranked_lists.append(vec)
+            if lex:
+                ranked_lists.append(lex)
+
+        fused = self._rrf_fuse(ranked_lists, rrf_k=self._rrf_k)
+        return [d for d, _s in fused][: max(k_final, 24)]
+
+    def _post_process_candidates(self, primary_query: str, docs: List[Document], k_final: int) -> List[Document]:
+        """Apply shared post-processing: TOC filter, MMR, cross-encoder, LLM rerank."""
+        if not docs:
+            return []
+
+        ql = (primary_query or "").lower()
+        wants_toc = any(k in ql for k in ["table of contents", "toc", "page", "pages"])
         if not wants_toc:
             docs = [d for d in docs if not d.metadata.get("is_toc")]
 
-        # MMR diversification before rerank
         if self._mmr_enabled and docs:
             mmr_k = min(max(k_final, 10), len(docs))
-            docs = self._mmr_select(next(iter(queries)), docs, k=mmr_k, lambda_mult=self._mmr_lambda) + docs
+            docs = self._mmr_select(primary_query, docs, k=mmr_k, lambda_mult=self._mmr_lambda) + docs
             # de-dup preserving order
             seen = set()
             deduped = []
@@ -640,20 +694,39 @@ class RetrieverTool:
                     deduped.append(d)
             docs = deduped[: max(k_final, 24)]
 
-        # Phase 2: Cross-encoder reranking before LLM rerank
         # Architecture: Hybrid → MMR → Cross-Encoder (top 24) → LLM Rerank (top 12) → Final
-        query = next(iter(queries))
         if self._use_cross_encoder and len(docs) > 1:
             try:
-                # Cross-encoder rerank top 24 candidates
                 cross_encoder_k = min(24, len(docs))
-                docs = rerank_documents(query, docs[:cross_encoder_k], top_k=cross_encoder_k) + docs[cross_encoder_k:]
+                docs = rerank_documents(primary_query, docs[:cross_encoder_k], top_k=cross_encoder_k) + docs[cross_encoder_k:]
                 logger.info(f"[RETRIEVE] Cross-encoder reranked {cross_encoder_k} documents")
             except Exception as e:
                 logger.warning(f"[RETRIEVE] Cross-encoder reranking failed, continuing with LLM rerank: {e}")
 
-        docs = self._llm_rerank(query, docs, top_n=k_final)
+        docs = self._llm_rerank(primary_query, docs, top_n=k_final)
         return docs[:k_final]
+
+    def _hybrid_retrieve(self, queries: Iterable[str], k_vec: int = 20, k_lex: int = 30, k_final: int = 10) -> List[Document]:
+        """
+        Hybrid retrieval (dense + lexical) with configurable fusion.
+
+        Fusion is controlled by env var `RAG_HYBRID_FUSION`:
+        - weighted (default): score-based merge with light rank priors
+        - rrf: Reciprocal Rank Fusion (rank-based)
+        """
+        qlist = [q for q in list(queries) if isinstance(q, str) and q.strip()]
+        if not qlist:
+            return []
+        primary = qlist[0]
+
+        if self._fusion_method == "rrf":
+            logger.info("[RETRIEVE] Hybrid fusion=rrf")
+            candidates = self._hybrid_candidates_rrf(qlist, k_vec=k_vec, k_lex=k_lex, k_final=k_final)
+        else:
+            logger.info("[RETRIEVE] Hybrid fusion=weighted")
+            candidates = self._hybrid_candidates_weighted(qlist, k_vec=k_vec, k_lex=k_lex, k_final=k_final)
+
+        return self._post_process_candidates(primary, candidates, k_final=k_final)
     
     def _normalize_well_name(self, well_name: str) -> str:
         """Normalize well name to handle different formats (15/9-19A = 15_9-19A = 15-9-19A)."""

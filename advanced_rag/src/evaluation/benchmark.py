@@ -74,7 +74,14 @@ class BenchmarkRunner:
                                 doc_ids.append(Path(source).name)
                         elif isinstance(item, str):
                             doc_ids.append(item)
-                    retrieved_docs_map[query] = doc_ids
+                    # De-duplicate while preserving order (multiple chunks can come from same file)
+                    seen = set()
+                    deduped = []
+                    for doc_id in doc_ids:
+                        if doc_id and doc_id not in seen:
+                            seen.add(doc_id)
+                            deduped.append(doc_id)
+                    retrieved_docs_map[query] = deduped
                 else:
                     retrieved_docs_map[query] = []
                 

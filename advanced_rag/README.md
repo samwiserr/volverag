@@ -203,6 +203,7 @@ For precise numeric queries, the system uses direct lookups from parsed tables:
 For exploratory or contextual queries:
 - Semantic search (vector embeddings via ChromaDB)
 - Keyword search (BM25)
+- Hybrid fusion (default: weighted merge; optional: RRF)
 - Cross-encoder reranking
 - LLM-based answer synthesis with document context
 
@@ -271,6 +272,8 @@ The system automatically routes queries to the appropriate retrieval method base
 | `OPENAI_MODEL` | No | `gpt-4o` | Chat model for LLM calls |
 | `OPENAI_EMBEDDING_MODEL` | No | `text-embedding-3-small` | Embedding model |
 | `RAG_USE_CROSS_ENCODER` | No | `true` | Enable cross-encoder reranking |
+| `RAG_HYBRID_FUSION` | No | `weighted` | Hybrid fusion method: `weighted` or `rrf` |
+| `RAG_RRF_K` | No | `60` | RRF constant \(k\) for rank fusion (higher = less rank impact) |
 | `RAG_ENABLE_QUERY_COMPLETION` | No | `true` | Enable incomplete query handling |
 | `RAG_ENABLE_QUERY_DECOMPOSITION` | No | `true` | Enable query decomposition |
 | `RAG_ENABLE_MONITORING` | No | `true` | Enable performance monitoring |

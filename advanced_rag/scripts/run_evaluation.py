@@ -10,6 +10,14 @@ import sys
 import logging
 from pathlib import Path
 
+# Load environment variables from .env for local runs
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    # Optional dependency / non-local environment
+    pass
+
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 

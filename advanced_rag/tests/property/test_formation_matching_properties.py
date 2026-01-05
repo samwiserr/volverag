@@ -64,6 +64,7 @@ class TestFormationMatchingProperties:
                 query_formation.lower(),
                 candidate_formations,
                 scorer=fuzz.WRatio,
+                processor=lambda s: s.lower() if isinstance(s, str) else s,
                 score_cutoff=0
             )
             
@@ -72,6 +73,7 @@ class TestFormationMatchingProperties:
                 query_formation.upper(),
                 candidate_formations,
                 scorer=fuzz.WRatio,
+                processor=lambda s: s.lower() if isinstance(s, str) else s,
                 score_cutoff=0
             )
             
@@ -139,6 +141,7 @@ class TestFormationMatchingProperties:
                 query_formation,
                 candidate_formations,
                 scorer=fuzz.WRatio,
+                processor=lambda s: " ".join(s.lower().split()) if isinstance(s, str) else s,
                 score_cutoff=0
             )
             
@@ -148,6 +151,7 @@ class TestFormationMatchingProperties:
                 query_with_spaces,
                 candidate_formations,
                 scorer=fuzz.WRatio,
+                processor=lambda s: " ".join(s.lower().split()) if isinstance(s, str) else s,
                 score_cutoff=0
             )
             
