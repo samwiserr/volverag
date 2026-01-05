@@ -1,0 +1,29 @@
+Stable Working Version Information
+==================================
+
+Version: v1.0.0-stable
+Date: 2025-12-22
+Commit Hash: 748d8b5db92e8154484da927d221822690c46bf4
+
+Status: ✅ VERIFIED WORKING
+- Application working correctly on Streamlit Cloud
+- All critical fixes implemented
+- PDF source citations working
+- View page button functional
+- All tests passing
+
+Key Features:
+- Hybrid RAG system with RRF (Reciprocal Rank Fusion)
+- Structured tool integration (PetroParams, WellPicks, EvalParams)
+- LangGraph state machine architecture
+- Result Monad pattern for error handling
+- Comprehensive documentation (Phase 7 complete)
+- Monitoring and metrics collection
+
+To restore this version:
+  git checkout v1.0.0-stable
+  OR
+  git checkout release/v1.0.0-stable
+  OR
+  git checkout 748d8b5db92e8154484da927d221822690c46bf4
+
