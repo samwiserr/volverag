@@ -727,12 +727,23 @@ def generate_query_or_respond(state: MessagesState, tools):
         has_formations = "formation" in ql or "formations" in ql
         has_formation_in_well = any(k in ql for k in [" in ", " for ", "present", "present in", "present for", "which formations", "formations in", "all formations"])
         
+        # EXCLUDE queries asking about formation properties/characteristics/pressure/etc.
+        # These should route to RetrieverTool, not WellPicksTool
+        is_formation_property_query = any(k in ql for k in [
+            "characteristic", "characteristics", "property", "properties", 
+            "pressure", "permeability", "porosity", "saturation", "density",
+            "explain", "describe", "what are", "how", "why", "interpretation",
+            "evaluation", "analysis", "data", "measurement", "test"
+        ])
+        
         # Very permissive: if it mentions formations and has a well pattern, route to well picks
+        # BUT: Exclude queries asking about formation properties/characteristics
         # This catches queries like "formations in Well NO 15/9-F-15 A" even without "all" or "list"
         wants_single_well_formations = (
             has_specific_well  # Use the same check we did above (now includes direct well extraction)
             and has_formations
             and (has_list_intent or has_formation_in_well or "formation" in ql or "formations" in ql)
+            and not is_formation_property_query  # EXCLUDE property/characteristic queries
         )
         if wants_single_well_formations:
             logger.info(f"[ROUTING] Routing to well picks tool for single well formation query: {tool_query}")
