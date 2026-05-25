@@ -8,21 +8,22 @@ for better retrieval performance.
 import os
 import logging
 from typing import List, Optional
-from langchain_openai import ChatOpenAI
+from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field
+from ..core.model_factory import get_chat_model
 
 logger = logging.getLogger(__name__)
 
 # Lazy-init LLM
-_decomposition_model: Optional[ChatOpenAI] = None
+_decomposition_model: Optional[BaseChatModel] = None
 
 
-def _get_decomposition_model() -> ChatOpenAI:
+def _get_decomposition_model() -> BaseChatModel:
     """Get or create the query decomposition LLM."""
     global _decomposition_model
     if _decomposition_model is None:
-        model = os.getenv("RAG_DECOMPOSITION_MODEL", "gpt-4o")
-        _decomposition_model = ChatOpenAI(model=model, temperature=0)
+        model = os.getenv("RAG_DECOMPOSITION_MODEL", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"))
+        _decomposition_model = get_chat_model(model, temperature=0, role="decomposition")
     return _decomposition_model
 
 

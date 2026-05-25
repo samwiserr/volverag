@@ -1,0 +1,14 @@
+# ── Build-time requirements ──────────────────────────────────────────────────
+# Install these LOCALLY when running --build-index to produce the vectorstore.
+# These packages are NOT needed on Streamlit Community Cloud at runtime.
+# The RAPTOR indexer auto-detects their presence; if absent, it falls back to
+# a pure-numpy k-means clusterer so the build still works but without UMAP
+# dimensionality reduction.
+#
+# Usage (local machine only):
+#   pip install -r requirements.txt -r requirements-build.txt
+#   python -m src.main --build-index --documents-path ../spwla_volve-main
+
+# UMAP + scikit-learn: RAPTOR hierarchical clustering (ICLR 2024)
+umap-learn>=0.5.6
+scikit-learn>=1.4.0

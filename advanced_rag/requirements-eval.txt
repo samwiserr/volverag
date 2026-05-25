@@ -1,0 +1,13 @@
+# ── Evaluation requirements ──────────────────────────────────────────────────
+# Install these locally when running the RAGAS evaluation script.
+# These packages are NOT needed on Streamlit Community Cloud.
+# ragas transitively pulls in transformers (~500 MB) and datasets, so they
+# are intentionally excluded from the main requirements.txt.
+#
+# Usage:
+#   pip install -r requirements.txt -r requirements-eval.txt
+#   python scripts/sota_evaluation.py --output results/sota_eval.json
+
+# RAGAS — RAG evaluation (faithfulness, answer relevancy, context precision/recall)
+ragas>=0.1.9
+datasets>=2.18.0

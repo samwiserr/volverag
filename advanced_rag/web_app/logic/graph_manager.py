@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import List, Dict, Optional
 
 import streamlit as st
-from langchain_openai import ChatOpenAI
+from langchain_core.language_models.chat_models import BaseChatModel
 
 from src.graph.rag_graph import build_rag_graph
 from src.tools.formation_properties_tool import FormationPropertiesTool
@@ -19,6 +19,7 @@ from src.tools.section_lookup_tool import SectionLookupTool
 from src.tools.structured_facts_tool import StructuredFactsTool
 from src.tools.well_picks_tool import WellPicksTool
 from src.core.container import get_container
+from src.core.model_factory import get_chat_model
 from src.normalize.property_registry import default_registry, PropertyEntry
 from src.graph.nodes import (
     SERVICE_KEY_RESPONSE_MODEL,
@@ -42,17 +43,17 @@ def _register_services(persist_dir: str) -> None:
     container = get_container()
     
     # Register response model (if not already registered)
-    if not container.is_registered(ChatOpenAI, key=SERVICE_KEY_RESPONSE_MODEL):
-        model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
-        response_model = ChatOpenAI(model=model_name, temperature=0)
-        container.register(ChatOpenAI, response_model, key=SERVICE_KEY_RESPONSE_MODEL)
+    if not container.is_registered(BaseChatModel, key=SERVICE_KEY_RESPONSE_MODEL):
+        model_name = os.getenv("GROQ_MODEL", os.getenv("OPENAI_MODEL", "llama-3.3-70b-versatile"))
+        response_model = get_chat_model(model_name, temperature=0, role="response")
+        container.register(BaseChatModel, response_model, key=SERVICE_KEY_RESPONSE_MODEL)
         logger.debug(f"Registered response model: {model_name}")
     
     # Register grader model (if not already registered)
-    if not container.is_registered(ChatOpenAI, key=SERVICE_KEY_GRADER_MODEL):
-        model_name = os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "gpt-4o"))
-        grader_model = ChatOpenAI(model=model_name, temperature=0)
-        container.register(ChatOpenAI, grader_model, key=SERVICE_KEY_GRADER_MODEL)
+    if not container.is_registered(BaseChatModel, key=SERVICE_KEY_GRADER_MODEL):
+        model_name = os.getenv("GROQ_MODEL", os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "llama-3.3-70b-versatile")))
+        grader_model = get_chat_model(model_name, temperature=0, role="grader")
+        container.register(BaseChatModel, grader_model, key=SERVICE_KEY_GRADER_MODEL)
         logger.debug(f"Registered grader model: {model_name}")
     
     # Register property registry (if not already registered)

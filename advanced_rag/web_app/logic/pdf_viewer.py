@@ -67,6 +67,12 @@ def _find_pdf_file(file_path: str, pdfs_dir: Path) -> Optional[Path]:
             if unique_match.exists():
                 logger.debug(f"[PDF_FIND] Found PDF via unique name: {unique_match}")
                 return unique_match
+
+            # Also support zips that preserve the original well-folder layout.
+            nested_match = pdfs_dir / well_dir / filename
+            if nested_match.exists():
+                logger.debug(f"[PDF_FIND] Found PDF via well directory: {nested_match}")
+                return nested_match
         
         # Strategy 2: Try exact filename match
         exact_match = pdfs_dir / filename
@@ -74,35 +80,47 @@ def _find_pdf_file(file_path: str, pdfs_dir: Path) -> Optional[Path]:
             logger.debug(f"[PDF_FIND] Found PDF at exact match: {exact_match}")
             return exact_match
         
-        # Strategy 3: Try recursive search (handles subdirectories)
-        matches = list(pdfs_dir.glob(f"**/{filename}"))
-        if matches:
-            logger.debug(f"[PDF_FIND] Found PDF via recursive search: {matches[0]}")
-            return matches[0]
-        
-        # Strategy 4: Try case-insensitive search with unique name
+        # Strategy 3: Try case-insensitive search with unique name
         if well_dir:
             unique_pattern = f"{well_dir}_*{filename}"
             unique_matches = list(pdfs_dir.glob(unique_pattern))
             if unique_matches:
                 logger.debug(f"[PDF_FIND] Found PDF via unique pattern: {unique_matches[0]}")
                 return unique_matches[0]
+
+            unique_lower = unique_name.lower()
+            for pdf_file in pdfs_dir.glob("**/*.pdf"):
+                if pdf_file.name.lower() == unique_lower:
+                    logger.debug(f"[PDF_FIND] Found PDF via recursive unique name: {pdf_file}")
+                    return pdf_file
+
+        # Strategy 4: Try recursive search, preferring the matching well directory.
+        matches = list(pdfs_dir.glob(f"**/{filename}"))
+        if matches:
+            if well_dir:
+                well_lower = well_dir.lower()
+                for match in matches:
+                    if match.parent.name.lower() == well_lower:
+                        logger.debug(f"[PDF_FIND] Found PDF via recursive well match: {match}")
+                        return match
+            logger.debug(f"[PDF_FIND] Found PDF via recursive search: {matches[0]}")
+            return matches[0]
         
         # Strategy 5: Try case-insensitive search by filename only
-        for pdf_file in pdfs_dir.glob("*.pdf"):
+        for pdf_file in pdfs_dir.glob("**/*.pdf"):
             if pdf_file.name.lower() == filename.lower():
                 logger.debug(f"[PDF_FIND] Found PDF via case-insensitive search: {pdf_file}")
                 return pdf_file
         
         # Strategy 6: Try partial match (filename contains the target filename)
         filename_lower = filename.lower()
-        for pdf_file in pdfs_dir.glob("*.pdf"):
+        for pdf_file in pdfs_dir.glob("**/*.pdf"):
             if filename_lower in pdf_file.name.lower() or pdf_file.name.lower() in filename_lower:
                 logger.debug(f"[PDF_FIND] Found PDF via partial match: {pdf_file}")
                 return pdf_file
         
         # Log what PDFs are actually available for debugging
-        available_pdfs = list(pdfs_dir.glob("*.pdf"))[:10]  # First 10 for logging
+        available_pdfs = list(pdfs_dir.glob("**/*.pdf"))[:10]  # First 10 for logging
         logger.debug(f"[PDF_FIND] PDF not found. Available PDFs (sample): {[p.name for p in available_pdfs]}")
     else:
         logger.debug(f"[PDF_FIND] PDFs directory does not exist: {pdfs_dir}")

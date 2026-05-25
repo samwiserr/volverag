@@ -12,6 +12,10 @@ langchain-chroma>=0.1.0
 # OpenAI
 openai>=1.12.0
 
+# Free/low-cost model providers
+langchain-groq>=0.1.0
+langchain-huggingface>=0.1.0
+
 # Document Processing (LangChain loaders)
 pypdf>=3.17.0
 python-docx>=1.1.0
@@ -34,6 +38,9 @@ rank-bm25>=0.2.2
 
 # Cross-encoder reranking (Phase 2)
 sentence-transformers>=2.2.0
+einops>=0.7.0
+# Pin transformers to <5.0.0 — v5.x has a hard torchvision dep that is absent on Streamlit Cloud
+transformers>=4.41.0,<5.0.0
 
 # Fuzzy matching (typos)
 rapidfuzz>=3.6.1
@@ -54,3 +61,7 @@ pytest>=7.4.0
 pytest-cov>=4.1.0
 pytest-mock>=3.11.0
 hypothesis>=6.92.0
+
+# ── SOTA additions (2024-2026) ──────────────────────────────────────────────
+# tiktoken: accurate token counting (used by contextual chunker cost estimates)
+tiktoken>=0.7.0

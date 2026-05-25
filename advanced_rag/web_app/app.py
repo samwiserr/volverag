@@ -41,8 +41,14 @@ def main():
     # Load .env if present, then fall back to Streamlit secrets.
     load_dotenv()
     try:
+        if not os.getenv("GROQ_API_KEY") and "GROQ_API_KEY" in st.secrets:
+            os.environ["GROQ_API_KEY"] = str(st.secrets["GROQ_API_KEY"])
         if not os.getenv("OPENAI_API_KEY") and "OPENAI_API_KEY" in st.secrets:
             os.environ["OPENAI_API_KEY"] = str(st.secrets["OPENAI_API_KEY"])
+        if "LLM_PROVIDER" in st.secrets:
+            os.environ.setdefault("LLM_PROVIDER", str(st.secrets["LLM_PROVIDER"]))
+        if "EMBEDDING_PROVIDER" in st.secrets:
+            os.environ.setdefault("EMBEDDING_PROVIDER", str(st.secrets["EMBEDDING_PROVIDER"]))
     except Exception:
         pass
 
@@ -51,8 +57,11 @@ def main():
     st.markdown("This application lets you query the Volve petrophysics reports using natural language. Ask questions about wells, formations, petrophysical parameters, and more.")
     st.markdown("**Example:** *\"What is the water saturation value of Hugin formation in 15/9-F-5?\"*")
 
-    if not os.getenv("OPENAI_API_KEY"):
-        st.error("OPENAI_API_KEY is not set. Add it to your environment/.env and restart.")
+    if os.getenv("LLM_PROVIDER", "groq").lower() == "groq" and not os.getenv("GROQ_API_KEY"):
+        st.error("GROQ_API_KEY is not set. Add it to Streamlit secrets or your local .env and restart.")
+        st.stop()
+    if os.getenv("EMBEDDING_PROVIDER", "huggingface").lower() == "openai" and not os.getenv("OPENAI_API_KEY"):
+        st.error("OPENAI_API_KEY is required only when EMBEDDING_PROVIDER=openai.")
         st.stop()
 
     with st.sidebar:
@@ -62,7 +71,7 @@ def main():
         # module from the repo root (Streamlit Cloud clones to /mount/src/...).
         default_persist = str(Path(__file__).resolve().parents[1] / "data" / "vectorstore")
         persist_dir = st.text_input("Vectorstore dir", value=default_persist)
-        embedding_model = st.text_input("Embedding model", value="text-embedding-3-small")
+        embedding_model = st.text_input("Embedding model", value=os.getenv("LOCAL_EMBEDDING_MODEL", "nomic-ai/nomic-embed-text-v1.5"))
         st.caption("Index build remains CLI-based: `python -m src.main --build-index`.")
         
         # Debug: show current working directory and vectorstore path
@@ -79,6 +88,60 @@ def main():
         print(f"DEBUG: CWD: {cwd}")
         print(f"DEBUG: Vectorstore path: {vs_abs}")
         print(f"DEBUG: Vectorstore exists: {vs_abs.exists()}")
+
+        # ── SOTA Techniques Status ────────────────────────────────────────
+        st.divider()
+        st.subheader("SOTA Techniques")
+
+        def _env_on(key: str, default: str = "true") -> bool:
+            return os.getenv(key, default).lower() in {"1", "true", "yes"}
+
+        # Index-time techniques (status only — must rebuild to change)
+        contextual_on = _env_on("RAG_CONTEXTUAL")
+        raptor_on = _env_on("RAG_RAPTOR")
+
+        st.markdown("**Index-time** *(baked into vectorstore)*")
+        col_c, col_r = st.columns(2)
+        with col_c:
+            st.markdown(
+                f"{'🟢' if contextual_on else '⚪'} **Contextual**"
+                if contextual_on else "⚪ Contextual"
+            )
+        with col_r:
+            st.markdown(
+                f"{'🟢' if raptor_on else '⚪'} **RAPTOR**"
+                if raptor_on else "⚪ RAPTOR"
+            )
+
+        if not contextual_on or not raptor_on:
+            st.caption("Set RAG_CONTEXTUAL / RAG_RAPTOR=true and rebuild index to activate.")
+
+        # Query-time toggle for HyDE (takes effect immediately, no rebuild needed)
+        st.markdown("**Query-time** *(active every query)*")
+        hyde_default = _env_on("RAG_HYDE")
+        if "hyde_enabled" not in st.session_state:
+            st.session_state.hyde_enabled = hyde_default
+        hyde_toggle = st.toggle(
+            "HyDE — Hypothetical Doc Embeddings",
+            value=st.session_state.hyde_enabled,
+            help=(
+                "Generates a hypothetical ideal answer passage for each query and "
+                "embeds it alongside the raw query for better dense retrieval. "
+                "Adds ~1 s latency via Groq's fast model."
+            ),
+        )
+        if hyde_toggle != st.session_state.hyde_enabled:
+            st.session_state.hyde_enabled = hyde_toggle
+            # Persist choice to env so RetrieverTool picks it up on next graph load
+            os.environ["RAG_HYDE"] = "true" if hyde_toggle else "false"
+            # Invalidate graph cache so the new toggle takes effect
+            _get_graph.clear()
+
+        fusion = os.getenv("RAG_HYBRID_FUSION", "rrf").upper()
+        st.markdown(f"🟢 **RRF Fusion** `({fusion})`")
+        st.markdown(f"{'🟢' if _env_on('RAG_USE_CROSS_ENCODER') else '⚪'} **Cross-Encoder Rerank**")
+        st.markdown(f"{'🟢' if _env_on('RAG_RERANK', 'llm') else '⚪'} **LLM Rerank**")
+        # ─────────────────────────────────────────────────────────────────
 
     # Chat history (multi-turn)
     if "messages" not in st.session_state:
@@ -279,8 +342,14 @@ def main():
                 st.session_state.messages.append({"role": "assistant", "content": answer})
                 
                 # Debug information expander
-                with st.expander("🔍 Debug Info (click to view diagnostics)", expanded=False):
+                with st.expander("Debug Info", expanded=False):
                     st.write("**Query:**", user_input)
+
+                    # HyDE hypothetical document (if generated)
+                    if st.session_state.get("last_hyde_doc"):
+                        st.write("**HyDE Hypothetical Document:**")
+                        st.caption(st.session_state.last_hyde_doc)
+                        st.session_state.last_hyde_doc = None  # clear after display
                     
                     # Check if petro cache exists
                     vectorstore_dir = Path(__file__).resolve().parents[1] / "data" / "vectorstore"

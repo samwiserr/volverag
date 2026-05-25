@@ -85,7 +85,7 @@ class SectionLookupTool:
         # Group per-page docs by source
         groups: Dict[str, List[Document]] = {}
         for d in documents:
-            src = str(d.metadata.get("source", ""))
+            src = str(d.metadata.get("file_path") or d.metadata.get("source") or "")
             if not src:
                 continue
             # Skip well picks .dat

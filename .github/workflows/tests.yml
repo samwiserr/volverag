@@ -39,6 +39,7 @@ jobs:
         pytest tests/unit -m unit -v --tb=short
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'test-key-for-ci' }}
+        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || 'test-key-for-ci' }}
     
     - name: Check code style (if flake8 available)
       working-directory: ./advanced_rag

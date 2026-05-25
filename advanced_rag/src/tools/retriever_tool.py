@@ -1,7 +1,16 @@
 """
 Retriever tool for LangGraph agentic RAG.
-Creates and manages ChromaDB vector store with OpenAI embeddings.
+Creates and manages ChromaDB vector store with configurable embeddings.
 Uses IntelligentChunker for semantic boundary detection.
+
+SOTA enhancements (2024-2026):
+- HyDE (Hypothetical Document Embeddings, Gao et al. SIGIR 2023): the user
+  query is expanded with a generated hypothetical answer document, which is
+  embedded alongside the raw query for improved dense retrieval alignment.
+- Contextual Retrieval (Anthropic, Sept 2024): chunks are pre-enriched with
+  LLM-generated situating context at index-build time via ContextualChunker.
+- RAPTOR (Sarthi et al. ICLR 2024): a hierarchical summary tree is built and
+  stored in ChromaDB so that high-level and low-level queries both succeed.
 """
 import os
 import logging
@@ -11,14 +20,16 @@ import hashlib
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Iterable
 from langchain.tools import tool
-from langchain_openai import OpenAIEmbeddings
-from langchain_openai import ChatOpenAI
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from pydantic import BaseModel, Field
 from rank_bm25 import BM25Okapi
+from ..core.model_factory import get_chat_model, get_embedding_model
+from ..processors.contextual_chunker import ContextualChunker
 from ..processors.intelligent_chunker import IntelligentChunker
+from ..processors.raptor_indexer import RaptorIndexer
 from .cross_encoder_reranker import rerank_documents
+from ..query.hyde_expander import HyDEExpander
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +40,7 @@ class RetrieverTool:
     def __init__(
         self,
         persist_directory: str = "./data/vectorstore",
-        embedding_model: str = "text-embedding-3-small",
+        embedding_model: str = "nomic-ai/nomic-embed-text-v1.5",
         collection_name: str = "petrophysical_docs",
         chunk_size: int = 500,
         chunk_overlap: int = 150
@@ -39,7 +50,7 @@ class RetrieverTool:
         
         Args:
             persist_directory: Directory to persist ChromaDB
-            embedding_model: OpenAI embedding model name
+            embedding_model: Embedding model name
             collection_name: ChromaDB collection name
             chunk_size: Target tokens per chunk (default: 500 for finer indexing)
             chunk_overlap: Token overlap between chunks (default: 150, ~30% overlap)
@@ -51,23 +62,35 @@ class RetrieverTool:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         
-        # Initialize embeddings
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("OPENAI_API_KEY environment variable not set")
+        self.embeddings = get_embedding_model(embedding_model)
         
-        self.embeddings = OpenAIEmbeddings(
-            model=embedding_model,
-            openai_api_key=api_key
-        )
-        
-        # Initialize IntelligentChunker for semantic boundary detection
-        self.chunker = IntelligentChunker(
-            chunk_size=chunk_size,
-            overlap=chunk_overlap,
-            preserve_sections=True
-        )
-        
+        # Contextual Chunking (Anthropic Contextual Retrieval, Sept 2024)
+        # Enabled by default; set RAG_CONTEXTUAL=false to disable.
+        _contextual = os.getenv("RAG_CONTEXTUAL", "true").lower() in {"1", "true", "yes"}
+        if _contextual:
+            try:
+                self.chunker = ContextualChunker(
+                    chunk_size=chunk_size,
+                    overlap=chunk_overlap,
+                    preserve_sections=True,
+                    context_model=os.getenv("RAG_CONTEXT_MODEL", os.getenv("GROQ_FAST_MODEL", "llama-3.1-8b-instant")),
+                )
+                logger.info("[OK] ContextualChunker active (Anthropic Contextual Retrieval)")
+            except Exception as _ce:
+                logger.warning(f"[RETRIEVE] ContextualChunker init failed: {_ce} — falling back to IntelligentChunker")
+                self.chunker = IntelligentChunker(
+                    chunk_size=chunk_size,
+                    overlap=chunk_overlap,
+                    preserve_sections=True,
+                )
+        else:
+            # Initialize IntelligentChunker for semantic boundary detection
+            self.chunker = IntelligentChunker(
+                chunk_size=chunk_size,
+                overlap=chunk_overlap,
+                preserve_sections=True,
+            )
+
         self.vectorstore: Optional[Chroma] = None
         self.retriever = None
 
@@ -83,18 +106,33 @@ class RetrieverTool:
         
         # Optional LLM reranker
         self._rerank_enabled = os.getenv("RAG_RERANK", "llm").lower() in {"1", "true", "yes", "llm"}
-        self._rerank_model = os.getenv("RAG_RERANK_MODEL", "gpt-4o")
-        self._reranker_llm = ChatOpenAI(model=self._rerank_model, temperature=0)
+        self._rerank_model = os.getenv("RAG_RERANK_MODEL", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"))
+        self._reranker_llm = get_chat_model(self._rerank_model, temperature=0, role="rerank")
 
         # MMR diversification (embedding-based) over merged candidates before rerank
         self._mmr_enabled = os.getenv("RAG_MMR", "true").lower() in {"1", "true", "yes"}
         self._mmr_lambda = float(os.getenv("RAG_MMR_LAMBDA", "0.7"))
         self._embed_cache: Dict[str, List[float]] = {}
 
+        # HyDE — Hypothetical Document Embeddings (Gao et al., SIGIR 2023)
+        # Enabled by default; set RAG_HYDE=false to disable.
+        self._hyde_enabled = os.getenv("RAG_HYDE", "true").lower() in {"1", "true", "yes"}
+        self._hyde: Optional[HyDEExpander] = None
+        if self._hyde_enabled:
+            try:
+                self._hyde = HyDEExpander(
+                    model=os.getenv("RAG_HYDE_MODEL", os.getenv("GROQ_FAST_MODEL", "llama-3.1-8b-instant")),
+                    n_hypotheses=int(os.getenv("RAG_HYDE_N", "1")),
+                )
+                logger.info("[OK] HyDE expander initialised")
+            except Exception as _e:
+                logger.warning(f"[RETRIEVE] HyDE init failed: {_e} — running without HyDE")
+                self._hyde = None
+
         # Hybrid fusion method for dense + lexical retrieval
         # - "weighted": weighted score merge (legacy/default)
         # - "rrf": Reciprocal Rank Fusion (rank-based, score-agnostic)
-        fusion = (os.getenv("RAG_HYBRID_FUSION", "weighted") or "weighted").strip().lower()
+        fusion = (os.getenv("RAG_HYBRID_FUSION", "rrf") or "rrf").strip().lower()
         if fusion not in {"weighted", "rrf"}:
             logger.warning(f"[RETRIEVE] Unknown RAG_HYBRID_FUSION='{fusion}', falling back to 'weighted'")
             fusion = "weighted"
@@ -113,8 +151,14 @@ class RetrieverTool:
     
     def build_vectorstore(self, documents: List[Document], chunk_size: int = None, chunk_overlap: int = None):
         """
-        Build ChromaDB vector store from documents using IntelligentChunker.
-        
+        Build ChromaDB vector store from documents using Contextual/IntelligentChunker
+        and (optionally) the RAPTOR hierarchical summary tree.
+
+        SOTA pipeline:
+          1. Contextual chunking  — LLM context prefix per chunk
+          2. RAPTOR tree          — cluster + summarise at multiple levels
+          3. Hybrid index         — all levels embedded into ChromaDB
+
         Args:
             documents: List of LangChain Document objects
             chunk_size: Size of text chunks (uses instance default if None)
@@ -128,13 +172,19 @@ class RetrieverTool:
         if chunk_overlap is None:
             chunk_overlap = self.chunk_overlap
         
-        # Update chunker if parameters changed
+        # Update chunker if parameters changed — preserve the chunker type
         if chunk_size != self.chunker.chunk_size or chunk_overlap != self.chunker.overlap:
-            self.chunker = IntelligentChunker(
-                chunk_size=chunk_size,
-                overlap=chunk_overlap,
-                preserve_sections=True
-            )
+            if isinstance(self.chunker, ContextualChunker):
+                self.chunker = ContextualChunker(
+                    chunk_size=chunk_size,
+                    overlap=chunk_overlap,
+                    preserve_sections=True,
+                    context_model=os.getenv("RAG_CONTEXT_MODEL", os.getenv("GROQ_FAST_MODEL", "llama-3.1-8b-instant")),
+                )
+            else:
+                self.chunker = IntelligentChunker(
+                    chunk_size=chunk_size, overlap=chunk_overlap, preserve_sections=True
+                )
         
         # Chunk documents using IntelligentChunker
         all_splits = []
@@ -197,7 +247,8 @@ class RetrieverTool:
                     split.metadata['is_formation_data'] = True
                     split.metadata['document_type'] = 'well_picks'
         
-        logger.info(f"Split into {len(splits)} chunks using IntelligentChunker")
+        chunker_name = type(self.chunker).__name__
+        logger.info(f"Split into {len(splits)} chunks using {chunker_name}")
         well_picks_count = sum(1 for s in splits if s.metadata.get('is_well_picks'))
         if well_picks_count > 0:
             logger.info(f"  - {well_picks_count} chunks from well picks document")
@@ -208,10 +259,32 @@ class RetrieverTool:
             sections_with_headers = sum(1 for s in splits if s.metadata.get('section_header'))
             logger.info(f"  - Average tokens per chunk: {avg_tokens:.1f}")
             logger.info(f"  - Chunks with section headers: {sections_with_headers}")
-        
-        # Create vector store
+
+        # RAPTOR: build hierarchical summary tree and append all levels
+        # Enabled by default; set RAG_RAPTOR=false to disable.
+        _raptor_enabled = os.getenv("RAG_RAPTOR", "true").lower() in {"1", "true", "yes"}
+        all_docs_to_index = list(splits)
+        if _raptor_enabled and splits:
+            try:
+                raptor = RaptorIndexer(
+                    summary_model=os.getenv("RAG_RAPTOR_MODEL", os.getenv("GROQ_FAST_MODEL", "llama-3.1-8b-instant")),
+                    embedding_model=self.embedding_model,
+                    max_levels=int(os.getenv("RAG_RAPTOR_LEVELS", "2")),
+                    target_clusters=int(os.getenv("RAG_RAPTOR_CLUSTERS", "8")),
+                )
+                leaf_docs = [d for d in splits if not d.metadata.get("is_toc")]
+                tree_docs = raptor.build_tree(leaf_docs)
+                # tree_docs includes leaves (level 0) + summaries; we only need the summaries
+                raptor_summaries = [d for d in tree_docs if d.metadata.get("raptor_level", 0) > 0]
+                if raptor_summaries:
+                    all_docs_to_index.extend(raptor_summaries)
+                    logger.info(f"[RAPTOR] Added {len(raptor_summaries)} summary nodes to index")
+            except Exception as _re:
+                logger.warning(f"[RAPTOR] Tree build failed: {_re} — indexing without RAPTOR")
+
+        # Create vector store with all levels (leaves + RAPTOR summaries)
         self.vectorstore = Chroma.from_documents(
-            documents=splits,
+            documents=all_docs_to_index,
             embedding=self.embeddings,
             persist_directory=str(self.persist_directory),
             collection_name=self.collection_name
@@ -220,14 +293,15 @@ class RetrieverTool:
         # Create retriever with more documents for better recall
         self.retriever = self.vectorstore.as_retriever(
             search_type="similarity",
-            search_kwargs={"k": 10}  # Retrieve more documents for better context
+            search_kwargs={"k": 10}
         )
 
-        # Persist lexical store for BM25 hybrid retrieval
+        # Persist lexical store for BM25 hybrid retrieval (leaves only — RAPTOR summaries
+        # are retrieved via dense search which is better suited for their abstract nature)
         self._persist_lexical_store(splits)
         self._load_lexical_store()  # build bm25 in-memory for this process
         
-        logger.info(f"[OK] Vector store built with {len(splits)} chunks")
+        logger.info(f"[OK] Vector store built: {len(splits)} leaf chunks + {len(all_docs_to_index) - len(splits)} RAPTOR nodes")
     
     def load_vectorstore(self) -> bool:
         """
@@ -381,6 +455,15 @@ class RetrieverTool:
             if v and v not in q:
                 queries.append(q.replace(m.group(1), v) if m else q + " " + v)
 
+        # HyDE: append hypothetical document queries for improved dense recall
+        if self._hyde is not None:
+            try:
+                hyde_queries = self._hyde.build_retrieval_queries(q)
+                # Skip the first item (raw query already in list); add hypotheses only
+                queries.extend(hyde_queries[1:])
+            except Exception as _e:
+                logger.debug(f"[HyDE] Expansion skipped: {_e}")
+
         # Deduplicate while preserving order
         out: List[str] = []
         seen = set()
@@ -389,7 +472,7 @@ class RetrieverTool:
             if key and key not in seen:
                 seen.add(key)
                 out.append(qq.strip())
-        return out[:6]
+        return out[:8]
 
     def _is_toc_text(self, text: str) -> bool:
         """Heuristic TOC detection: dotted leaders and many short heading+page lines."""

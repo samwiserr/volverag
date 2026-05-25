@@ -5,6 +5,8 @@ from typing import Literal
 from langgraph.graph import MessagesState
 from langchain_core.messages import HumanMessage, ToolMessage
 from pydantic import BaseModel, Field
+from src.core.config import get_config
+from src.core.model_factory import get_chat_model
 from src.core.result import Result, AppError, ErrorType
 from src.core.logging import get_logger
 from src.graph.utils.message_utils import _latest_user_question
@@ -41,15 +43,13 @@ class DocumentGrader:
     def _get_grader_model(self):
         """Get or create grader model."""
         if self._grader_model is None:
-            from langchain_openai import ChatOpenAI
-            from src.core.config import get_config
             try:
                 config = get_config()
-                model_name = config.grade_model.value
+                model_name = str(config.grade_model)
             except Exception:
                 import os
-                model_name = os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "gpt-4o"))
-            self._grader_model = ChatOpenAI(model=model_name, temperature=0)
+                model_name = os.getenv("GROQ_MODEL", os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "llama-3.3-70b-versatile")))
+            self._grader_model = get_chat_model(model_name, temperature=0, role="grader")
         return self._grader_model
     
     def grade(self, state: MessagesState) -> Result[Literal["generate_answer", "rewrite_question"], AppError]:
