@@ -79,6 +79,7 @@ class DocumentLoader:
 
                 # Normalize to list
                 loaded_docs: List[Document] = loaded if isinstance(loaded, list) else [loaded]
+                self._attach_file_metadata(file_path, loaded_docs)
                 documents.extend(loaded_docs)
                 logger.info(f"[OK] Loaded: {file_path.name} ({len(loaded_docs)} document(s))")
             except Exception as e:
@@ -87,6 +88,15 @@ class DocumentLoader:
         logger.info(f"[OK] Successfully loaded {len(documents)} documents")
         return documents
     
+    @staticmethod
+    def _attach_file_metadata(file_path: Path, docs: List[Document]) -> None:
+        """Ensure every page carries a unique absolute source (well folders share filenames)."""
+        abs_path = str(file_path.resolve())
+        for doc in docs:
+            doc.metadata["source"] = abs_path
+            doc.metadata["file_path"] = abs_path
+            doc.metadata["filename"] = file_path.name
+
     def _load_single_document(self, file_path: Path) -> Optional[Union[Document, List[Document]]]:
         """
         Load a single document, trying LangChain first, then fallback.

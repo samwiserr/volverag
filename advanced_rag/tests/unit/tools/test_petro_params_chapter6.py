@@ -22,3 +22,16 @@ def test_parse_weighted_average_rows_extracts_formations():
     middle = next(r for r in rows if "Middle Hugin" in r.formation)
     assert middle.sw == 0.338
     assert middle.phif == 0.219
+
+
+def test_parse_weighted_average_rows_uses_well_folder_in_path():
+    rows = _parse_weighted_average_rows(
+        "Weighted Hugin averages: 0.888 0.207 0.232 512 2 123",
+        r"C:\data\spwla-volve-main\15_9-F-5\PETROPHYSICAL_REPORT_1.PDF",
+        None,
+        None,
+    )
+    assert len(rows) == 1
+    assert rows[0].well == "15/9-F-5"
+    assert rows[0].formation == "Hugin"
+    assert rows[0].sw == 0.232

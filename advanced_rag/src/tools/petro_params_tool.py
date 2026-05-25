@@ -138,14 +138,32 @@ _WEIGHTED_AVERAGES_LINE_RE = re.compile(
 )
 
 
+def _extract_well_from_source_path(source: str) -> Optional[str]:
+    """Infer well from dataset folder names like 15_9-F-5 in the source path."""
+    if not source:
+        return None
+    m = re.search(
+        r"(15[\s_/-]*9[\s_/-]*f[\s_/-]*-?\s*\d+[a-zA-Z]?)",
+        source.replace("\\", "/"),
+        re.IGNORECASE,
+    )
+    if not m:
+        return None
+    from src.core.well_utils import canonicalize_well
+    return canonicalize_well(m.group(1))
+
+
 def _extract_well_from_averages_block(text: str, source: str) -> Optional[str]:
-    """Resolve well id from chapter-6 style '15/9-F-11 B Averages' headers."""
+    """Resolve well id from chapter-6 headers or the well folder in the file path."""
     for blob in (text, source):
         if not blob:
             continue
         m = _WELL_AVERAGES_HEADER_RE.search(blob)
         if m:
             return m.group(1).strip()
+    from_path = _extract_well_from_source_path(source)
+    if from_path:
+        return from_path
     return _extract_well(text) or _extract_well(source)
 
 
