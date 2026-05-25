@@ -115,6 +115,19 @@ def build_index(
     except Exception as e:
         logger.warning(f"[PETRO_PARAMS] Failed to build petro params cache: {e}")
 
+    # Build well picks cache when the .dat file is present in the dataset
+    try:
+        docs_root = Path(documents_path)
+        well_picks_dat = next(docs_root.rglob("Well_picks_Volve_v1.dat"), None)
+        if well_picks_dat is not None:
+            cache_path = Path(persist_directory) / "well_picks_cache.json"
+            tool = WellPicksTool(dat_path=str(well_picks_dat), cache_path=str(cache_path))
+            logger.info(f"[WELL_PICKS] Cache ready with {len(tool._rows)} rows at {cache_path}")
+        else:
+            logger.warning("[WELL_PICKS] Well_picks_Volve_v1.dat not found; skipping well picks cache")
+    except Exception as e:
+        logger.warning(f"[WELL_PICKS] Failed to build well picks cache: {e}")
+
     # Build deterministic evaluation parameters cache (tables like "Evaluation Parameters 15/9-F5")
     try:
         eval_params_cache_path = str(Path(persist_directory) / "eval_params_cache.json")

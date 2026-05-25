@@ -176,28 +176,40 @@ def _zip_vectorstore(persist_dir: Path, output_zip: Path) -> None:
 
     # Extra cache files that live in data/ (parent of persist_dir) and must be
     # available at runtime under advanced_rag/data/ on the Streamlit deployment.
+    # Runtime caches live under vectorstore/ (included via rglob above).
+    # Legacy copies may still exist in data/ — add those at zip root for the downloader.
     EXTRA_DATA_FILES = [
         "well_picks_cache.json",
         "petro_params_cache.json",
         "section_index.json",
         "structured_facts_cache.json",
         "eval_tables_cache.json",
+        "eval_params_cache.json",
+        "facts_cache.json",
     ]
 
     with zipfile.ZipFile(output_zip, "w", zipfile.ZIP_DEFLATED) as zf:
-        # Always add all vectorstore files under the "vectorstore/" prefix
+        written: set[str] = set()
+
+        # All vectorstore files under vectorstore/
         for file in persist_dir.rglob("*"):
             if file.is_file():
-                zf.write(file, file.relative_to(persist_dir.parent))
+                arc = str(file.relative_to(persist_dir.parent)).replace("\\", "/")
+                zf.write(file, arc)
+                written.add(arc)
 
-        # Add any extra data/ cache files at the root of the zip so the
-        # downloader can place them in advanced_rag/data/ on Streamlit.
+        # Root-level data/ copies (backward compatibility for asset downloader)
         data_dir = persist_dir.parent
         for name in EXTRA_DATA_FILES:
-            extra = data_dir / name
-            if extra.exists():
-                zf.write(extra, name)
-                print(f"  Included         : {name} ({extra.stat().st_size / 1024:.1f} KB)")
+            for extra in (data_dir / name, persist_dir / name):
+                if not extra.exists():
+                    continue
+                arc = name if extra.parent == data_dir else f"vectorstore/{name}"
+                if arc in written:
+                    continue
+                zf.write(extra, arc)
+                written.add(arc)
+                print(f"  Included         : {arc} ({extra.stat().st_size / 1024:.1f} KB)")
 
     size_mb = output_zip.stat().st_size / (1024 * 1024)
     print(f"  Created          : {output_zip}")

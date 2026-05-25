@@ -128,6 +128,70 @@ def _safe_float(tok: str) -> Optional[float]:
         return None
 
 
+_WELL_AVERAGES_HEADER_RE = re.compile(
+    r"(15[\s_/-]*9[\s_/-]*(?:f[\s_/-]*)?[\d]+[a-zA-Z]?(?:\s+[A-Z])?)\s+Averages",
+    re.IGNORECASE,
+)
+_WEIGHTED_AVERAGES_LINE_RE = re.compile(
+    r"Weighted\s+(.+?)\s+averages:\s*((?:[-+]?\d+(?:\.\d+)?\s*){3,6})",
+    re.IGNORECASE,
+)
+
+
+def _extract_well_from_averages_block(text: str, source: str) -> Optional[str]:
+    """Resolve well id from chapter-6 style '15/9-F-11 B Averages' headers."""
+    for blob in (text, source):
+        if not blob:
+            continue
+        m = _WELL_AVERAGES_HEADER_RE.search(blob)
+        if m:
+            return m.group(1).strip()
+    return _extract_well(text) or _extract_well(source)
+
+
+def _parse_weighted_average_rows(
+    text: str,
+    source: str,
+    start_page: Optional[int],
+    end_page: Optional[int],
+) -> List[PetroParamRow]:
+    """
+    Parse Volve PDF chapter-6 tables that use lines like:
+      Weighted Hugin averages: 0.888 0.207 0.232 512 2 123
+    """
+    well = _extract_well_from_averages_block(text, source)
+    if not well:
+        return []
+
+    rows: List[PetroParamRow] = []
+    for m in _WEIGHTED_AVERAGES_LINE_RE.finditer(text):
+        formation = m.group(1).strip().strip(":")
+        nums = [_safe_float(tok) for tok in re.findall(r"[-+]?\d+(?:\.\d+)?", m.group(2))]
+        nums = [n for n in nums if n is not None]
+        if len(nums) < 3:
+            continue
+        if not (0.0 <= nums[0] <= 1.0 and 0.0 <= nums[1] <= 1.0 and 0.0 <= nums[2] <= 1.0):
+            continue
+        while len(nums) < 6:
+            nums.append(None)  # type: ignore[arg-type]
+        rows.append(
+            PetroParamRow(
+                well=well,
+                formation=formation,
+                netgros=nums[0],
+                phif=nums[1],
+                sw=nums[2],
+                klogh_a=nums[3],
+                klogh_h=nums[4],
+                klogh_g=nums[5],
+                source=source,
+                page_start=start_page if isinstance(start_page, int) else None,
+                page_end=end_page if isinstance(end_page, int) else None,
+            )
+        )
+    return rows
+
+
 class PetroParamsTool:
     def __init__(self, cache_path: str):
         self.cache_path = Path(cache_path)
@@ -149,18 +213,47 @@ class PetroParamsTool:
         payload = json.loads(section_path.read_text(encoding="utf-8"))
         sections = payload.get("sections", [])
         rows: List[PetroParamRow] = []
+        seen: set[Tuple[str, str]] = set()
+
+        def _add_rows(new_rows: List[PetroParamRow]) -> None:
+            for row in new_rows:
+                key = (_norm_well(row.well), row.formation.lower())
+                if key in seen:
+                    continue
+                seen.add(key)
+                rows.append(row)
+
+        # Chapter-6 tables are split across many small sections; parse per source file.
+        by_source: Dict[str, str] = {}
+        for s in sections:
+            source = s.get("source") or ""
+            if not source:
+                continue
+            by_source[source] = (by_source.get(source, "") + "\n" + (s.get("text") or "")).strip()
+
+        for source, combined in by_source.items():
+            lower = combined.lower()
+            if "weighted" not in lower or "averages" not in lower:
+                continue
+            if not re.search(
+                r"net/gross|n/g|phif|\[fraction\]|petrophysical results",
+                combined,
+                re.IGNORECASE,
+            ):
+                continue
+            _add_rows(_parse_weighted_average_rows(combined, source, None, None))
 
         for s in sections:
-            heading = (s.get("heading") or "").lower()
             text = s.get("text") or ""
             source = s.get("source") or ""
             start_page = s.get("start_page")
             end_page = s.get("end_page")
 
-            # Identify candidate sections that likely contain the table
-            if ("petrophysical parameters" not in text.lower()) and ("netgros" not in text.lower()):
+            # Formal "Petrophysical parameters" table (older report layout)
+            lower_text = text.lower()
+            if ("petrophysical parameters" not in lower_text) and ("netgros" not in lower_text):
                 continue
-            if "klogh" not in text.lower() and "netgros" not in text.lower():
+            if "klogh" not in lower_text and "netgros" not in lower_text:
                 continue
 
             well = _extract_well(text) or _extract_well(source)
@@ -169,8 +262,9 @@ class PetroParamsTool:
 
             # Restrict parsing to the actual table block (before CPI/next section),
             # otherwise we may accidentally parse CPI depth listings like "Heather 8".
-            lower_text = text.lower()
             start_pos = lower_text.find("petrophysical parameters")
+            if start_pos < 0:
+                start_pos = lower_text.find("netgros")
             if start_pos < 0:
                 continue
             end_pos = len(text)
@@ -238,20 +332,23 @@ class PetroParamsTool:
                     # Pad to 6
                     while len(nums) < 6:
                         nums.append(None)  # type: ignore
-                    row = PetroParamRow(
-                        well=well,
-                        formation=formation,
-                        netgros=nums[0],
-                        phif=nums[1],
-                        sw=nums[2],
-                        klogh_a=nums[3],
-                        klogh_h=nums[4],
-                        klogh_g=nums[5],
-                        source=source,
-                        page_start=start_page if isinstance(start_page, int) else None,
-                        page_end=end_page if isinstance(end_page, int) else None,
+                    _add_rows(
+                        [
+                            PetroParamRow(
+                                well=well,
+                                formation=formation,
+                                netgros=nums[0],
+                                phif=nums[1],
+                                sw=nums[2],
+                                klogh_a=nums[3],
+                                klogh_h=nums[4],
+                                klogh_g=nums[5],
+                                source=source,
+                                page_start=start_page if isinstance(start_page, int) else None,
+                                page_end=end_page if isinstance(end_page, int) else None,
+                            )
+                        ]
                     )
-                    rows.append(row)
                     i = j
                 else:
                     i += 1
