@@ -153,18 +153,37 @@ def _extract_well_from_source_path(source: str) -> Optional[str]:
     return canonicalize_well(m.group(1))
 
 
+_WELL_CLEAN_RE = re.compile(
+    r"(15[\s_/-]*9[\s_/-]*(?:f[\s_/-]*)?\d+[a-zA-Z]?(?:\s+[A-Z](?=\s|$))?)",
+    re.IGNORECASE,
+)
+
+
+def _clean_well(raw: Optional[str]) -> Optional[str]:
+    """Trim trailing newlines / trailing words like PETROPHYSICAL from a well id."""
+    if not raw:
+        return None
+    m = _WELL_CLEAN_RE.search(raw)
+    if not m:
+        return None
+    from src.core.well_utils import canonicalize_well
+    return canonicalize_well(m.group(1))
+
+
 def _extract_well_from_averages_block(text: str, source: str) -> Optional[str]:
-    """Resolve well id from chapter-6 headers or the well folder in the file path."""
+    """Resolve well id from path, chapter-6 header, or text body (in that order)."""
+    from_path = _extract_well_from_source_path(source)
+    if from_path:
+        return from_path
     for blob in (text, source):
         if not blob:
             continue
         m = _WELL_AVERAGES_HEADER_RE.search(blob)
         if m:
-            return m.group(1).strip()
-    from_path = _extract_well_from_source_path(source)
-    if from_path:
-        return from_path
-    return _extract_well(text) or _extract_well(source)
+            cleaned = _clean_well(m.group(1))
+            if cleaned:
+                return cleaned
+    return _clean_well(_extract_well(text)) or _clean_well(_extract_well(source))
 
 
 def _parse_weighted_average_rows(
@@ -274,7 +293,11 @@ class PetroParamsTool:
             if "klogh" not in lower_text and "netgros" not in lower_text:
                 continue
 
-            well = _extract_well(text) or _extract_well(source)
+            well = (
+                _extract_well_from_source_path(source)
+                or _clean_well(_extract_well(text))
+                or _clean_well(_extract_well(source))
+            )
             if not well:
                 continue
 
