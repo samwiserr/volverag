@@ -1,11 +1,11 @@
 # VolveRAG
 
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Streamlit](https://img.shields.io/badge/streamlit-ready-orange.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![CI](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 
-A state-of-the-art Retrieval-Augmented Generation (RAG) system for querying Volve petrophysical reports using natural language. Built with LangGraph, OpenAI GPT-4o, and advanced retrieval techniques.
+VolveRAG is a Streamlit-ready RAG application for querying Volve petrophysical reports with natural language. It uses LangGraph for orchestration, Groq for LLM calls, local Hugging Face embeddings for vector search, and deterministic structured tools for exact petrophysical values.
 
 ## 🚀 Features
 
@@ -33,40 +33,36 @@ A state-of-the-art Retrieval-Augmented Generation (RAG) system for querying Volv
 - **PDF Viewer**: Click sources to view exact pages in-app
 - **Performance Monitoring**: Built-in metrics and evaluation framework
 - **Incomplete Query Handling**: Automatically completes partial queries
+- **Streamlit Release Assets**: Downloads a prebuilt vectorstore and PDF bundle on first startup
 
 ## ⚡ Quick Start (Golden Path)
 
 **The supported way to run VolveRAG:**
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/samwiserr/volverag.git
-cd VolveRAG/advanced_rag
+cd volverag/advanced_rag
 
-# 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Set up environment
 cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
+# Edit .env and add GROQ_API_KEY
 
-# 4. Download Volve dataset separately (outside repository)
 # Place it at: ../spwla_volve-main/ (or configure your path)
 # See DATA_POLICY.md for details
 
-# 5. Build index
-python -m src.main --build-index --documents-path ../spwla_volve-main
+# Build a Streamlit-ready local index
+python scripts/build_sota.py --documents-path ../spwla_volve-main --no-contextual --no-raptor
 
-# 6. Run web UI
-streamlit run web_app.py
+streamlit run web_app/app.py
 ```
 
-**Note**: The `src/` directory in the repository root is legacy. Use `advanced_rag/` for the current system.
+`--no-contextual --no-raptor` is the Groq-free-tier friendly build path. Contextual chunking and RAPTOR are implemented, but full builds can hit Groq request/token limits unless the account has higher throughput.
 
 ## 📋 Prerequisites
 
-- Python 3.8+
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- Python 3.10+
+- Groq API key
 - Volve dataset (petrophysical reports) - **download separately, do not commit to repo**
 - (Optional) antiword for `.doc` file support - see [EXTERNAL_TOOLS.md](../EXTERNAL_TOOLS.md)
 
@@ -74,8 +70,8 @@ streamlit run web_app.py
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/volve-rag.git
-cd volve-rag/advanced_rag
+git clone https://github.com/samwiserr/volverag.git
+cd volverag/advanced_rag
 ```
 
 2. **Install dependencies:**
@@ -87,14 +83,19 @@ pip install -r requirements.txt
 
 Create a `.env` file in the `advanced_rag/` directory:
 ```bash
-OPENAI_API_KEY=sk-your-api-key-here
-OPENAI_MODEL=gpt-4o
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+GROQ_API_KEY=gsk-your-api-key-here
+LLM_PROVIDER=groq
+EMBEDDING_PROVIDER=huggingface
+GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_FAST_MODEL=llama-3.1-8b-instant
+LOCAL_EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 ```
 
 Or export them:
 ```bash
-export OPENAI_API_KEY="sk-your-api-key-here"
+export GROQ_API_KEY="gsk-your-api-key-here"
+export LLM_PROVIDER="groq"
+export EMBEDDING_PROVIDER="huggingface"
 ```
 
 4. **Download and prepare the Volve dataset:**
@@ -115,7 +116,7 @@ See [DATA_POLICY.md](../DATA_POLICY.md) for details on why data files are exclud
 First, process all documents and build the vector store:
 
 ```bash
-python -m src.main --build-index --documents-path ../spwla_volve-main
+python scripts/build_sota.py --documents-path ../spwla_volve-main --no-contextual --no-raptor
 ```
 
 This will:
@@ -124,12 +125,12 @@ This will:
 - Create embeddings and build the vector store
 - Generate caches for fast deterministic lookups
 
-**Note:** First-time indexing may take 10-30 minutes depending on document count.
+**Note:** The validated local build for the full Volve folder processed 511 documents into 2,606 chunks and completed in about 9 minutes without contextual chunking/RAPTOR.
 
 ### 2. Run the Web UI
 
 ```bash
-streamlit run web_app.py
+streamlit run web_app/app.py
 ```
 
 Or use the provided scripts:
@@ -143,6 +144,31 @@ chmod +x run_web_app.sh
 ```
 
 The app will open at `http://localhost:8501`
+
+## Streamlit Cloud Deployment
+
+Streamlit Community Cloud should not build the vectorstore at runtime. Use the prebuilt GitHub Release assets:
+
+```toml
+VECTORSTORE_URL = "https://github.com/samwiserr/volverag/releases/download/v2.0.1-sota/vectorstore.zip"
+PDFS_URL = "https://github.com/samwiserr/volverag/releases/download/v2.0.1-sota/pdfs.zip"
+GROQ_API_KEY = "gsk_..."
+LLM_PROVIDER = "groq"
+EMBEDDING_PROVIDER = "huggingface"
+LOCAL_EMBEDDING_MODEL = "nomic-ai/nomic-embed-text-v1.5"
+```
+
+The `vectorstore.zip` asset contains:
+
+- Chroma vectorstore
+- BM25 lexical store
+- `petro_params_cache.json` with 64 rows
+- `well_picks_cache.json` with 409 rows
+- `eval_params_cache.json` with 16 tables
+- `facts_cache.json` with 293 rows
+- `section_index.json`
+
+The `pdfs.zip` asset contains uniquely named PDFs used by the in-app PDF viewer.
 
 ### 3. Query via CLI
 
@@ -203,9 +229,9 @@ For precise numeric queries, the system uses direct lookups from parsed tables:
 For exploratory or contextual queries:
 - Semantic search (vector embeddings via ChromaDB)
 - Keyword search (BM25)
-- Hybrid fusion (default: weighted merge; optional: RRF)
+- Hybrid fusion with Reciprocal Rank Fusion (RRF)
 - Cross-encoder reranking
-- LLM-based answer synthesis with document context
+- LLM-based reranking and answer synthesis with document context
 
 **When used**: Queries asking for explanations, summaries, or complex analysis (e.g., "What happened to wellbore 15/9-F-15 C?")
 
@@ -243,7 +269,7 @@ The system automatically routes queries to the appropriate retrieval method base
          └───────────┬────────────┘
                      │
          ┌───────────▼────────────┐
-         │  LLM Rerank (gpt-4o)  │
+         │  LLM Rerank (Groq)    │
          └───────────┬────────────┘
                      │
          ┌───────────▼────────────┐
@@ -256,8 +282,8 @@ The system automatically routes queries to the appropriate retrieval method base
 
 - **LangGraph**: Agentic workflow orchestration
 - **ChromaDB**: Vector database with HNSW indexing
-- **OpenAI GPT-4o**: LLM for query understanding and answer generation
-- **OpenAI Embeddings**: text-embedding-3-small for semantic search
+- **Groq**: LLM provider for routing, query expansion, reranking, and answer generation
+- **Hugging Face / Sentence Transformers**: local embedding model (`nomic-ai/nomic-embed-text-v1.5`)
 - **BM25**: Keyword-based retrieval
 - **Sentence Transformers**: Cross-encoder reranking
 - **RapidFuzz**: Fuzzy matching for entity resolution
@@ -268,12 +294,18 @@ The system automatically routes queries to the appropriate retrieval method base
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `OPENAI_API_KEY` | ✅ Yes | - | Your OpenAI API key |
-| `OPENAI_MODEL` | No | `gpt-4o` | Chat model for LLM calls |
-| `OPENAI_EMBEDDING_MODEL` | No | `text-embedding-3-small` | Embedding model |
+| `GROQ_API_KEY` | ✅ Yes | - | Groq API key for LLM calls |
+| `LLM_PROVIDER` | No | `groq` | LLM provider |
+| `EMBEDDING_PROVIDER` | No | `huggingface` | Embedding provider |
+| `GROQ_MODEL` | No | `llama-3.3-70b-versatile` | Main chat model |
+| `GROQ_FAST_MODEL` | No | `llama-3.1-8b-instant` | Fast model for routing/expansion |
+| `LOCAL_EMBEDDING_MODEL` | No | `nomic-ai/nomic-embed-text-v1.5` | Local embedding model |
+| `VECTORSTORE_URL` | Streamlit | - | GitHub Release URL for `vectorstore.zip` |
+| `PDFS_URL` | Streamlit | - | GitHub Release URL for `pdfs.zip` |
 | `RAG_USE_CROSS_ENCODER` | No | `true` | Enable cross-encoder reranking |
-| `RAG_HYBRID_FUSION` | No | `weighted` | Hybrid fusion method: `weighted` or `rrf` |
+| `RAG_HYBRID_FUSION` | No | `rrf` | Hybrid fusion method |
 | `RAG_RRF_K` | No | `60` | RRF constant \(k\) for rank fusion (higher = less rank impact) |
+| `RAG_HYDE` | No | `true` | Enable Hypothetical Document Embeddings at query time |
 | `RAG_ENABLE_QUERY_COMPLETION` | No | `true` | Enable incomplete query handling |
 | `RAG_ENABLE_QUERY_DECOMPOSITION` | No | `true` | Enable query decomposition |
 | `RAG_ENABLE_MONITORING` | No | `true` | Enable performance monitoring |
@@ -303,7 +335,7 @@ VolveRAG/
 │   ├── data/                    # Generated (not in repo)
 │   │   ├── vectorstore/        # ChromaDB storage
 │   │   └── indices/            # Cached indices
-│   ├── web_app.py              # Streamlit UI
+│   ├── web_app/                # Streamlit UI
 │   ├── requirements.txt        # Dependencies
 │   └── README.md              # Main documentation
 ├── src/                  # ⚠️ LEGACY (deprecated, may be removed)
@@ -375,7 +407,7 @@ See [LICENSE](../LICENSE) file for details.
 
 - Volve dataset provided by Equinor
 - Built with [LangChain](https://www.langchain.com/) and [LangGraph](https://github.com/langchain-ai/langgraph)
-- Uses [OpenAI](https://openai.com/) for embeddings and LLM
+- Uses [Groq](https://groq.com/) for LLM calls and Hugging Face-compatible local embeddings
 
 ## 📧 Contact
 

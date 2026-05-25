@@ -1,101 +1,90 @@
 # VolveRAG
 
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
 ![Streamlit](https://img.shields.io/badge/streamlit-ready-orange.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![RAG](https://img.shields.io/badge/RAG-hybrid%20%2B%20structured-green.svg)
+![CI](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 
-Retrieval-Augmented Generation (RAG) system for querying Volve petrophysical reports using natural language. Built with LangGraph, OpenAI GPT-4o, and advanced retrieval techniques.
+VolveRAG is a Streamlit-ready Retrieval-Augmented Generation application for querying Volve petrophysical reports with natural language. It combines deterministic structured lookups for exact numeric answers with hybrid semantic/keyword retrieval for narrative questions.
 
-## 📖 Overview
+The current app uses:
 
-VolveRAG enables natural language querying of petrophysical reports from the Volve field dataset. Ask questions about wells, formations, petrophysical parameters, and more - the system understands your queries and provides accurate answers with source citations.
+- **Groq** for LLM calls
+- **Hugging Face / Sentence Transformers** for local embeddings
+- **ChromaDB** for vector search
+- **BM25 + RRF** for hybrid retrieval
+- **Structured JSON caches** for well picks, petrophysical parameters, evaluation parameters, and numeric facts
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/samwiserr/VolveRAG.git
-cd VolveRAG/advanced_rag
+git clone https://github.com/samwiserr/volverag.git
+cd volverag/advanced_rag
 
-# 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Set up environment
 cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
+# Add GROQ_API_KEY and keep LLM_PROVIDER=groq
 
-# 4. Download Volve dataset separately (outside repository)
-# Place it at: ../spwla_volve-main/ (or configure your path)
-# See DATA_POLICY.md for details
-
-# 5. Build index
-python -m src.main --build-index --documents-path ../spwla_volve-main
-
-# 6. Run web UI
+python scripts/build_sota.py --documents-path "../spwla_volve-main" --no-contextual --no-raptor
 streamlit run web_app.py
 ```
 
-## 📁 Repository Structure
+For Streamlit Community Cloud, use the prebuilt release assets instead of building on the server:
 
+```toml
+VECTORSTORE_URL = "https://github.com/samwiserr/volverag/releases/download/v2.0.1-sota/vectorstore.zip"
+PDFS_URL = "https://github.com/samwiserr/volverag/releases/download/v2.0.1-sota/pdfs.zip"
+GROQ_API_KEY = "gsk_..."
+LLM_PROVIDER = "groq"
+EMBEDDING_PROVIDER = "huggingface"
+LOCAL_EMBEDDING_MODEL = "nomic-ai/nomic-embed-text-v1.5"
 ```
-VolveRAG/
-├── advanced_rag/          # ✅ Main application (use this)
-│   ├── src/               # Source code
-│   ├── web_app.py         # Streamlit UI
-│   ├── README.md          # 📖 Main documentation
-│   └── requirements.txt   # Dependencies
+
+## Repository Structure
+
+```text
+.
+├── advanced_rag/          # Main application
+│   ├── src/               # RAG graph, tools, loaders, processors
+│   ├── web_app/           # Streamlit app and UI logic
+│   ├── scripts/           # Build and evaluation scripts
+│   └── README.md          # Detailed developer documentation
 ├── DATA_POLICY.md         # Data handling policy
-├── EXTERNAL_TOOLS.md      # External dependencies
-└── LICENSE                # MIT License
+├── EXTERNAL_TOOLS.md      # Optional local dependencies
+└── LICENSE
 ```
 
-## 📚 Documentation
+## Example Queries
 
-- **[Main README](advanced_rag/README.md)** - Complete documentation, features, and usage guide
-- **[Setup Guide](advanced_rag/SETUP.md)** - Detailed installation instructions
-- **[Data Policy](DATA_POLICY.md)** - What should/shouldn't be committed
-- **[External Tools](EXTERNAL_TOOLS.md)** - Required and optional dependencies
-- **[Contributing](advanced_rag/CONTRIBUTING.md)** - How to contribute
+- `What is the water saturation value of Hugin formation in 15/9-F-5?`
+- `What formations are present in 15/9-F-5?`
+- `What is the porosity for Hugin in 15/9-F-5?`
+- `Show the evaluation parameters for Hugin in 15/9-F-5.`
 
-## ✨ Key Features
+Validated structured lookup example:
 
-- **Natural Language Querying**: Ask questions in plain English
-- **Deterministic Fact Retrieval**: 100% accurate structured lookups
-- **Hybrid Retrieval**: Semantic + keyword search for better results
-- **Source Citations**: Every answer includes exact page numbers
-- **Stateful Chat**: Maintains conversation context
-- **Entity Disambiguation**: Handles typos and ambiguous queries
+```text
+15/9-F-5 / Hugin
+SW   = 0.216
+PHIF = 0.22
+N/G  = 0.889
+```
 
-## 🔍 Example Queries
+## Documentation
 
-- "What formations are in well 15/9-F-5?"
-- "What is the porosity for Hugin in 15/9-F-5?"
-- "What is the depth of Sleipner formation in 15/9-19A?"
-- "List all formations and their properties"
+- [Detailed developer README](advanced_rag/README.md)
+- [Setup Guide](advanced_rag/SETUP.md)
+- [Data Policy](DATA_POLICY.md)
+- [External Tools](EXTERNAL_TOOLS.md)
 
-## 📋 Prerequisites
+## Data Policy
 
-- Python 3.8+
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
-- Volve dataset (download separately - see [DATA_POLICY.md](DATA_POLICY.md))
+The Volve source dataset, generated vectorstores, PDF bundles, and cache files are intentionally excluded from Git. Build them locally or download the release assets configured above.
 
-## 🤝 Contributing
+## License
 
-See [CONTRIBUTING.md](advanced_rag/CONTRIBUTING.md) for guidelines.
-
-## 📝 License
-
-See [LICENSE](LICENSE) file for details.
-
-## 🔗 Links
-
-- **Main Documentation**: [advanced_rag/README.md](advanced_rag/README.md)
-- **GitHub Repository**: https://github.com/samwiserr/VolveRAG
-
----
-
-**Note**: All development and usage should be done in the `advanced_rag/` directory. See the [main README](advanced_rag/README.md) for complete documentation.
+See [LICENSE](LICENSE).
 
 
 
