@@ -174,10 +174,30 @@ def _zip_vectorstore(persist_dir: Path, output_zip: Path) -> None:
     if output_zip.exists():
         output_zip.unlink()
 
+    # Extra cache files that live in data/ (parent of persist_dir) and must be
+    # available at runtime under advanced_rag/data/ on the Streamlit deployment.
+    EXTRA_DATA_FILES = [
+        "well_picks_cache.json",
+        "petro_params_cache.json",
+        "section_index.json",
+        "structured_facts_cache.json",
+        "eval_tables_cache.json",
+    ]
+
     with zipfile.ZipFile(output_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+        # Always add all vectorstore files under the "vectorstore/" prefix
         for file in persist_dir.rglob("*"):
             if file.is_file():
                 zf.write(file, file.relative_to(persist_dir.parent))
+
+        # Add any extra data/ cache files at the root of the zip so the
+        # downloader can place them in advanced_rag/data/ on Streamlit.
+        data_dir = persist_dir.parent
+        for name in EXTRA_DATA_FILES:
+            extra = data_dir / name
+            if extra.exists():
+                zf.write(extra, name)
+                print(f"  Included         : {name} ({extra.stat().st_size / 1024:.1f} KB)")
 
     size_mb = output_zip.stat().st_size / (1024 * 1024)
     print(f"  Created          : {output_zip}")

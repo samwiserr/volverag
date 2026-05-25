@@ -39,6 +39,8 @@ rank-bm25>=0.2.2
 # Cross-encoder reranking (Phase 2)
 sentence-transformers>=2.2.0
 einops>=0.7.0
+# Pin transformers to <5.0.0 — v5.x has a hard torchvision dep that is absent on Streamlit Cloud
+transformers>=4.41.0,<5.0.0
 
 # Fuzzy matching (typos)
 rapidfuzz>=3.6.1

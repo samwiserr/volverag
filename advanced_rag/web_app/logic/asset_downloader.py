@@ -205,32 +205,39 @@ def _download_and_extract_vectorstore(zip_url: str, target_dir: Path) -> bool:
                     root_dir = list(root_dirs)[0]
                     logger.info(f"ZIP contains root directory '{root_dir}'. Extracting contents...")
                     
-                    # Manually extract files, stripping the root_dir prefix
+                    # Manually extract files, stripping the root_dir prefix.
+                    # Root-level files (no directory prefix) go to target_dir.parent (data/).
                     extracted_count = 0
+                    root_level_count = 0
                     for orig_path, norm_path in normalized_files:
-                        # Check if this file is under the root directory
-                        if not norm_path.startswith(root_dir + '/'):
-                            continue
-                        
-                        # Get relative path within root_dir
-                        rel_path = norm_path[len(root_dir) + 1:]
-                        if not rel_path:
-                            continue
-                        
-                        # Create destination path
-                        dest_path = target_dir / rel_path
-                        dest_path.parent.mkdir(parents=True, exist_ok=True)
-                        
-                        # Extract the file
-                        try:
-                            with zip_ref.open(orig_path) as source:
-                                with open(dest_path, 'wb') as dest:
-                                    dest.write(source.read())
-                            extracted_count += 1
-                        except Exception as e:
-                            logger.warning(f"Failed to extract {orig_path}: {e}")
+                        if norm_path.startswith(root_dir + '/'):
+                            # File is inside the root directory - extract to target_dir
+                            rel_path = norm_path[len(root_dir) + 1:]
+                            if not rel_path:
+                                continue
+                            dest_path = target_dir / rel_path
+                            dest_path.parent.mkdir(parents=True, exist_ok=True)
+                            try:
+                                with zip_ref.open(orig_path) as source:
+                                    with open(dest_path, 'wb') as dest:
+                                        dest.write(source.read())
+                                extracted_count += 1
+                            except Exception as e:
+                                logger.warning(f"Failed to extract {orig_path}: {e}")
+                        elif '/' not in norm_path:
+                            # Root-level file (e.g. well_picks_cache.json) - place in data/ parent
+                            dest_path = target_dir.parent / norm_path
+                            dest_path.parent.mkdir(parents=True, exist_ok=True)
+                            try:
+                                with zip_ref.open(orig_path) as source:
+                                    with open(dest_path, 'wb') as dest:
+                                        dest.write(source.read())
+                                root_level_count += 1
+                                logger.info(f"Extracted root-level cache file: {norm_path}")
+                            except Exception as e:
+                                logger.warning(f"Failed to extract root-level {orig_path}: {e}")
                     
-                    logger.info(f"Extracted {extracted_count} files from '{root_dir}' directory")
+                    logger.info(f"Extracted {extracted_count} files from '{root_dir}' directory, {root_level_count} root-level cache files")
                 else:
                     # Files are at root level OR have mixed paths - need to handle Windows-style paths
                     # Check if files have a common prefix like "vectorstore/"
