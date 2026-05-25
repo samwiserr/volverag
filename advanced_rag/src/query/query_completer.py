@@ -9,20 +9,21 @@ import os
 import re
 import logging
 from typing import List, Optional
-from langchain_openai import ChatOpenAI
+from langchain_core.language_models.chat_models import BaseChatModel
+from ..core.model_factory import get_chat_model
 
 logger = logging.getLogger(__name__)
 
 # Lazy-init LLM
-_completion_model: Optional[ChatOpenAI] = None
+_completion_model: Optional[BaseChatModel] = None
 
 
-def _get_completion_model() -> ChatOpenAI:
+def _get_completion_model() -> BaseChatModel:
     """Get or create the query completion LLM."""
     global _completion_model
     if _completion_model is None:
-        model = os.getenv("RAG_QUERY_COMPLETION_MODEL", "gpt-4o")
-        _completion_model = ChatOpenAI(model=model, temperature=0)
+        model = os.getenv("RAG_QUERY_COMPLETION_MODEL", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"))
+        _completion_model = get_chat_model(model, temperature=0, role="completion")
     return _completion_model
 
 

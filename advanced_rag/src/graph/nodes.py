@@ -9,8 +9,9 @@ from pathlib import Path
 from typing import Literal, Optional, List
 from langgraph.graph import MessagesState
 from langchain_core.messages import HumanMessage, AIMessage
-from langchain_openai import ChatOpenAI
+from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field
+from ..core.model_factory import get_chat_model
 from ..normalize.query_normalizer import normalize_query
 from ..normalize.property_registry import default_registry, resolve_property_deterministic, PropertyEntry
 from ..normalize.agent_disambiguator import choose_property_with_agent
@@ -28,8 +29,8 @@ logger = logging.getLogger(__name__)
 
 # Lazy-init chat models (avoid import-time crash if OPENAI_API_KEY not set)
 # DEPRECATED: These globals will be removed in favor of DI container
-_response_model: Optional[ChatOpenAI] = None
-_grader_model: Optional[ChatOpenAI] = None
+_response_model: Optional[BaseChatModel] = None
+_grader_model: Optional[BaseChatModel] = None
 
 
 # Service keys for DI container
@@ -38,7 +39,7 @@ SERVICE_KEY_GRADER_MODEL = "grader_model"
 SERVICE_KEY_REGISTRY = "property_registry"
 
 
-def _get_response_model() -> ChatOpenAI:
+def _get_response_model() -> BaseChatModel:
     """
     Get response model (ChatOpenAI instance).
     
@@ -51,8 +52,8 @@ def _get_response_model() -> ChatOpenAI:
     # Try DI container first
     try:
         container = get_container()
-        if container.is_registered(ChatOpenAI, key=SERVICE_KEY_RESPONSE_MODEL):
-            model = container.get(ChatOpenAI, key=SERVICE_KEY_RESPONSE_MODEL)
+        if container.is_registered(BaseChatModel, key=SERVICE_KEY_RESPONSE_MODEL):
+            model = container.get(BaseChatModel, key=SERVICE_KEY_RESPONSE_MODEL)
             if model is not None:
                 return model
     except Exception:
@@ -61,12 +62,12 @@ def _get_response_model() -> ChatOpenAI:
     # Fallback to global singleton (backward compatibility)
     global _response_model
     if _response_model is None:
-        model = os.getenv("OPENAI_MODEL", "gpt-4o")
-        _response_model = ChatOpenAI(model=model, temperature=0)
+        model = os.getenv("GROQ_MODEL", os.getenv("OPENAI_MODEL", "llama-3.3-70b-versatile"))
+        _response_model = get_chat_model(model, temperature=0, role="response")
     return _response_model
 
 
-def _get_grader_model() -> ChatOpenAI:
+def _get_grader_model() -> BaseChatModel:
     """
     Get grader model (ChatOpenAI instance).
     
@@ -79,8 +80,8 @@ def _get_grader_model() -> ChatOpenAI:
     # Try DI container first
     try:
         container = get_container()
-        if container.is_registered(ChatOpenAI, key=SERVICE_KEY_GRADER_MODEL):
-            model = container.get(ChatOpenAI, key=SERVICE_KEY_GRADER_MODEL)
+        if container.is_registered(BaseChatModel, key=SERVICE_KEY_GRADER_MODEL):
+            model = container.get(BaseChatModel, key=SERVICE_KEY_GRADER_MODEL)
             if model is not None:
                 return model
     except Exception:
@@ -89,8 +90,8 @@ def _get_grader_model() -> ChatOpenAI:
     # Fallback to global singleton (backward compatibility)
     global _grader_model
     if _grader_model is None:
-        model = os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "gpt-4o"))
-        _grader_model = ChatOpenAI(model=model, temperature=0)
+        model = os.getenv("GROQ_MODEL", os.getenv("OPENAI_GRADE_MODEL", os.getenv("OPENAI_MODEL", "llama-3.3-70b-versatile")))
+        _grader_model = get_chat_model(model, temperature=0, role="grader")
     return _grader_model
 
 # Initialize property registry (lazy-loaded)

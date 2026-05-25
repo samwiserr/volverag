@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import List
 from langgraph.graph import MessagesState
 from langchain_core.messages import AIMessage
+from src.core.config import get_config
+from src.core.model_factory import get_chat_model
 from src.core.result import Result, AppError, ErrorType
 from src.core.logging import get_logger
 from src.normalize.query_normalizer import normalize_query, extract_well, normalize_formation
@@ -121,16 +123,13 @@ class QueryRouter:
             
             # Fallback: Use LLM to decide (original behavior)
             logger.info("[ROUTING] No strategy matched, using LLM fallback")
-            from langchain_openai import ChatOpenAI
-            from src.core.config import get_config
             try:
                 config = get_config()
-                model = ChatOpenAI(model=config.llm_model.value, temperature=0)
+                model = get_chat_model(str(config.llm_model), temperature=0, role="router")
             except Exception:
                 # Fallback if config not available
-                import os
-                model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
-                model = ChatOpenAI(model=model_name, temperature=0)
+                model_name = os.getenv("GROQ_MODEL", os.getenv("OPENAI_MODEL", "llama-3.3-70b-versatile"))
+                model = get_chat_model(model_name, temperature=0, role="router")
             
             response = model.bind_tools(self.tools).invoke(messages)
             return Result.ok({"messages": [response]})

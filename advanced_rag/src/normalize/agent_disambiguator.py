@@ -8,11 +8,12 @@ to choose between a small set of candidates. The agent never produces numeric an
 from __future__ import annotations
 
 import os
+import json
+import re
 from dataclasses import dataclass
 from typing import List, Optional
 
-from langchain_openai import ChatOpenAI
-
+from ..core.model_factory import get_chat_model
 from .property_registry import PropertyEntry
 
 
@@ -31,9 +32,8 @@ def choose_property_with_agent(question: str, candidates: List[PropertyEntry]) -
     if not _enabled() or not candidates:
         return Disambiguation(canonical=None, confidence=0.0, clarification_question=None)
 
-    # Using gpt-4o for better disambiguation quality
-    model = os.getenv("RAG_AGENT_DISAMBIGUATE_MODEL", "gpt-4o")
-    llm = ChatOpenAI(model=model, temperature=0)
+    model = os.getenv("RAG_AGENT_DISAMBIGUATE_MODEL", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"))
+    llm = get_chat_model(model, temperature=0, role="disambiguation")
 
     options = "\n".join([f"- {c.canonical}: {c.display or c.canonical}" for c in candidates])
     prompt = (
@@ -52,10 +52,6 @@ def choose_property_with_agent(question: str, candidates: List[PropertyEntry]) -
 
     resp = llm.invoke([{"role": "user", "content": prompt}])
     txt = (resp.content or "").strip()
-    # Minimal JSON parse without adding a dependency
-    import json
-    import re
-
     try:
         # The model may wrap JSON in prose; extract the first JSON object.
         m = re.search(r"\{[\s\S]*\}", txt)

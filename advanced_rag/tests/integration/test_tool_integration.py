@@ -87,6 +87,7 @@ class TestToolIntegration:
         from src.core.config import get_config, reload_config
         
         # Set test env vars
+        monkeypatch.setenv("LLM_PROVIDER", "openai")
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
         monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
         
@@ -94,5 +95,5 @@ class TestToolIntegration:
         config = get_config()
         
         assert config.openai_api_key == "test-key"
-        assert config.llm_model.value == "gpt-4o"
+        assert config.llm_model == "gpt-4o"
 

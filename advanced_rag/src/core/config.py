@@ -5,9 +5,9 @@ This module provides a single source of truth for all configuration,
 replacing scattered os.getenv() calls throughout the codebase.
 """
 from pathlib import Path
-from typing import Optional, List, Annotated, Union
+from typing import Optional, List, Union
 from enum import Enum
-from pydantic import Field, field_validator, model_validator, BeforeValidator, AliasChoices
+from pydantic import Field, field_validator, model_validator, AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from .exceptions import ConfigurationError
 import os
@@ -75,25 +75,40 @@ class AppConfig(BaseSettings):
     """
     
     # API Keys
-    openai_api_key: str = Field(
-        ...,
+    openai_api_key: Optional[str] = Field(
+        default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "openai_api_key"),
-        description="OpenAI API key (required)"
+        description="OpenAI API key (required only when using OpenAI models or embeddings)"
+    )
+    groq_api_key: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("GROQ_API_KEY", "groq_api_key"),
+        description="Groq API key (required when LLM_PROVIDER=groq)"
     )
     
     # Models
-    embedding_model: EmbeddingModel = Field(
-        default=EmbeddingModel.TEXT_EMBEDDING_3_SMALL,
-        validation_alias=AliasChoices("EMBEDDING_MODEL", "embedding_model")
+    llm_provider: str = Field(
+        default="groq",
+        validation_alias=AliasChoices("LLM_PROVIDER", "llm_provider"),
+        description="'groq' or 'openai'"
     )
-    llm_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
-        default=LLMModel.GPT_4O,
-        validation_alias=AliasChoices("OPENAI_MODEL", "llm_model")
+    embedding_provider: str = Field(
+        default="huggingface",
+        validation_alias=AliasChoices("EMBEDDING_PROVIDER", "embedding_provider"),
+        description="'huggingface'/'local' or 'openai'"
+    )
+    embedding_model: str = Field(
+        default="nomic-ai/nomic-embed-text-v1.5",
+        validation_alias=AliasChoices("EMBEDDING_MODEL", "OPENAI_EMBEDDING_MODEL", "LOCAL_EMBEDDING_MODEL", "embedding_model")
+    )
+    llm_model: str = Field(
+        default="llama-3.3-70b-versatile",
+        validation_alias=AliasChoices("OPENAI_MODEL", "GROQ_MODEL", "llm_model")
     )
     
-    grade_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
-        default=LLMModel.GPT_4O,
-        validation_alias=AliasChoices("OPENAI_GRADE_MODEL", "grade_model")
+    grade_model: str = Field(
+        default="llama-3.3-70b-versatile",
+        validation_alias=AliasChoices("OPENAI_GRADE_MODEL", "GROQ_MODEL", "grade_model")
     )
     
     # Paths
@@ -147,10 +162,82 @@ class AppConfig(BaseSettings):
         default=True,
         validation_alias=AliasChoices("RAG_RERANK", "rerank_enabled")
     )
-    rerank_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
-        default=LLMModel.GPT_4O,
+    rerank_model: str = Field(
+        default="llama-3.3-70b-versatile",
         validation_alias=AliasChoices("RAG_RERANK_MODEL", "rerank_model")
     )
+
+    # ── SOTA techniques (2024-2026) ─────────────────────────────────────────
+    # Contextual Chunking — Anthropic Contextual Retrieval (Sept 2024)
+    # Runs at index-build time only; baked into the vectorstore.
+    contextual_chunking: bool = Field(
+        default=True,
+        validation_alias=AliasChoices("RAG_CONTEXTUAL", "contextual_chunking"),
+        description="Prepend LLM-generated situating context to each chunk before embedding",
+    )
+    context_model: str = Field(
+        default="llama-3.1-8b-instant",
+        validation_alias=AliasChoices("RAG_CONTEXT_MODEL", "GROQ_FAST_MODEL", "context_model"),
+        description="Model used to generate contextual chunk prefixes (build-time)",
+    )
+    # HyDE — Hypothetical Document Embeddings (Gao et al., SIGIR 2023)
+    # Runs at query time; can be toggled without rebuilding the index.
+    hyde_enabled: bool = Field(
+        default=True,
+        validation_alias=AliasChoices("RAG_HYDE", "hyde_enabled"),
+        description="Generate a hypothetical answer doc and embed it alongside the raw query",
+    )
+    hyde_model: str = Field(
+        default="llama-3.1-8b-instant",
+        validation_alias=AliasChoices("RAG_HYDE_MODEL", "GROQ_FAST_MODEL", "hyde_model"),
+        description="Model used to generate hypothetical documents (query-time)",
+    )
+    hyde_n_hypotheses: int = Field(
+        default=1,
+        ge=1,
+        le=5,
+        validation_alias=AliasChoices("RAG_HYDE_N", "hyde_n_hypotheses"),
+        description="Number of independent hypothetical documents to generate per query",
+    )
+    # RAPTOR — Recursive Abstractive Processing for Tree-Organised Retrieval
+    # (Sarthi et al., ICLR 2024). Runs at index-build time only.
+    raptor_enabled: bool = Field(
+        default=True,
+        validation_alias=AliasChoices("RAG_RAPTOR", "raptor_enabled"),
+        description="Build a multi-level summary tree over leaf chunks at index time",
+    )
+    raptor_model: str = Field(
+        default="llama-3.1-8b-instant",
+        validation_alias=AliasChoices("RAG_RAPTOR_MODEL", "GROQ_FAST_MODEL", "raptor_model"),
+        description="Model used to summarise RAPTOR cluster nodes (build-time)",
+    )
+    raptor_levels: int = Field(
+        default=2,
+        ge=1,
+        le=5,
+        validation_alias=AliasChoices("RAG_RAPTOR_LEVELS", "raptor_levels"),
+        description="Maximum depth of the RAPTOR summary tree",
+    )
+    raptor_clusters: int = Field(
+        default=8,
+        ge=2,
+        le=50,
+        validation_alias=AliasChoices("RAG_RAPTOR_CLUSTERS", "raptor_clusters"),
+        description="Target number of clusters per RAPTOR level",
+    )
+    # Hybrid fusion strategy
+    hybrid_fusion: str = Field(
+        default="rrf",
+        validation_alias=AliasChoices("RAG_HYBRID_FUSION", "hybrid_fusion"),
+        description="'rrf' (Reciprocal Rank Fusion) or 'weighted' score merge",
+    )
+    rrf_k: int = Field(
+        default=60,
+        ge=1,
+        validation_alias=AliasChoices("RAG_RRF_K", "rrf_k"),
+        description="RRF smoothing constant k (higher = less rank-sensitive)",
+    )
+    # ────────────────────────────────────────────────────────────────────────
     
     # Fuzzy matching thresholds
     formation_fuzzy_threshold: float = Field(
@@ -177,9 +264,9 @@ class AppConfig(BaseSettings):
         default=True,
         validation_alias=AliasChoices("RAG_ENABLE_QUERY_COMPLETION", "enable_query_completion")
     )
-    decomposition_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
-        default=LLMModel.GPT_4O,
-        validation_alias=AliasChoices("RAG_DECOMPOSITION_MODEL", "decomposition_model")
+    decomposition_model: str = Field(
+        default="llama-3.3-70b-versatile",
+        validation_alias=AliasChoices("RAG_DECOMPOSITION_MODEL", "OPENAI_MODEL", "GROQ_MODEL", "decomposition_model")
     )
     
     # Entity resolution
@@ -187,9 +274,9 @@ class AppConfig(BaseSettings):
         default=True,
         validation_alias=AliasChoices("RAG_ENTITY_RESOLVER", "enable_entity_resolver")
     )
-    entity_resolver_model: Annotated[LLMModel, BeforeValidator(_parse_llm_model)] = Field(
-        default=LLMModel.GPT_4O,
-        validation_alias=AliasChoices("RAG_ENTITY_RESOLVER_MODEL", "entity_resolver_model")
+    entity_resolver_model: str = Field(
+        default="llama-3.3-70b-versatile",
+        validation_alias=AliasChoices("RAG_ENTITY_RESOLVER_MODEL", "OPENAI_MODEL", "GROQ_MODEL", "entity_resolver_model")
     )
     
     # Logging
@@ -282,37 +369,17 @@ class AppConfig(BaseSettings):
             return resolved.resolve()
         return path.resolve() if path.exists() else path
     
-    @model_validator(mode='before')
-    @classmethod
-    def validate_llm_models_from_env(cls, values):
-        """Parse LLM model enums from environment variables before validation."""
-        if isinstance(values, dict):
-            # Handle LLM model fields that might come as strings from env
-            llm_fields = ['llm_model', 'grade_model', 'rerank_model', 'decomposition_model', 'entity_resolver_model']
-            for field in llm_fields:
-                if field in values and isinstance(values[field], str):
-                    # Try exact match first
-                    for member in LLMModel:
-                        if member.value == values[field]:
-                            values[field] = member
-                            break
-                    else:
-                        # Try case-insensitive match
-                        v_lower = values[field].lower()
-                        for member in LLMModel:
-                            if member.value.lower() == v_lower:
-                                values[field] = member
-                                break
-                        else:
-                            # Fallback to _missing_ handler
-                            values[field] = LLMModel._missing_(values[field])
-        return values
-    
     @model_validator(mode='after')
     def validate_overlap(self):
         """Overlap must be less than chunk size."""
         if self.chunk_overlap >= self.chunk_size:
             raise ValueError("chunk_overlap must be less than chunk_size")
+        if self.llm_provider.lower() == "groq" and not self.groq_api_key:
+            raise ValueError("GROQ_API_KEY is required when LLM_PROVIDER=groq")
+        if self.llm_provider.lower() == "openai" and not self.openai_api_key:
+            raise ValueError("OPENAI_API_KEY is required when LLM_PROVIDER=openai")
+        if self.embedding_provider.lower() == "openai" and not self.openai_api_key:
+            raise ValueError("OPENAI_API_KEY is required when EMBEDDING_PROVIDER=openai")
         return self
     
     @field_validator("log_format")
@@ -360,8 +427,14 @@ def get_config() -> AppConfig:
                 # Only access secrets if they exist (avoids StreamlitSecretNotFoundError)
                 if hasattr(secrets, '_secrets') and secrets._secrets:
                     # Merge Streamlit secrets into environment
+                    if "GROQ_API_KEY" in secrets:
+                        os.environ.setdefault("GROQ_API_KEY", str(secrets["GROQ_API_KEY"]))
                     if "OPENAI_API_KEY" in secrets:
                         os.environ.setdefault("OPENAI_API_KEY", str(secrets["OPENAI_API_KEY"]))
+                    if "LLM_PROVIDER" in secrets:
+                        os.environ.setdefault("LLM_PROVIDER", str(secrets["LLM_PROVIDER"]))
+                    if "EMBEDDING_PROVIDER" in secrets:
+                        os.environ.setdefault("EMBEDDING_PROVIDER", str(secrets["EMBEDDING_PROVIDER"]))
                     if "VECTORSTORE_URL" in secrets:
                         os.environ.setdefault("VECTORSTORE_URL", str(secrets["VECTORSTORE_URL"]))
                     if "PDFS_URL" in secrets:

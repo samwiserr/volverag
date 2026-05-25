@@ -21,9 +21,9 @@ from .graph.rag_graph import build_rag_graph
 # Load environment variables
 load_dotenv()
 
-# Fallback: load OPENAI_API_KEY from Streamlit secrets if present.
-def _load_openai_key_from_streamlit_secrets() -> None:
-    if os.getenv("OPENAI_API_KEY"):
+# Fallback: load API keys from Streamlit secrets if present.
+def _load_keys_from_streamlit_secrets() -> None:
+    if os.getenv("GROQ_API_KEY") and os.getenv("OPENAI_API_KEY"):
         return
     try:
         import tomllib  # py311+
@@ -39,15 +39,19 @@ def _load_openai_key_from_streamlit_secrets() -> None:
             if not p.exists():
                 continue
             data = tomllib.loads(p.read_text(encoding="utf-8"))
-            key = data.get("OPENAI_API_KEY")
-            if isinstance(key, str) and key.strip():
-                os.environ["OPENAI_API_KEY"] = key.strip()
+            groq_key = data.get("GROQ_API_KEY")
+            if isinstance(groq_key, str) and groq_key.strip():
+                os.environ.setdefault("GROQ_API_KEY", groq_key.strip())
+            openai_key = data.get("OPENAI_API_KEY")
+            if isinstance(openai_key, str) and openai_key.strip():
+                os.environ.setdefault("OPENAI_API_KEY", openai_key.strip())
+            if os.getenv("GROQ_API_KEY") or os.getenv("OPENAI_API_KEY"):
                 return
         except Exception:
             continue
 
 
-_load_openai_key_from_streamlit_secrets()
+_load_keys_from_streamlit_secrets()
 
 # Setup logging
 logging.basicConfig(
@@ -60,7 +64,7 @@ logger = logging.getLogger(__name__)
 def build_index(
     documents_path: str,
     persist_directory: str = "./data/vectorstore",
-    embedding_model: str = "text-embedding-3-small"
+    embedding_model: str = "nomic-ai/nomic-embed-text-v1.5"
 ):
     """
     Build vector store index from documents.
@@ -68,16 +72,16 @@ def build_index(
     Args:
         documents_path: Path to directory containing documents
         persist_directory: Directory to persist ChromaDB
-        embedding_model: OpenAI embedding model name
+        embedding_model: Embedding model name
     """
     logger.info("=" * 60)
     logger.info("Building RAG Index")
     logger.info("=" * 60)
     
-    # Check API key
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set")
+    if os.getenv("LLM_PROVIDER", "groq").lower() == "groq" and not os.getenv("GROQ_API_KEY"):
+        raise ValueError("GROQ_API_KEY environment variable not set")
+    if os.getenv("EMBEDDING_PROVIDER", "huggingface").lower() == "openai" and not os.getenv("OPENAI_API_KEY"):
+        raise ValueError("OPENAI_API_KEY environment variable not set for OpenAI embeddings")
     
     # Load documents
     logger.info(f"Loading documents from: {documents_path}")
@@ -138,7 +142,7 @@ def build_index(
 def query(
     question: str,
     persist_directory: str = "./data/vectorstore",
-    embedding_model: str = "text-embedding-3-small",
+    embedding_model: str = "nomic-ai/nomic-embed-text-v1.5",
     stream: bool = False
 ):
     """
@@ -147,17 +151,17 @@ def query(
     Args:
         question: User question
         persist_directory: Directory where ChromaDB is persisted
-        embedding_model: OpenAI embedding model name
+        embedding_model: Embedding model name
         stream: Whether to stream results
     """
     logger.info("=" * 60)
     logger.info(f"Query: {question}")
     logger.info("=" * 60)
     
-    # Check API key
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set")
+    if os.getenv("LLM_PROVIDER", "groq").lower() == "groq" and not os.getenv("GROQ_API_KEY"):
+        raise ValueError("GROQ_API_KEY environment variable not set")
+    if os.getenv("EMBEDDING_PROVIDER", "huggingface").lower() == "openai" and not os.getenv("OPENAI_API_KEY"):
+        raise ValueError("OPENAI_API_KEY environment variable not set for OpenAI embeddings")
     
     # Load vector store
     retriever_tool = RetrieverTool(
@@ -284,7 +288,7 @@ def query(
 
 def chat(
     persist_directory: str = "./data/vectorstore",
-    embedding_model: str = "text-embedding-3-small",
+    embedding_model: str = "nomic-ai/nomic-embed-text-v1.5",
 ):
     """
     Interactive multi-turn chat mode.
@@ -295,9 +299,10 @@ def chat(
     - User: "matrix density"
     -> system can still resolve well/formation from history.
     """
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set")
+    if os.getenv("LLM_PROVIDER", "groq").lower() == "groq" and not os.getenv("GROQ_API_KEY"):
+        raise ValueError("GROQ_API_KEY environment variable not set")
+    if os.getenv("EMBEDDING_PROVIDER", "huggingface").lower() == "openai" and not os.getenv("OPENAI_API_KEY"):
+        raise ValueError("OPENAI_API_KEY environment variable not set for OpenAI embeddings")
 
     # Load vector store (once)
     retriever_tool = RetrieverTool(persist_directory=persist_directory, embedding_model=embedding_model)
@@ -416,8 +421,8 @@ def main():
     parser.add_argument(
         "--embedding-model",
         type=str,
-        default="text-embedding-3-small",
-        help="OpenAI embedding model (default: text-embedding-3-small)"
+        default="nomic-ai/nomic-embed-text-v1.5",
+        help="Embedding model (default: nomic-ai/nomic-embed-text-v1.5)"
     )
     parser.add_argument(
         "--stream",

@@ -17,8 +17,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
-from langchain_openai import ChatOpenAI
-
+from ..core.model_factory import get_chat_model
 from .property_registry import PropertyEntry, default_registry, resolve_property_deterministic
 from .query_normalizer import extract_well, normalize_formation
 
@@ -267,8 +266,8 @@ def resolve_with_bounded_agent(
         for e in use:
             prop_opts.append({"canonical": e.canonical, "label": e.display or e.canonical, "tool": e.tool})
 
-    model = os.getenv("RAG_ENTITY_RESOLVER_MODEL", "gpt-4o")
-    llm = ChatOpenAI(model=model, temperature=0)
+    model = os.getenv("RAG_ENTITY_RESOLVER_MODEL", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"))
+    llm = get_chat_model(model, temperature=0, role="entity_resolver")
 
     prompt = (
         "You are an entity resolver for a deterministic petrophysical QA system.\n"
