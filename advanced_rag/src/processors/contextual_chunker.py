@@ -92,6 +92,7 @@ class ContextualChunker:
         self.overlap = overlap
         self.preserve_sections = preserve_sections
 
+        self._context_model = context_model
         self._llm = get_chat_model(
             context_model,
             temperature=0,
@@ -129,7 +130,7 @@ class ContextualChunker:
 
         base_result.chunks = enriched_chunks
         base_result.metadata["contextual_enrichment"] = True
-        base_result.metadata["context_model"] = getattr(self._llm, "model_name", context_model)
+        base_result.metadata["context_model"] = getattr(self._llm, "model_name", self._context_model)
         return base_result
 
     def chunk_documents(
