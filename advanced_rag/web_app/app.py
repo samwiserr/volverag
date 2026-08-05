@@ -34,6 +34,18 @@ from .logic.asset_downloader import _ensure_pdfs_available, _ensure_vectorstore_
 from .logic.pdf_viewer import _pdf_full_viewer
 from .logic.graph_manager import _get_graph
 
+# Import modern UI components
+from .components import (
+    render_header,
+    render_chat_message,
+    render_citation_card,
+    render_sota_panel,
+    render_pdf_viewer_placeholder,
+    render_loading_spinner,
+    render_example_queries,
+    render_debug_expander,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -52,10 +64,37 @@ def main():
     except Exception:
         pass
 
-    st.set_page_config(page_title="VolveRAG", layout="wide")
-    st.title("VolveRAG")
-    st.markdown("This application lets you query the Volve petrophysics reports using natural language. Ask questions about wells, formations, petrophysical parameters, and more.")
-    st.markdown("**Example:** *\"What is the water saturation value of Hugin formation in 15/9-F-5?\"*")
+    st.set_page_config(
+        page_title="VolveRAG", 
+        page_icon="🔍",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    
+    # Render modern header
+    render_header(
+        title="VolveRAG",
+        subtitle="Advanced Petrophysical RAG System for Volve Field Data"
+    )
+    
+    st.markdown(
+        """
+        <style>
+        .main-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 2rem;
+        }
+        </style>
+        <div class="main-info">
+            <strong>🎯 What can I do?</strong> Ask questions about wells, formations, petrophysical parameters, and more using natural language.
+            <br><em>Example: "What is the water saturation value of Hugin formation in 15/9-F-5?"</em>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     if os.getenv("LLM_PROVIDER", "groq").lower() == "groq" and not os.getenv("GROQ_API_KEY"):
         st.error("GROQ_API_KEY is not set. Add it to Streamlit secrets or your local .env and restart.")
@@ -91,56 +130,9 @@ def main():
 
         # ── SOTA Techniques Status ────────────────────────────────────────
         st.divider()
-        st.subheader("SOTA Techniques")
-
-        def _env_on(key: str, default: str = "true") -> bool:
-            return os.getenv(key, default).lower() in {"1", "true", "yes"}
-
-        # Index-time techniques (status only — must rebuild to change)
-        contextual_on = _env_on("RAG_CONTEXTUAL")
-        raptor_on = _env_on("RAG_RAPTOR")
-
-        st.markdown("**Index-time** *(baked into vectorstore)*")
-        col_c, col_r = st.columns(2)
-        with col_c:
-            st.markdown(
-                f"{'🟢' if contextual_on else '⚪'} **Contextual**"
-                if contextual_on else "⚪ Contextual"
-            )
-        with col_r:
-            st.markdown(
-                f"{'🟢' if raptor_on else '⚪'} **RAPTOR**"
-                if raptor_on else "⚪ RAPTOR"
-            )
-
-        if not contextual_on or not raptor_on:
-            st.caption("Set RAG_CONTEXTUAL / RAG_RAPTOR=true and rebuild index to activate.")
-
-        # Query-time toggle for HyDE (takes effect immediately, no rebuild needed)
-        st.markdown("**Query-time** *(active every query)*")
-        hyde_default = _env_on("RAG_HYDE")
-        if "hyde_enabled" not in st.session_state:
-            st.session_state.hyde_enabled = hyde_default
-        hyde_toggle = st.toggle(
-            "HyDE — Hypothetical Doc Embeddings",
-            value=st.session_state.hyde_enabled,
-            help=(
-                "Generates a hypothetical ideal answer passage for each query and "
-                "embeds it alongside the raw query for better dense retrieval. "
-                "Adds ~1 s latency via Groq's fast model."
-            ),
-        )
-        if hyde_toggle != st.session_state.hyde_enabled:
-            st.session_state.hyde_enabled = hyde_toggle
-            # Persist choice to env so RetrieverTool picks it up on next graph load
-            os.environ["RAG_HYDE"] = "true" if hyde_toggle else "false"
-            # Invalidate graph cache so the new toggle takes effect
-            _get_graph.clear()
-
-        fusion = os.getenv("RAG_HYBRID_FUSION", "rrf").upper()
-        st.markdown(f"🟢 **RRF Fusion** `({fusion})`")
-        st.markdown(f"{'🟢' if _env_on('RAG_USE_CROSS_ENCODER') else '⚪'} **Cross-Encoder Rerank**")
-        st.markdown(f"{'🟢' if _env_on('RAG_RERANK', 'llm') else '⚪'} **LLM Rerank**")
+        
+        # Use modern SOTA panel component
+        render_sota_panel()
         # ─────────────────────────────────────────────────────────────────
 
     # Chat history (multi-turn)
@@ -149,47 +141,51 @@ def main():
     if "viewer" not in st.session_state:
         st.session_state.viewer = {"path": None, "page": None}
 
-    col_left, col_right = st.columns([0.55, 0.45], gap="large")
+    col_left, col_right = st.columns([0.58, 0.42], gap="large")
 
     with col_left:
-        st.subheader("Chat")
+        # Render example queries if no messages yet
+        if not st.session_state.messages:
+            render_example_queries()
+            
+            # Check if user clicked an example query
+            if hasattr(st.session_state, 'example_query') and st.session_state.example_query:
+                user_input = st.session_state.example_query
+                st.session_state.example_query = None  # Clear after use
+        
+        st.markdown("### 💬 Chat")
         st.caption("Context is preserved in this chat: you can answer clarifications (e.g., just \"matrix density\") and the prior well/formation will be remembered.")
 
-        # Render chat history
+        # Render chat history with modern styling
         for msg_idx, m in enumerate(st.session_state.messages):
             role = m.get("role")
             content = m.get("content", "")
+            
             if role == "user":
-                with st.chat_message("user"):
-                    st.write(content)
+                render_chat_message(role, content, idx=msg_idx)
             else:
-                with st.chat_message("assistant"):
-                    ans_body = re.sub(r"(?m)^\s*Source:\s*.*\n?", "", content).strip() if isinstance(content, str) else content
-                    st.write(ans_body)
-
-                    # Citations + viewer hook (first citation only)
-                    cits = _parse_citations(content if isinstance(content, str) else "")
-                    if cits:
-                        c = cits[0]
-                        # Only show citation UI if source is valid (not "N/A")
+                # Parse citations for assistant messages
+                cits = _parse_citations(content if isinstance(content, str) else "")
+                
+                # Display the message content
+                render_chat_message(role, content, citations=cits, idx=msg_idx)
+                
+                # Show citation cards if available
+                if cits:
+                    for cit_idx, c in enumerate(cits):
                         if c.source_path and c.source_path != "N/A":
-                            page = c.page_start
-                            cols = st.columns([0.72, 0.28])
-                            with cols[0]:
-                                # Clean up the source path for display
-                                clean_path = _clean_source_path(c.source_path)
-                                st.caption(
-                                    f"`{clean_path}`"
-                                    + (f" (pages {c.page_start}-{c.page_end})" if c.page_start and c.page_end else 
-                                       f" (page {c.page_start})" if c.page_start else "")
-                                )
-                            with cols[1]:
-                                label = f"View page {page}" if page else "View"
-                                # Add idx component to avoid duplicate Streamlit keys when the same
-                                # citation repeats across reruns or messages.
-                                key_suffix = f"{len(st.session_state.messages)}_{msg_idx}_{0}_{c.source_path}_{page}"
-                                if st.button(label, key=f"view_{key_suffix}"):
-                                    st.session_state.viewer = {"path": c.source_path, "page": page}
+                            key_suffix = f"{len(st.session_state.messages)}_{msg_idx}_{cit_idx}_{c.source_path}_{c.page_start}"
+                            
+                            def on_click(path=c.source_path, page=c.page_start):
+                                st.session_state.viewer = {"path": path, "page": page}
+                            
+                            render_citation_card(
+                                source_path=c.source_path,
+                                page_start=c.page_start,
+                                page_end=c.page_end,
+                                on_click=on_click,
+                                key=f"cite_{key_suffix}"
+                            )
 
         # Ensure vectorstore is available (download if needed)
         if not _ensure_vectorstore_available(persist_dir):
@@ -336,80 +332,23 @@ def main():
                 return
             
             st.session_state.messages.append({"role": "user", "content": sanitized_input})
-            with st.spinner("Thinking..."):
+            
+            # Show modern loading spinner
+            render_loading_spinner("Analyzing your query...")
+            loading_placeholder = st.empty()
+            
+            with loading_placeholder:
                 result = graph.invoke({"messages": st.session_state.messages})
                 answer = result["messages"][-1].content
                 st.session_state.messages.append({"role": "assistant", "content": answer})
                 
-                # Debug information expander
-                with st.expander("Debug Info", expanded=False):
-                    st.write("**Query:**", user_input)
-
-                    # HyDE hypothetical document (if generated)
-                    if st.session_state.get("last_hyde_doc"):
-                        st.write("**HyDE Hypothetical Document:**")
-                        st.caption(st.session_state.last_hyde_doc)
-                        st.session_state.last_hyde_doc = None  # clear after display
-                    
-                    # Check if petro cache exists
-                    vectorstore_dir = Path(__file__).resolve().parents[1] / "data" / "vectorstore"
-                    cache_path = vectorstore_dir / "petro_params_cache.json"
-                    cache_exists = cache_path.exists()
-                    st.write(f"**Petro Cache Exists:** {cache_exists}")
-                    if cache_exists:
-                        st.write(f"**Cache Path:** `{cache_path}`")
-                    else:
-                        st.write(f"**Cache Path (not found):** `{cache_path}`")
-                    
-                    # Show normalized query info
-                    try:
-                        from src.normalize.query_normalizer import normalize_query, extract_well
-                        nq = normalize_query(user_input)
-                        extracted_well = extract_well(user_input)
-                        st.write(f"**Extracted Well:** `{extracted_well}`")
-                        st.write(f"**Normalized Query Well:** `{nq.well}`")
-                        st.write(f"**Normalized Query Formation:** `{nq.formation}`")
-                        st.write(f"**Normalized Query Property:** `{nq.property}`")
-                    except Exception as e:
-                        st.write(f"**Error extracting well:** {e}")
-                    
-                    # Check routing conditions
-                    ql = user_input.lower()
-                    param_keywords = ["petrophysical parameters", "petrophysical parameter", "net to gross", "net-to-gross", "netgros", "net/gross", "ntg", "n/g", "phif", "phi", "poro", "porosity", "water saturation", "sw", "klogh", "permeability", "permeab", "perm"]
-                    has_param_keyword = any(k in ql for k in param_keywords) or bool(re.search(r'\bsw\b', ql, re.IGNORECASE))
-                    extracted_well_for_routing = extracted_well if 'extracted_well' in locals() else None
-                    has_well_pattern = ("15" in ql and "9" in ql) or (extracted_well_for_routing is not None)
-                    should_route = has_param_keyword and (cache_exists or has_well_pattern)
-                    
-                    st.write("---")
-                    st.write("**Routing Analysis:**")
-                    st.write(f"- Has Param Keyword: `{has_param_keyword}`")
-                    st.write(f"- Has Well Pattern: `{has_well_pattern}`")
-                    st.write(f"- Should Route to Petro Params: `{should_route}`")
-                    
-                    # Check what tools were called
-                    tool_calls = []
-                    for msg in result.get("messages", []):
-                        if hasattr(msg, "tool_calls") and msg.tool_calls:
-                            for tc in msg.tool_calls:
-                                tool_calls.append(tc.get("name", "unknown"))
-                    if tool_calls:
-                        st.write(f"**Tools Called:** {', '.join(tool_calls)}")
-                    else:
-                        st.write("**Tools Called:** None (query went to retriever/LLM)")
-                    
-                    # Show answer source
-                    if "[PETRO_PARAMS_JSON]" in answer or "[PETRO_PARAMS]" in answer:
-                        st.write("**Answer Source:** Petro Params Tool (structured)")
-                    elif "Source:" in answer:
-                        st.write("**Answer Source:** Retriever Tool (vector search)")
-                    else:
-                        st.write("**Answer Source:** LLM (generated)")
+                # Use modern debug expander
+                render_debug_expander(result, user_input)
                 
                 st.rerun()
 
     with col_right:
-        st.subheader("PDF Viewer")
+        st.markdown("### 📄 PDF Viewer")
         vp = st.session_state.viewer.get("path")
         vpage = st.session_state.viewer.get("page")
         if vp:
@@ -417,7 +356,7 @@ def main():
             initial_page = vpage if isinstance(vpage, int) and vpage > 0 else 1
             components.html(_pdf_full_viewer(vp, initial_page), height=900)
         else:
-            st.info("Click **View page** next to a source to open it here.")
+            render_pdf_viewer_placeholder()
 
 
 if __name__ == "__main__":
