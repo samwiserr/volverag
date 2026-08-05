@@ -94,7 +94,7 @@ def render_chat_message(role: str, content: str, citations: Optional[List[Dict]]
 
 def render_citation_card(source_path: str, page_start: Optional[int], page_end: Optional[int], on_click=None, key: str = ""):
     """Render a modern citation card with click functionality."""
-    from .logic.citation_parser import _clean_source_path
+    from ..logic.citation_parser import _clean_source_path
     
     clean_path = _clean_source_path(source_path)
     page_info = ""
